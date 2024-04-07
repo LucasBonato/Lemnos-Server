@@ -24,6 +24,14 @@ public class Endereco {
     @Column(name = "Bairro")
     private String Bairro;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "Id_Cidade")
+    private Cidade cidade;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "Id_Estado")
+    private Estado estado;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "enderecos")
     private List<Cliente> clientes;
