@@ -27,4 +27,8 @@ public class Endereco {
     @JsonIgnore
     @ManyToMany(mappedBy = "enderecos")
     private List<Cliente> clientes;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "enderecos")
+    private List<Funcionario> funcionarios;
 }
