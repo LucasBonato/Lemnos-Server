@@ -1,17 +1,17 @@
-package com.lemnos.server.Models;
+package com.lemnos.server.Models.Endereco;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "Estado")
+@Table(name = "Cidade")
 @Data
-public class Estado {
+public class Cidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer Id;
 
-    @Column(name = "UF")
-    private String UF;
+    @Column(name = "Cidade")
+    private String Cidade;
 }

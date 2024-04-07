@@ -1,6 +1,8 @@
-package com.lemnos.server.Models;
+package com.lemnos.server.Models.Endereco;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemnos.server.Models.Cliente;
+import com.lemnos.server.Models.Funcionario;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,6 +33,9 @@ public class Endereco {
     @OneToOne(cascade = CascadeType.ALL)
     @Column(name = "Id_Estado")
     private Estado estado;
+
+    @Column(name = "Id_Fornecedor")
+    private Integer Id_Fornecedor;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "enderecos")

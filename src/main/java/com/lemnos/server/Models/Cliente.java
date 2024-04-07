@@ -1,9 +1,8 @@
 package com.lemnos.server.Models;
 
+import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 

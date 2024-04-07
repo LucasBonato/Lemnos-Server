@@ -1,5 +1,6 @@
 package com.lemnos.server.Models;
 
+import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.Data;
 
