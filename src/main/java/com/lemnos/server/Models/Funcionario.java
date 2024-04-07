@@ -41,4 +41,8 @@ public class Funcionario {
             inverseJoinColumns = @JoinColumn(name = "Id_Endereco")
     )
     private List<Endereco> enderecos;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "Id_Cadastro")
+    private Cadastro cadastro;
 }
