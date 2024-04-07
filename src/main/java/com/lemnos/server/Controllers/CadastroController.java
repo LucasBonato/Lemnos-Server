@@ -1,6 +1,7 @@
 package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Services.CadastroService;
 import com.lemnos.server.Services.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cadastro")
 public class CadastroController {
 
-    @Autowired private ClienteService clienteService;
+    @Autowired private CadastroService cadastroService;
 
     @PostMapping
     public ResponseEntity cadastrarCliente(@RequestBody @Valid ClienteDTO clienteDTO){
-        return clienteService.cadastrarCliente(clienteDTO);
+        return cadastroService.cadastrarCliente(clienteDTO);
     }
 }

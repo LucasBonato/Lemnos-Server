@@ -18,16 +18,16 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Nome")
-    private String Nome;
+    private String nome;
 
-    @Column(name = "CPF", unique = true)
-    private String CPF;
+    @Column(name = "CPF")
+    private String cpf;
 
     @Column(name = "CEP")
-    private String CEP;
+    private String cep;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -42,8 +42,8 @@ public class Cliente {
     private Cadastro cadastro;
 
     public Cliente(ClienteDTO clienteDTO){
-        this.Nome = clienteDTO.getNome();
-        this.CPF = clienteDTO.getCpf();
+        this.nome = clienteDTO.getNome();
+        this.cpf = clienteDTO.getCpf();
         this.cadastro = new Cadastro(clienteDTO);
     }
 }
