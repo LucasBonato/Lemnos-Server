@@ -1,5 +1,6 @@
 package com.lemnos.server.Models;
 
+import com.lemnos.server.Models.DTOs.ClienteDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,4 +18,9 @@ public class Cadastro {
 
     @Column(name = "Senha")
     private String Senha;
+
+    public Cadastro(ClienteDTO clienteDTO){
+        this.Email = clienteDTO.getEmail();
+        this.Senha = clienteDTO.getSenha();
+    }
 }
