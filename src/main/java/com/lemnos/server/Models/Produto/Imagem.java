@@ -1,0 +1,19 @@
+package com.lemnos.server.Models.Produto;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "Imagem")
+@Data
+public class Imagem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
+    private Integer Id;
+
+    @Column(name = "Imagem_Principal")
+    private String ImagemPrincipal;
+
+    public Imagem(){}
+}
