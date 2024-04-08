@@ -13,16 +13,16 @@ public class Fornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Telefone")
-    private String Telefone;
+    private String telefone;
 
     @Column(name = "CNPJ", unique = true)
-    private String CNPJ;
+    private String cnpj;
 
     @Column(name = "CEP")
-    private String CEP;
+    private String cep;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Funcionario")

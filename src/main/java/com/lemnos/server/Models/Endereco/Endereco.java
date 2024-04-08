@@ -15,16 +15,16 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Logradouro")
-    private String Logradouro;
+    private String logradouro;
 
     @Column(name = "Numero_Logradouro")
-    private Integer NumeroLogradouro ;
+    private Integer numeroLogradouro ;
 
     @Column(name = "Bairro")
-    private String Bairro;
+    private String bairro;
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "Id_Cidade")
@@ -35,7 +35,7 @@ public class Endereco {
     private Estado estado;
 
     @Column(name = "Id_Fornecedor")
-    private Integer Id_Fornecedor;
+    private Integer id_Fornecedor;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "enderecos")

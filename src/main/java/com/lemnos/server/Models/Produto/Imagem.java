@@ -10,10 +10,8 @@ public class Imagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Imagem_Principal")
-    private String ImagemPrincipal;
-
-    public Imagem(){}
+    private String imagemPrincipal;
 }

@@ -14,25 +14,25 @@ public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Nome")
-    private String Nome;
+    private String nome;
 
     @Column(name = "CPF", unique = true)
-    private String CPF;
+    private String cpf;
 
     @Column(name = "Data_Nascimento")
-    private Date DataNascimento;
+    private Date dataNascimento;
 
     @Column(name = "Data_Admissao")
-    private Date DataAdmissao;
+    private Date dataAdmissao;
 
     @Column(name = "Telefone")
-    private String Telefone;
+    private String telefone;
 
     @Column(name = "CEP")
-    private String CEP;
+    private String cep;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

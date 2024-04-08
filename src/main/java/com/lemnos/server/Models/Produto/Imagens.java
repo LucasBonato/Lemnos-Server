@@ -9,15 +9,13 @@ import lombok.Data;
 public class Imagens {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Imagens")
-    private String Imagens;
+    private String imagens;
 
     @ManyToOne
     @JoinColumn(name = "Id")
     @Column(name = "Id_Imagem")
-    private Integer IdImagem;
-
-    public Imagens(){}
+    private Integer idImagem;
 }

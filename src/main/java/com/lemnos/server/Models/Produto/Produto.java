@@ -10,27 +10,19 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Descricao")
-    private String Descricao;
+    private String descricao;
 
     @Column(name = "Cor")
-    private String Cor;
+    private String cor;
 
     @Column(name = "Valor")
-    private Double Valor;
-
-   /* @ManyToOne
-    @JoinColumn(name = "Id")
-    @Column(name = "Id_Itens")
-    private Integer IdItensCarrinho;*/
+    private Double valor;
 
     @ManyToOne
     @JoinColumn(name = "Id")
     @Column(name = "Id_Imagens")
-    private Integer IdImagens;
-
-    public Produto(){}
-
+    private Integer idImagens;
 }

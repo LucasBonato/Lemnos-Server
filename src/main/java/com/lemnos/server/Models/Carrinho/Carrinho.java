@@ -10,17 +10,15 @@ public class Carrinho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Valor")
-    private Double Valor;
+    private Double valor;
 
     @Column(name = "Quantidade_Produtos")
-    private Integer QuantidadeProdutos;
+    private Integer quantidadeProdutos;
 
     @OneToOne
     @JoinColumn(name = "Id_Cadastro")
-    private Integer IdCadastro;
-
-    public Carrinho(){}
+    private Integer idCadastro;
 }

@@ -12,17 +12,15 @@ public class Avaliacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Data_Avaliacao")
-    private Date DataAvaliacao;
+    private Date dataAvaliacao;
 
     @Column(name = "Avaliacao")
-    private Double Avaliacao;
+    private Double avaliacao;
 
     @ManyToOne
     @JoinColumn(name = "Id")
-    private Integer IdProduto;
-
-    public Avaliacao(){}
+    private Integer idProduto;
 }

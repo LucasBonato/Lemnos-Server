@@ -13,25 +13,23 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "Valor_Pedido")
-    private Double Valor_Pedido;
+    private Double valor_Pedido;
 
     @Column(name = "Metodo_Pagamento")
-    private String Metodo_Pagamento;
+    private String metodo_Pagamento;
 
     @Column(name = "Data_Pedido")
-    private Date Data_Pedido;
+    private Date data_Pedido;
 
     @Column(name = "Valor_Pagamento")
-    private Double Valor_Pagamento;
+    private Double valor_Pagamento;
 
     @Column(name = "Quantidade_Produtos")
-    private Integer Quantidade_Prdoutos;
+    private Integer quantidade_Prdoutos;
 
     @Column(name = "Data_Pagamento")
-    private Date Data_Pagamento;
-
-    public Pedido(){}
+    private Date data_Pagamento;
 }
