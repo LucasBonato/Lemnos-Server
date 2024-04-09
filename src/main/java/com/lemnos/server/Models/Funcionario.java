@@ -29,10 +29,10 @@ public class Funcionario {
     private Date dataAdmissao;
 
     @Column(name = "Telefone")
-    private char telefone;
+    private String telefone;
 
     @Column(name = "CEP")
-    private char cep;
+    private String cep;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
