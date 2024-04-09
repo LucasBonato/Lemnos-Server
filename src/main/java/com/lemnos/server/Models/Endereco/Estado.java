@@ -14,7 +14,7 @@ public class Estado {
     private Integer id;
 
     @Column(name = "UF")
-    private char uf;
+    private String uf;
 
     public Estado(EnderecoDTO enderecoDTO){
         this.uf = enderecoDTO.getUf();
