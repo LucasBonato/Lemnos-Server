@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class FuncionarioDTO {
     @NotBlank(message = "O campo Nome é obrigatório!")
-    @Size(min = 3, max = 50, message = "O nome precisa ter no mínimo 3 carateres e no máximo 50 carateres!")
+    @Size(min = 3, max = 40, message = "O nome precisa ter no mínimo 3 caracteres e no máximo 40 caracteres!")
     private String nome;
 
     @NotBlank(message = "O campo CPF é obrigatório!")
@@ -31,10 +31,10 @@ public class FuncionarioDTO {
     private Date dataAdmissao;
 
     @NotBlank(message = "O campo Telefone é obrigatório!")
-    @Size(min = 11, max = 11, message = "O telefone precisa ter 11 carateres!")
-    private char telefone;
+    @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres!")
+    private String telefone;
 
     @NotBlank(message = "O campo CEP é obrigatório!")
-    @Size(min = 8, max = 8, message = "O CEP precisa ter 8 carateres!")
-    private char cep;
+    @Size(min = 8, max = 8, message = "O CEP precisa ter 8 caracteres!")
+    private String cep;
 }
