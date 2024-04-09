@@ -1,5 +1,6 @@
 package com.lemnos.server.Models.Endereco;
 
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,4 +15,8 @@ public class Cidade {
 
     @Column(name = "Cidade")
     private String cidade;
+
+    public Cidade(EnderecoDTO enderecoDTO){
+        this.cidade = enderecoDTO.getCidade();
+    }
 }
