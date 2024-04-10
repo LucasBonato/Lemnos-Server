@@ -65,9 +65,7 @@ public class CadastroService {
     }
 
     private void verificarCamposFornecedor(FornecedorDTO fornecedorDTO) {
-        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(fornecedorDTO.getEmail());
         Optional<Fornecedor> fornecedorOptional = fornecedorRepository.findByCnpj(fornecedorDTO.getCnpj());
-        if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(fornecedorOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
     }
 }

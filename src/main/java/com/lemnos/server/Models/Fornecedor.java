@@ -25,6 +25,9 @@ public class Fornecedor {
     @Column(name = "CEP")
     private String cep;
 
+    @Column(name = "Numero_Logradouro")
+    private Integer numeroLogradouro;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Funcionario")
     private List<Endereco> enderecos;
@@ -33,5 +36,6 @@ public class Fornecedor {
         this.telefone = fornecedorDTO.getTelefone();
         this.cnpj = fornecedorDTO.getCnpj();
         this.cep = fornecedorDTO.getCep();
+        this.numeroLogradouro = fornecedorDTO.getNumeroLogradouro();
     }
 }

@@ -1,9 +1,7 @@
 package com.lemnos.server.Models.DTOs;
 
 import com.lemnos.server.Annotations.CPFValidation;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,4 +44,9 @@ public class FuncionarioDTO {
     @NotBlank(message = "A Senha é obrigatória!")
     @Size(min = 8, message = "A senha precisa ter no mínimo 8 caracteres!")
     private String senha;
+
+    @NotNull(message = "O campo 'N Logradouro' é obrigatório!")
+    @PositiveOrZero(message = "Digite um número válido")
+    @Max(value = 9999, message = "O número inserido é muito alto!")
+    private Integer numeroLogradouro;
 }
