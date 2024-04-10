@@ -1,6 +1,7 @@
 package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Services.CadastroService;
 import com.lemnos.server.Services.ClienteService;
 import jakarta.validation.Valid;
@@ -17,8 +18,13 @@ public class CadastroController {
 
     @Autowired private CadastroService cadastroService;
 
-    @PostMapping
+    @PostMapping("/cliente")
     public ResponseEntity cadastrarCliente(@RequestBody @Valid ClienteDTO clienteDTO){
         return cadastroService.cadastrarCliente(clienteDTO);
+    }
+
+    @PostMapping("/funcionario")
+    public ResponseEntity cadastrarFuncionario(@RequestBody @Valid FuncionarioDTO funcionarioDTO){
+        return cadastroService.cadastrarFuncionario(funcionarioDTO);
     }
 }

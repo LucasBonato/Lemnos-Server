@@ -1,5 +1,6 @@
 package com.lemnos.server.Models;
 
+import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -45,4 +46,13 @@ public class Funcionario {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
+
+    public Funcionario(FuncionarioDTO funcionarioDTO){
+        this.nome = funcionarioDTO.getNome();
+        this.cpf = funcionarioDTO.getCpf();
+        this.dataNascimento = funcionarioDTO.getDataNascimento();
+        this.dataAdmissao = funcionarioDTO.getDataAdmissao();
+        this.telefone = funcionarioDTO.getTelefone();
+        this.cep = funcionarioDTO.getCep();
+    }
 }

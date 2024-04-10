@@ -5,8 +5,11 @@ import com.lemnos.server.Exceptions.Cadastro.CadastroEmailAlreadyInUseException;
 import com.lemnos.server.Models.Cadastro;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.FuncionarioDTO;
+import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.CadastroRepository;
 import com.lemnos.server.Repositories.ClienteRepository;
+import com.lemnos.server.Repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import java.util.Optional;
 @Service
 public class CadastroService {
     @Autowired private ClienteRepository clienteRepository;
+    @Autowired private FuncionarioRepository funcionarioRepository;
     @Autowired private CadastroRepository cadastroRepository;
 
     public ResponseEntity cadastrarCliente(ClienteDTO clienteDTO) {
@@ -28,10 +32,24 @@ public class CadastroService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    public ResponseEntity cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
+        funcionarioDTO.setEmail(funcionarioDTO.getEmail().toLowerCase());
+        verificarCamposFuncionario(funcionarioDTO);
+        Funcionario funcionario = new Funcionario(funcionarioDTO);
+        funcionarioRepository.save(funcionario);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     private void verificarCamposCliente(ClienteDTO clienteDTO) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(clienteDTO.getEmail());
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(clienteDTO.getCpf());
         if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(clienteOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
+    }
+    private void verificarCamposFuncionario(FuncionarioDTO funcionarioDTO) {
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(funcionarioDTO.getEmail());
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionarioDTO.getCpf());
+        if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
+        if(funcionarioOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
     }
 }
