@@ -29,6 +29,9 @@ public class Cliente {
     @Column(name = "CEP")
     private String cep;
 
+    @Column(name = "Numero_Logradouro")
+    private Integer numeroLogradouro;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Cliente_Possui_Endereco",
@@ -44,6 +47,7 @@ public class Cliente {
     public Cliente(ClienteDTO clienteDTO){
         this.nome = clienteDTO.getNome();
         this.cpf = clienteDTO.getCpf();
+        this.numeroLogradouro = clienteDTO.getNumeroLogradouro();
         this.cadastro = new Cadastro(clienteDTO);
     }
 }

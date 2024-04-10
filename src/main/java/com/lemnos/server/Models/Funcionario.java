@@ -35,6 +35,9 @@ public class Funcionario {
     @Column(name = "CEP")
     private String cep;
 
+    @Column(name = "Numero_Logradouro")
+    private Integer numeroLogradouro;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Funcionario_Possui_Endereco",
@@ -54,5 +57,6 @@ public class Funcionario {
         this.dataAdmissao = funcionarioDTO.getDataAdmissao();
         this.telefone = funcionarioDTO.getTelefone();
         this.cep = funcionarioDTO.getCep();
+        this.numeroLogradouro = funcionarioDTO.getNumeroLogradouro();
     }
 }

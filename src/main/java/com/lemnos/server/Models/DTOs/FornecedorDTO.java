@@ -1,8 +1,6 @@
 package com.lemnos.server.Models.DTOs;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,8 @@ public class FornecedorDTO {
     @Size(min = 8, max = 8, message = "O CEP precisa ter 8 caracteres!")
     private String cep;
 
-    @NotBlank(message = "O Email é obrigatório!")
-    @Email(message = "Insira um Email válido!")
-    private String email;
+    @NotNull(message = "O campo 'N Logradouro' é obrigatório!")
+    @PositiveOrZero(message = "Digite um número válido")
+    @Max(value = 9999, message = "O número inserido é muito alto!")
+    private Integer numeroLogradouro;
 }

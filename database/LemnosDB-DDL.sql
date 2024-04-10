@@ -13,6 +13,7 @@ CREATE TABLE Cliente (
 	Nome varchar(40) NOT NULL,
 	CPF char(11) UNIQUE NOT NULL,
 	CEP char(11),
+	Numero_Logradouro int NOT NULL,
 	Id_Cadastro int,
     foreign key(Id_Cadastro) references Cadastro(Id),
     constraint check(CHAR_LENGTH(Nome) > 2)
@@ -23,6 +24,7 @@ CREATE TABLE Funcionario (
 	CPF char(8) UNIQUE NOT NULL,
 	Data_Nascimento date NOT NULL,
 	Data_Admissao date NOT NULL,
+	Numero_Logradouro int NOT NULL,
 	Telefone char(11),
 	CEP char(8),
 	Id_Cadastro int,
@@ -33,7 +35,8 @@ CREATE TABLE Fornecedor (
 	Id int primary key auto_increment,
 	Telefone char(11) NOT NULL,
 	CNPJ char(14) UNIQUE NOT NULL,
-	CEP char(11)
+	CEP char(11),
+	Numero_Logradouro int NOT NULL
 );
 CREATE TABLE Pedido (
 	Id int primary key auto_increment,
@@ -100,7 +103,6 @@ CREATE TABLE Cidade(
 CREATE TABLE Endereco (
 	Id int primary key auto_increment,
 	Logradouro varchar(50) NOT NULL,
-	Numero_Logradouro varchar(4) NOT NULL,
 	Bairro varchar(30) NOT NULL,
 	Id_Fornecedor int,
     Id_Estado int,

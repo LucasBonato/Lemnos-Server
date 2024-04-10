@@ -20,9 +20,6 @@ public class Endereco {
     @Column(name = "Logradouro")
     private String logradouro;
 
-    @Column(name = "Numero_Logradouro")
-    private Integer numeroLogradouro ;
-
     @Column(name = "Bairro")
     private String bairro;
 
