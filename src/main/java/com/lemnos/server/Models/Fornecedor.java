@@ -1,5 +1,6 @@
 package com.lemnos.server.Models;
 
+import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,4 +28,10 @@ public class Fornecedor {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Funcionario")
     private List<Endereco> enderecos;
+
+    public Fornecedor(FornecedorDTO fornecedorDTO){
+        this.telefone = fornecedorDTO.getTelefone();
+        this.cnpj = fornecedorDTO.getCnpj();
+        this.cep = fornecedorDTO.getCep();
+    }
 }

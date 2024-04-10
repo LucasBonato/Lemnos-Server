@@ -1,9 +1,9 @@
 package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Services.CadastroService;
-import com.lemnos.server.Services.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +26,10 @@ public class CadastroController {
     @PostMapping("/funcionario")
     public ResponseEntity cadastrarFuncionario(@RequestBody @Valid FuncionarioDTO funcionarioDTO){
         return cadastroService.cadastrarFuncionario(funcionarioDTO);
+    }
+
+    @PostMapping("/fornecedor")
+    public ResponseEntity cadastrarFornecedor(@RequestBody @Valid FornecedorDTO fornecedorDTO){
+        return cadastroService.cadastrarFornecedor(fornecedorDTO);
     }
 }
