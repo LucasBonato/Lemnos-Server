@@ -3,6 +3,8 @@ package com.lemnos.server.Models.Produto;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Imagem")
 @Data
@@ -14,4 +16,8 @@ public class Imagem {
 
     @Column(name = "Imagem_Principal")
     private String imagemPrincipal;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "Id_Imagens")
+    private List<Imagens> imagens;
 }

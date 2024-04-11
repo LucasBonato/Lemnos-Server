@@ -21,8 +21,7 @@ public class Produto {
     @Column(name = "Valor")
     private Double valor;
 
-    @ManyToOne
-    @JoinColumn(name = "Id")
-    @Column(name = "Id_Imagens")
-    private Integer idImagens;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "Id_Imagem")
+    private Imagem imagem;
 }

@@ -33,6 +33,7 @@ CREATE TABLE Funcionario (
 );
 CREATE TABLE Fornecedor (
 	Id int primary key auto_increment,
+    Nome varChar(50) NOT NULL,
 	Telefone char(11) NOT NULL,
 	CNPJ char(14) UNIQUE NOT NULL,
 	CEP char(11),
@@ -71,8 +72,8 @@ CREATE TABLE Imagem (
 CREATE TABLE Imagens (
 	Id int primary key auto_increment,
 	Imagem varchar(255) NOT NULL,
-	Id_Imagem int,
-	foreign key(Id_Imagem) references Imagem (Id)
+    Id_Imagem int,
+    foreign key(Id_Imagem) references Imagem (Id)
 );
 CREATE TABLE Produto (
 	Id int primary key auto_increment,
@@ -80,9 +81,9 @@ CREATE TABLE Produto (
 	Cor varchar(30),
 	Valor decimal(10,2) NOT NULL,
 	Id_Itens_Carrinho int,
-	Id_Imagens int,
+	Id_Imagem int,
     foreign key(Id_Itens_Carrinho) references Itens_Carrinho(Id),
-    foreign key(Id_Imagens) references Imagens(Id),
+    foreign key(Id_Imagem) references Imagem(Id),
     constraint check(Valor > 0)
 );
 CREATE TABLE Avaliacao (

@@ -13,9 +13,4 @@ public class Imagens {
 
     @Column(name = "Imagens")
     private String imagens;
-
-    @ManyToOne
-    @JoinColumn(name = "Id")
-    @Column(name = "Id_Imagem")
-    private Integer idImagem;
 }
