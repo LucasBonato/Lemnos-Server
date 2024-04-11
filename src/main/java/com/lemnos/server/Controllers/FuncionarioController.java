@@ -1,7 +1,8 @@
 package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.Cliente;
-import com.lemnos.server.Services.ClienteService;
+import com.lemnos.server.Models.Funcionario;
+import com.lemnos.server.Services.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cliente")
-public class ClienteController {
-    @Autowired private ClienteService clienteService;
+@RequestMapping("/funcionario")
+public class FuncionarioController {
+
+    @Autowired private FuncionarioService funcionarioService;
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> getAll(){
-        return clienteService.getAll();
+    public ResponseEntity<List<Funcionario>> getAll(){
+        return funcionarioService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> getOneById(@PathVariable Integer id){
-        return clienteService.getOneById(id);
+    public ResponseEntity<Funcionario> getOneById(@PathVariable Integer id){
+        return funcionarioService.getOneById(id);
     }
 }
