@@ -16,6 +16,9 @@ public class Fornecedor {
     @Column(name = "Id")
     private Integer id;
 
+    @Column(name = "Nome")
+    private String nome;
+
     @Column(name = "Telefone")
     private String telefone;
 
