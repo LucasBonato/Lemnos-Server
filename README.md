@@ -33,6 +33,9 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Exemplos**                      | **O que enviar?**                        |
-|---------------|-----------------------------------|------------------------------------------|
-| /cadastro     | [/cliente]()<br/>[/funcionario]() | [Json Cliente]()<br>[Json Funcionario]() |
+| **EndPoints** | **Sub Endpoints** | **Exemplos**                                          | **O que enviar?**                                               | **Parâmetros** |
+|---------------|-------------------|-------------------------------------------------------|-----------------------------------------------------------------|----------------|
+| /cadastro     |                   | [/cliente]()<br/>[/funcionario]()<br/>[/fornecedor]() | [Json Cliente]()<br>[Json Funcionario]()<br>[Json Fornecedor]() |
+| /cliente      |                   |                                                       |                                                                 |
+| /funcionario  |                   |                                                       |                                                                 |
+| /fornecedor   |                   |                                                       |                                                                 |
