@@ -18,7 +18,7 @@ public class ClienteService {
         return ResponseEntity.ok(clienteRepository.findAll());
     }
 
-    public ResponseEntity<Cliente> getOne(Integer id) {
+    public ResponseEntity<Cliente> getOneById(Integer id) {
         Optional<Cliente> clienteOptional = clienteRepository.findById(id);
         if(clienteOptional.isPresent()){
             return ResponseEntity.ok(clienteOptional.get());
