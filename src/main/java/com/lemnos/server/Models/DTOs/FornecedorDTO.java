@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FornecedorDTO {
 
+    @NotBlank(message = "O campo 'nome' é obrigatório!")
+    @Size(min = 3, max = 50, message = "O nome precisa ter entre 3 a 50 caracteres!")
+    private String nome;
+
     @NotBlank(message = "O campo Telefone é obrigatório!")
     @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres!")
     private String telefone;
