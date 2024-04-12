@@ -82,8 +82,10 @@ CREATE TABLE Produto (
 	Valor decimal(10,2) NOT NULL,
 	Id_Itens_Carrinho int,
 	Id_Imagem int,
+    Id_Sub_Sub_Categoria int,
     foreign key(Id_Itens_Carrinho) references Itens_Carrinho(Id),
     foreign key(Id_Imagem) references Imagem(Id),
+    foreign key(Id_Sub_Sub_Categoria) references Sub_Sub_Categoria(Id),
     constraint check(Valor > 0)
 );
 CREATE TABLE Avaliacao (
@@ -138,35 +140,22 @@ CREATE TABLE Categoria (
 CREATE TABLE Sub_Categoria (
 	Id int primary key auto_increment,
 	Nome varchar(30),
+    Id_Categoria int,
+    foreign key(Id_Categoria) references Categoria(Id),
     constraint check(Nome > 2)
 );
 CREATE TABLE Sub_Sub_Categoria (
 	Id int primary key auto_increment,
-	Nome varchar(30)
+	Nome varchar(30),
+    Id_Sub_Categoria int,
+    foreign key(Id_Sub_Categoria) references Sub_Categoria(Id),
+    constraint check(Nome > 2)
 );
 CREATE TABLE Descontos (
 	Id int primary key auto_increment,
 	Valor_Porcentagem varchar(2) NOT NULL,
 	Id_Categoria int,
 	foreign key(Id_Categoria) references Categoria (Id)
-);
-CREATE TABLE Categoria_Sub_Categoria (
-	Id_Sub_Categoria int,
-	Id_Categoria int,
-	foreign key(Id_Sub_Categoria) references Sub_Categoria (Id),
-	foreign key(Id_Categoria) references Categoria (Id)
-);
-CREATE TABLE Sub_Categoria_Sub_Sub_Categoria (
-	Id_Sub_Sub_Categoria int,
-	Id_Sub_Categoria int,
-	foreign key(Id_Sub_Sub_Categoria) references Sub_Sub_Categoria (Id),
-	foreign key(Id_Sub_Categoria) references Sub_Categoria (Id)
-);
-CREATE TABLE Produto_Sub_Sub_Categoria (
-	Id_Produto int,
-	Id_Sub_Sub_Categoria int,
-	foreign key(Id_Produto) references Produto (Id),
-	foreign key(Id_Sub_Sub_Categoria) references Sub_Sub_Categoria (Id)
 );
 CREATE TABLE Data_Fornece (
 	Data_Fornecimento date NOT NULL,
@@ -194,4 +183,4 @@ CREATE TABLE Funcionario_Possui_Endereco (
 	primary key(Id_Endereco, Id_Funcionario),
 	foreign key(Id_Endereco) references Endereco (Id),
     foreign key(Id_Funcionario) references Funcionario (Id)
-);
+)
