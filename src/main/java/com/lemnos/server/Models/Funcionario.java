@@ -50,11 +50,11 @@ public class Funcionario {
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
 
-    public Funcionario(FuncionarioDTO funcionarioDTO){
+    public Funcionario(FuncionarioDTO funcionarioDTO, Date dataNascimento, Date dataAdmissao){
         this.nome = funcionarioDTO.getNome();
         this.cpf = funcionarioDTO.getCpf();
-        this.dataNascimento = funcionarioDTO.getDataNascimento();
-        this.dataAdmissao = funcionarioDTO.getDataAdmissao();
+        this.dataNascimento = dataNascimento;
+        this.dataAdmissao = dataAdmissao;
         this.telefone = funcionarioDTO.getTelefone();
         this.cep = funcionarioDTO.getCep();
         this.numeroLogradouro = funcionarioDTO.getNumeroLogradouro();

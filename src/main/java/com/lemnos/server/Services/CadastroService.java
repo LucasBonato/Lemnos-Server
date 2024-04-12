@@ -18,6 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -35,10 +41,14 @@ public class CadastroService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
+    public ResponseEntity cadastrarFuncionario(FuncionarioDTO funcionarioDTO) throws ParseException {
         funcionarioDTO.setEmail(funcionarioDTO.getEmail().toLowerCase());
         verificarCamposFuncionario(funcionarioDTO);
-        Funcionario funcionario = new Funcionario(funcionarioDTO);
+
+        Date dataNascimento = convertData(funcionarioDTO.getDataNascimento());
+        Date dataAdmissao = convertData(funcionarioDTO.getDataAdmissao());
+
+        Funcionario funcionario = new Funcionario(funcionarioDTO, dataNascimento, dataAdmissao);
         funcionarioRepository.save(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -65,5 +75,11 @@ public class CadastroService {
     private void verificarCamposFornecedor(FornecedorDTO fornecedorDTO) {
         Optional<Fornecedor> fornecedorOptional = fornecedorRepository.findByCnpj(fornecedorDTO.getCnpj());
         if(fornecedorOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
+    }
+
+    private Date convertData(String data) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        return formatter.parse(data);
     }
 }

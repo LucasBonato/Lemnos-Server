@@ -23,11 +23,11 @@ public class FuncionarioDTO {
 
     @NotBlank(message = "O campo Data de Nascimento é obrigatório!")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date dataNascimento;
+    private String dataNascimento;
 
     @NotBlank(message = "O campo Data de Admissão é obrigatório!")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date dataAdmissao;
+    private String dataAdmissao;
 
     @NotBlank(message = "O campo Telefone é obrigatório!")
     @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres!")
