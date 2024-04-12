@@ -75,6 +75,31 @@ CREATE TABLE Imagens (
     Id_Imagem int,
     foreign key(Id_Imagem) references Imagem (Id)
 );
+CREATE TABLE Categoria (
+	Id int primary key auto_increment,
+	Nome varchar(30),
+    constraint check(Nome > 2)
+);
+CREATE TABLE Sub_Categoria (
+	Id int primary key auto_increment,
+	Nome varchar(30),
+    Id_Categoria int,
+    foreign key(Id_Categoria) references Categoria(Id),
+    constraint check(Nome > 2)
+);
+CREATE TABLE Sub_Sub_Categoria (
+	Id int primary key auto_increment,
+	Nome varchar(30),
+    Id_Sub_Categoria int,
+    foreign key(Id_Sub_Categoria) references Sub_Categoria(Id),
+    constraint check(Nome > 2)
+);
+CREATE TABLE Descontos (
+	Id int primary key auto_increment,
+	Valor_Porcentagem varchar(2) NOT NULL,
+	Id_Categoria int,
+	foreign key(Id_Categoria) references Categoria (Id)
+);
 CREATE TABLE Produto (
 	Id int primary key auto_increment,
 	Descricao varchar(200) NOT NULL,
@@ -132,31 +157,6 @@ CREATE TABLE Especificacao (
     foreign key(Id_Fabricante) references Fabricante (Id),
     constraint check(Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
-CREATE TABLE Categoria (
-	Id int primary key auto_increment,
-	Nome varchar(30),
-    constraint check(Nome > 2)
-);
-CREATE TABLE Sub_Categoria (
-	Id int primary key auto_increment,
-	Nome varchar(30),
-    Id_Categoria int,
-    foreign key(Id_Categoria) references Categoria(Id),
-    constraint check(Nome > 2)
-);
-CREATE TABLE Sub_Sub_Categoria (
-	Id int primary key auto_increment,
-	Nome varchar(30),
-    Id_Sub_Categoria int,
-    foreign key(Id_Sub_Categoria) references Sub_Categoria(Id),
-    constraint check(Nome > 2)
-);
-CREATE TABLE Descontos (
-	Id int primary key auto_increment,
-	Valor_Porcentagem varchar(2) NOT NULL,
-	Id_Categoria int,
-	foreign key(Id_Categoria) references Categoria (Id)
-);
 CREATE TABLE Data_Fornece (
 	Data_Fornecimento date NOT NULL,
 	Id_Fornecedor int,
@@ -183,4 +183,4 @@ CREATE TABLE Funcionario_Possui_Endereco (
 	primary key(Id_Endereco, Id_Funcionario),
 	foreign key(Id_Endereco) references Endereco (Id),
     foreign key(Id_Funcionario) references Funcionario (Id)
-)
+);
