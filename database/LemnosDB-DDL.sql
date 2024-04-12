@@ -21,7 +21,7 @@ CREATE TABLE Cliente (
 CREATE TABLE Funcionario (
 	Id int primary key auto_increment,
 	Nome varchar(40) NOT NULL,
-	CPF char(8) UNIQUE NOT NULL,
+	CPF char(11) UNIQUE NOT NULL,
 	Data_Nascimento date NOT NULL,
 	Data_Admissao date NOT NULL,
 	Numero_Logradouro int NOT NULL,
