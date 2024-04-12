@@ -36,6 +36,7 @@ public class Fornecedor {
     private List<Endereco> enderecos;
 
     public Fornecedor(FornecedorDTO fornecedorDTO){
+        this.nome = fornecedorDTO.getNome();
         this.telefone = fornecedorDTO.getTelefone();
         this.cnpj = fornecedorDTO.getCnpj();
         this.cep = fornecedorDTO.getCep();
