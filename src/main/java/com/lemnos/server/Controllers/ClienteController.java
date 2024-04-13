@@ -1,6 +1,8 @@
 package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.Cliente;
+import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,10 @@ public class ClienteController {
         return clienteService.getOneById(id);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Cliente> updateById(@PathVariable Integer id){ return clienteService.updateClient(Cliente, id); }
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> updateById(@PathVariable Integer id, @RequestBody ClienteDTO clienteDTO){
+        return clienteService.updateCliente(id, clienteDTO);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Cliente> deleteById(@PathVariable Integer id){ return clienteService.deleteById(id);}

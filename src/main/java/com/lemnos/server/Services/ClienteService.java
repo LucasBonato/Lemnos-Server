@@ -1,13 +1,12 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Models.Cliente;
+import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Repositories.ClienteRepository;
-import jakarta.validation.Valid;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,20 +28,15 @@ public class ClienteService {
         throw new RuntimeException("Cliente não encontrado");
     }
 
-//    public ResponseEntity<Cliente> updateClient(Cliente cliente, Integer id){
-//        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-//        if(clienteOptional.isPresent()){
-//            Cliente updatedCliente = getOneById(cliente.getId()).getBody();
-//            if (updatedCliente != null) {
-//                updatedCliente.setNome(cliente.getNome());
-//                updatedCliente.setCpf(cliente.getCpf());
-//                updatedCliente.setCep(cliente.getCep());
-//                updatedCliente.setNumeroLogradouro(cliente.getNumeroLogradouro());
-//                return ResponseEntity.ok(updatedCliente);
-//            }
-//        }
-//        throw new RuntimeException("Não foi possível atualizar os dados do cliente");
-//    }
+    public ResponseEntity<Cliente> updateCliente(Integer id, ClienteDTO clienteDTO){
+        Cliente clienteEncontrado = getOneById(id).getBody();
+
+        Cliente updatedCliente = insertData(clienteEncontrado, clienteDTO);
+        clienteRepository.save(updatedCliente);
+
+        return ResponseEntity.ok(updatedCliente);
+    }
+
     public ResponseEntity<Cliente> deleteById(Integer id){
         try{
             clienteRepository.deleteById(id);
@@ -51,5 +45,30 @@ public class ClienteService {
         catch (Exception ex){
             throw new RuntimeException("Não foi possível deletar o cliente!");
         }
+    }
+
+    private Cliente insertData(Cliente clienteEncontrado, ClienteDTO clienteEnviado) {
+        Cliente updatedCliente = new Cliente();
+        updatedCliente.setId(clienteEncontrado.getId());
+
+        if(StringUtils.isBlank(clienteEnviado.getNome()) && StringUtils.isNotBlank(clienteEncontrado.getNome())){
+            updatedCliente.setNome(clienteEncontrado.getNome());
+        } else {
+            updatedCliente.setNome(clienteEnviado.getNome());
+        }
+        if(StringUtils.isBlank(clienteEnviado.getCpf()) && StringUtils.isNotBlank(clienteEncontrado.getCpf())){
+            updatedCliente.setCpf(clienteEncontrado.getCpf());
+        } else {
+            updatedCliente.setCpf(clienteEnviado.getCpf());
+        }
+        if(clienteEnviado.getNumeroLogradouro() == null){
+            updatedCliente.setNumeroLogradouro(clienteEncontrado.getNumeroLogradouro());
+        } else {
+            updatedCliente.setNumeroLogradouro(clienteEnviado.getNumeroLogradouro());
+        }
+        updatedCliente.setCadastro(clienteEncontrado.getCadastro());
+        updatedCliente.setEnderecos(clienteEncontrado.getEnderecos());
+
+        return updatedCliente;
     }
 }
