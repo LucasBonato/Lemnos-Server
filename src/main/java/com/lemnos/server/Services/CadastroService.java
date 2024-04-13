@@ -2,6 +2,7 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroEmailAlreadyInUseException;
+import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
 import com.lemnos.server.Models.Cadastro;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -41,7 +39,7 @@ public class CadastroService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity cadastrarFuncionario(FuncionarioDTO funcionarioDTO) throws ParseException {
+    public ResponseEntity cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
         funcionarioDTO.setEmail(funcionarioDTO.getEmail().toLowerCase());
         verificarCamposFuncionario(funcionarioDTO);
 
@@ -77,9 +75,14 @@ public class CadastroService {
         if(fornecedorOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
     }
 
-    private Date convertData(String data) throws ParseException {
+    private Date convertData(String data) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-        return formatter.parse(data);
+        Date dataFormatada;
+        try{
+            dataFormatada = formatter.parse(data);
+        }catch (ParseException e){
+            throw new CadastroWrongDataFormatException();
+        }
+        return dataFormatada;
     }
 }
