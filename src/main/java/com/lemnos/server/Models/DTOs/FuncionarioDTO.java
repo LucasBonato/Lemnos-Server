@@ -33,10 +33,6 @@ public class FuncionarioDTO {
     @Size(min = 11, max = 11, message = "O telefone precisa ter 11 caracteres!")
     private String telefone;
 
-    @NotBlank(message = "O campo CEP é obrigatório!")
-    @Size(min = 8, max = 8, message = "O CEP precisa ter 8 caracteres!")
-    private String cep;
-
     @NotBlank(message = "O Email é obrigatório!")
     @Email(message = "Insira um Email válido!")
     private String email;

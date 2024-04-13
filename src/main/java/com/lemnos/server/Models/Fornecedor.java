@@ -25,9 +25,6 @@ public class Fornecedor {
     @Column(name = "CNPJ", unique = true)
     private String cnpj;
 
-    @Column(name = "CEP")
-    private String cep;
-
     @Column(name = "Numero_Logradouro")
     private Integer numeroLogradouro;
 
@@ -39,7 +36,6 @@ public class Fornecedor {
         this.nome = fornecedorDTO.getNome();
         this.telefone = fornecedorDTO.getTelefone();
         this.cnpj = fornecedorDTO.getCnpj();
-        this.cep = fornecedorDTO.getCep();
         this.numeroLogradouro = fornecedorDTO.getNumeroLogradouro();
     }
 }

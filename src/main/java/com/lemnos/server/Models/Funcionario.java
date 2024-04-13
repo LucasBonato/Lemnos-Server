@@ -32,9 +32,6 @@ public class Funcionario {
     @Column(name = "Telefone")
     private String telefone;
 
-    @Column(name = "CEP")
-    private String cep;
-
     @Column(name = "Numero_Logradouro")
     private Integer numeroLogradouro;
 
@@ -42,7 +39,7 @@ public class Funcionario {
     @JoinTable(
             name = "Funcionario_Possui_Endereco",
             joinColumns = @JoinColumn(name = "Id_Funcionario"),
-            inverseJoinColumns = @JoinColumn(name = "Id_Endereco")
+            inverseJoinColumns = @JoinColumn(name = "CEP")
     )
     private List<Endereco> enderecos;
 
@@ -56,7 +53,6 @@ public class Funcionario {
         this.dataNascimento = dataNascimento;
         this.dataAdmissao = dataAdmissao;
         this.telefone = funcionarioDTO.getTelefone();
-        this.cep = funcionarioDTO.getCep();
         this.numeroLogradouro = funcionarioDTO.getNumeroLogradouro();
     }
 }

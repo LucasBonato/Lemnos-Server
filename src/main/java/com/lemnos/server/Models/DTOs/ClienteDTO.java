@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +32,7 @@ public class ClienteDTO {
     @PositiveOrZero(message = "Digite um número válido")
     @Max(value = 9999, message = "O número inserido é muito alto!")
     private Integer numeroLogradouro;
+
+    @Null
+    private List<EnderecoDTO> enderecosDTO;
 }
