@@ -22,10 +22,6 @@ public class FornecedorDTO {
     @Size(min = 14, max = 14, message = "O CNPJ precisa ter 14 caracteres!")
     private String cnpj;
 
-    @NotBlank(message = "O campo CEP é obrigatório!")
-    @Size(min = 8, max = 8, message = "O CEP precisa ter 8 caracteres!")
-    private String cep;
-
     @NotNull(message = "O campo 'N Logradouro' é obrigatório!")
     @PositiveOrZero(message = "Digite um número válido")
     @Max(value = 9999, message = "O número inserido é muito alto!")

@@ -1,9 +1,6 @@
 package com.lemnos.server.Models.DTOs;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnderecoDTO {
+
+    @NotNull
+    @Positive
+    private Integer cep;
 
     @NotBlank(message = "O campo Logradouro é obrigatório!")
     @Size(min = 3, max = 50, message = "O logradouro precisa ter no mínimo 3 caracteres e no máximo 50 caracteres!")

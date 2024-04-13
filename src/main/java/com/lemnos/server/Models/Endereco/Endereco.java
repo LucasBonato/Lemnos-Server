@@ -13,9 +13,8 @@ import java.util.List;
 @Data
 public class Endereco {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
-    private Integer id;
+    @Column(name = "CEP")
+    private Integer cep;
 
     @Column(name = "Logradouro")
     private String logradouro;
@@ -31,6 +30,7 @@ public class Endereco {
     @PrimaryKeyJoinColumn(name = "Id_Estado")
     private Estado estado;
 
+    @JsonIgnore
     @Column(name = "Id_Fornecedor")
     private Integer id_Fornecedor;
 
