@@ -26,7 +26,7 @@ public class CadastroController {
     }
 
     @PostMapping("/funcionario")
-    public ResponseEntity cadastrarFuncionario(@RequestBody @Valid FuncionarioDTO funcionarioDTO) throws ParseException {
+    public ResponseEntity cadastrarFuncionario(@RequestBody @Valid FuncionarioDTO funcionarioDTO){
         return cadastroService.cadastrarFuncionario(funcionarioDTO);
     }
 
