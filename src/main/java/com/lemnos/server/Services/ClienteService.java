@@ -34,7 +34,7 @@ public class ClienteService {
         Cliente updatedCliente = insertData(clienteEncontrado, clienteDTO);
         clienteRepository.save(updatedCliente);
 
-        return ResponseEntity.ok(updatedCliente);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Cliente> deleteById(Integer id){
