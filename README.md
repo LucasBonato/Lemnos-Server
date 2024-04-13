@@ -1,6 +1,6 @@
 <div align="center">
     <br />
-    <img src="src/main/resources/imagens/Logo-Lemnos-Horizontal-Branco.png" alt="Logo" />
+    <img src="src/main/resources/imagens/Logo.png" alt="Logo" />
     <hr />
     <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge" alt="..." />
     <img src="https://img.shields.io/static/v1?label=Projeto%20de&message=TCC&color=blue&style=for-the-badge" alt="..." />
@@ -33,9 +33,9 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints** | **Exemplos**                                          | **O que enviar?**                                               | **Parâmetros** |
-|---------------|-------------------|-------------------------------------------------------|-----------------------------------------------------------------|----------------|
-| /cadastro     |                   | [/cliente]()<br/>[/funcionario]()<br/>[/fornecedor]() | [Json Cliente]()<br>[Json Funcionario]()<br>[Json Fornecedor]() |
-| /cliente      |                   |                                                       |                                                                 |
-| /funcionario  |                   |                                                       |                                                                 |
-| /fornecedor   |                   |                                                       |                                                                 |
+| **EndPoints** | **Sub Endpoints**                                     | **Exemplos** | **O que enviar?**                                               | **Parâmetros** |
+|---------------|-------------------------------------------------------|--------------|-----------------------------------------------------------------|----------------|
+| /cadastro     | [/cliente]()<br/>[/funcionario]()<br/>[/fornecedor]() |              | [Json Cliente]()<br>[Json Funcionario]()<br>[Json Fornecedor]() |
+| /cliente      |                                                       |              |                                                                 |
+| /funcionario  |                                                       |              |                                                                 |
+| /fornecedor   |                                                       |              |                                                                 |
