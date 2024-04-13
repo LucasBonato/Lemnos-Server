@@ -17,11 +17,6 @@ public class EnderecoDTO {
     @Size(min = 3, max = 50, message = "O logradouro precisa ter no mínimo 3 caracteres e no máximo 50 caracteres!")
     private String logradouro;
 
-    @NotBlank(message = "O campo N° do Logradouro é obrigatório!")
-    @Min(1)
-    @Max(9999)
-    private Integer numLogradouro;
-
     @NotBlank(message = "O campo Bairro é obrigatório!")
     @Size(min = 3, max = 40, message = "O bairro precisa ter no mínimo 3 caracteres e no máximo 40 caracteres!")
     private String bairro;
