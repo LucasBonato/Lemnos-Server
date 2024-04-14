@@ -38,13 +38,13 @@ public class ClienteService {
     }
 
     public ResponseEntity<Cliente> deleteById(Integer id){
-        try{
-            clienteRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        catch (Exception ex){
-            throw new RuntimeException("Não foi possível deletar o cliente!");
-        }
+        clienteRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Não foi possível encontrar o cliente!")
+                );
+        clienteRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     private Cliente insertData(Cliente clienteEncontrado, ClienteDTO clienteEnviado) {
