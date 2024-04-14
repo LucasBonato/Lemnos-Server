@@ -32,6 +32,7 @@ CREATE TABLE Funcionario (
 CREATE TABLE Fornecedor (
 	Id int primary key auto_increment,
     Nome varChar(50) NOT NULL,
+    Email varChar(100) NOT NULL,
 	Telefone char(11) NOT NULL,
 	CNPJ char(14) UNIQUE NOT NULL,
 	CEP char(11),
