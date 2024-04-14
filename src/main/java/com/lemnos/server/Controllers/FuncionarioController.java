@@ -1,7 +1,9 @@
 package com.lemnos.server.Controllers;
 
+import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Services.FuncionarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,11 @@ class FuncionarioController {
     @GetMapping("/{id}")
     public ResponseEntity<Funcionario> getOneById(@PathVariable Integer id){
         return funcionarioService.getOneById(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Funcionario> updateFuncionario(@PathVariable Integer id, @RequestBody @Valid FuncionarioDTO funcionarioDTO){
+        return funcionarioService.updateFuncionario(id, funcionarioDTO);
     }
 
     @DeleteMapping("/{id}")
