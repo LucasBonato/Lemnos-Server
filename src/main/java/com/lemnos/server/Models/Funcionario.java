@@ -4,6 +4,7 @@ import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "Funcionario")
 @Data
+@NoArgsConstructor
 public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,5 +56,6 @@ public class Funcionario {
         this.dataAdmissao = dataAdmissao;
         this.telefone = funcionarioDTO.getTelefone();
         this.numeroLogradouro = funcionarioDTO.getNumeroLogradouro();
+        this.cadastro = new Cadastro(funcionarioDTO);
     }
 }

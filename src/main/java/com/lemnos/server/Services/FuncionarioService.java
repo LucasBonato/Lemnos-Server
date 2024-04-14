@@ -25,4 +25,14 @@ public class FuncionarioService {
         }
         throw new RuntimeException("Funcionário não encontrado!");
     }
+
+    public ResponseEntity<Funcionario> deleteById(Integer id){
+        try{
+            funcionarioRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex){
+            throw new RuntimeException("Não foi possível deletar o funcionário");
+        }
+    }
 }

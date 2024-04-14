@@ -1,6 +1,7 @@
 package com.lemnos.server.Models;
 
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,5 +27,10 @@ public class Cadastro {
     public Cadastro(ClienteDTO clienteDTO){
         this.email = clienteDTO.getEmail();
         this.senha = clienteDTO.getSenha();
+    }
+
+    public Cadastro(FuncionarioDTO funcionarioDTO){
+        this.email = funcionarioDTO.getEmail();
+        this.senha = funcionarioDTO.getSenha();
     }
 }
