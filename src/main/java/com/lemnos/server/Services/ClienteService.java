@@ -29,27 +29,24 @@ public class ClienteService {
     }
 
     public ResponseEntity<Cliente> updateCliente(Integer id, ClienteDTO clienteDTO){
-        Cliente clienteEncontrado = getOneById(id).getBody();
-
-        Cliente updatedCliente = insertData(clienteEncontrado, clienteDTO);
+        Cliente updatedCliente = insertData(id, clienteDTO);
         clienteRepository.save(updatedCliente);
 
         return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Cliente> deleteById(Integer id){
-        clienteRepository
-                .findById(id)
-                .orElseThrow(
-                        () -> new RuntimeException("Não foi possível encontrar o cliente!")
-                );
+        getOneById(id);
         clienteRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    private Cliente insertData(Cliente clienteEncontrado, ClienteDTO clienteEnviado) {
+    private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
+        Cliente clienteEncontrado = getOneById(id).getBody();
+        assert clienteEncontrado != null;
+
         Cliente updatedCliente = new Cliente();
-        updatedCliente.setId(clienteEncontrado.getId());
+        updatedCliente.setId(id);
 
         if(StringUtils.isBlank(clienteEnviado.getNome()) && StringUtils.isNotBlank(clienteEncontrado.getNome())){
             updatedCliente.setNome(clienteEncontrado.getNome());
