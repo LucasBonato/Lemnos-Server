@@ -12,7 +12,7 @@ CREATE TABLE Cliente (
 	Id int primary key auto_increment,
 	Nome varchar(40) NOT NULL,
 	CPF char(11) UNIQUE NOT NULL,
-	Numero_Logradouro int NOT NULL,
+	Numero_Logradouro int,
 	Id_Cadastro int,
     foreign key(Id_Cadastro) references Cadastro(Id),
     constraint check(CHAR_LENGTH(Nome) > 2)
@@ -32,10 +32,10 @@ CREATE TABLE Funcionario (
 CREATE TABLE Fornecedor (
 	Id int primary key auto_increment,
     Nome varChar(50) NOT NULL,
-    Email varChar(100) NOT NULL,
+    Email varChar(100) NOT NULL UNIQUE,
 	Telefone char(11) NOT NULL,
 	CNPJ char(14) UNIQUE NOT NULL,
-	CEP char(11),
+	CEP char(8),
 	Numero_Logradouro int NOT NULL
 );
 CREATE TABLE Pedido (
@@ -128,7 +128,7 @@ CREATE TABLE Cidade(
     Cidade varChar(30) UNIQUE NOT NULL
 );
 CREATE TABLE Endereco (
-	CEP int primary key,
+	CEP char(8) primary key,
 	Logradouro varchar(50) NOT NULL,
 	Bairro varchar(30) NOT NULL,
 	Id_Fornecedor int,
@@ -170,14 +170,14 @@ CREATE TABLE Entrega (
 	Foreign key(Id_Pedido) references Pedido (Id)
 );
 CREATE TABLE Cliente_Possui_Endereco (
-	CEP int,
+	CEP char(8),
 	Id_Cliente int,
 	primary key(CEP, Id_Cliente),
 	foreign key(CEP) references Endereco (CEP),
 	foreign key(Id_Cliente) references Cliente (Id)
 );
 CREATE TABLE Funcionario_Possui_Endereco (
-	CEP int,
+	CEP char(8),
 	Id_Funcionario int,
 	primary key(CEP, Id_Funcionario),
 	foreign key(CEP) references Endereco (CEP),
