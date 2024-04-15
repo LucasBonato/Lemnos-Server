@@ -1,6 +1,7 @@
 package com.lemnos.server.Models.Endereco;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemnos.server.Annotations.CEP;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.Funcionario;
 import jakarta.persistence.*;
@@ -14,7 +15,8 @@ import java.util.List;
 public class Endereco {
     @Id
     @Column(name = "CEP")
-    private Integer cep;
+    @CEP(message = "CEP Inválido! (XXXXX-XXX)")
+    private String cep;
 
     @Column(name = "Logradouro")
     private String logradouro;
