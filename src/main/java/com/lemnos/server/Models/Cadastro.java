@@ -3,6 +3,7 @@ package com.lemnos.server.Models;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class Cadastro {
     private Integer id;
 
     @Column(name = "Email")
+    @Email(message = "Insira um Email válido")
     private String email;
 
     @Column(name = "Senha")
