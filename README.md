@@ -35,7 +35,78 @@ gerenciamento de carrinho.
 
 | **EndPoints** | **Sub Endpoints** | **Exemplos**                                          | **O que enviar?**                                               | **Parâmetros** |
 |---------------|-------------------|-------------------------------------------------------|-----------------------------------------------------------------|----------------|
-| /cadastro     |                   | [/cliente]()<br/>[/funcionario]()<br/>[/fornecedor]() | [Json Cliente]()<br>[Json Funcionario]()<br>[Json Fornecedor]() |
+| /cadastro     |                   | [/cliente](#cliente)<br/>[/funcionario](#funcionario)<br/>[/fornecedor]() | [Json Cliente](#jsoncliente)<br>[Json Funcionario](#jsonfuncionario)<br>[Json Fornecedor]() |
 | /cliente      |                   |                                                       |                                                                 |
 | /funcionario  |                   |                                                       |                                                                 |
 | /fornecedor   |                   |                                                       |                                                                 |
+
+
+# Cliente
+
+<hr />
+
+<p>
+	O cliente tem 5 métodos para fazer as requisições para a API, sendo elas para criar um cliente, listar
+	todos os clientes cadastrados no sistema, para mostrar um cliente em específico, atualizá-lo e deletá-lo,
+	com estes três últimos métodos utilizando seu Id como parâmetro.
+</p>
+<p>
+	A seguir está os exemplos de como utilizar a API em seu navegador:
+	[GET]  localhost:8080/api/cliente
+	[GET]  localhost:8080/api/cliente/{id}
+	[POST] localhost:8080/api/cadastro/cliente
+	[PUT]  localhost:8080/api/cliente/{id}
+	[DEL]  localhost:8080/api/cliente/{id}
+</p>
+
+# JsonCliente
+
+<hr />
+
+<p>
+	Para poder fazer o POST do Cliente, tem que se usar o seguinte JSON:
+	"nome": "qualquernome",
+	"telefone": "11400289221", (são 11 caracteres, tirando os símbolos)
+	"cpf": "11122233311", (são 11 caracteres, tirando os símbolos)
+	"email": "emaildesuaescolha@email.com",
+	"senha": senhadesuaescola, (tem que ser no mínimo 8 caracteres)
+	"numeroLogradouro": 00 (são no máximo 4 caracteres)
+	
+</p>
+
+
+
+# Funcionario
+
+<hr />
+
+<p>
+	O cliente tem 5 métodos para fazer as requisições para a API, sendo elas para criar um cliente, listar
+	todos os clientes cadastrados no sistema, para mostrar um cliente em específico, atualizá-lo e deletá-lo,
+	com estes três últimos métodos utilizando seu Id como parâmetro.
+</p>
+
+<p>
+	A seguir está os exemplos de como utilizar a API em seu navegador:
+	[GET]  localhost:8080/api/cliente
+	[GET]  localhost:8080/api/cliente/{id}
+	[POST] localhost:8080/api/cadastro/funcionario
+	[PUT]  localhost:8080/api/cliente/{id}
+	[DEL]  localhost:8080/api/cliente/{id}
+</p>
+
+# JsonFuncionario
+
+<hr />
+
+<p>
+	Para poder fazer o POST do Funcionario, tem que se usar o seguinte JSON:
+	"nome": "qualquernome",
+	"cpf": "11122233344", (são 11 caracteres, tirando os símbolos)
+	"dataNascimento": "01/01/0001",
+	"dataAdmissao": "01/01/0001",
+	"telefone": "11400289221", (são 11 caracteres, tirando os símbolos)
+	"email": "emaildesuaescolha@email.com",
+	"senha": senhadesuaescolha, (tem que ser no mínimo 8 caracteres)
+	"numeroLogradouro": 00 (são no máximo 4 caracteres)
+</p>
