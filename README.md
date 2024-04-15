@@ -52,11 +52,11 @@ gerenciamento de carrinho.
 </p>
 <p>
 	A seguir está os exemplos de como utilizar a API em seu navegador:
-	- [GET]  localhost:8080/api/cliente
-	- [GET]  localhost:8080/api/cliente/{id}
-	- [POST] localhost:8080/api/cadastro/cliente
-	- [PUT]  localhost:8080/api/cliente/{id}
-	- [DEL]  localhost:8080/api/cliente/{id}
+	-    [GET]  localhost:8080/api/cliente
+	-    [GET]  localhost:8080/api/cliente/{id}
+	-    [POST] localhost:8080/api/cadastro/cliente
+	-    [PUT]  localhost:8080/api/cliente/{id}
+	-    [DEL]  localhost:8080/api/cliente/{id}
 </p>
 
 # JsonCliente
@@ -65,12 +65,14 @@ gerenciamento de carrinho.
 
 <p>
 	Para poder fazer o POST do Cliente, tem que se usar o seguinte JSON:
-	``` "nome": "qualquernome",
+	```
+    "nome": "qualquernome",
 	"telefone": "11400289221", (são 11 caracteres, tirando os símbolos)
 	"cpf": "11122233311", (são 11 caracteres, tirando os símbolos)
 	"email": "emaildesuaescolha@email.com",
 	"senha": senhadesuaescola, (tem que ser no mínimo 8 caracteres)
-	"numeroLogradouro": 00 (são no máximo 4 caracteres) ```
+	"numeroLogradouro": 00 (são no máximo 4 caracteres)
+    ```
 	
 </p>
 
@@ -88,11 +90,11 @@ gerenciamento de carrinho.
 
 <p>
 	A seguir está os exemplos de como utilizar a API em seu navegador:
-	- [GET]  localhost:8080/api/cliente
-	- [GET]  localhost:8080/api/cliente/{id}
-	- [POST] localhost:8080/api/cadastro/funcionario
-	- [PUT]  localhost:8080/api/cliente/{id}
-	- [DEL]  localhost:8080/api/cliente/{id} 
+    -    [GET]  localhost:8080/api/cliente
+    -    [GET]  localhost:8080/api/cliente/{id}
+    -    [POST] localhost:8080/api/cadastro/funcionario
+    -    [PUT]  localhost:8080/api/cliente/{id}
+    -    [DEL]  localhost:8080/api/cliente/{id} 
 </p>
 
 # JsonFuncionario
@@ -101,12 +103,14 @@ gerenciamento de carrinho.
 
 <p>
 	Para poder fazer o POST do Funcionario, tem que se usar o seguinte JSON:
-	``` "nome": "qualquernome",
+	```
+    "nome": "qualquernome",
 	"cpf": "11122233344", (são 11 caracteres, tirando os símbolos)
 	"dataNascimento": "01/01/0001",
 	"dataAdmissao": "01/01/0001",
 	"telefone": "11400289221", (são 11 caracteres, tirando os símbolos)
 	"email": "emaildesuaescolha@email.com",
 	"senha": senhadesuaescolha, (tem que ser no mínimo 8 caracteres)
-	"numeroLogradouro": 00 (são no máximo 4 caracteres) ```
+	"numeroLogradouro": 00 (são no máximo 4 caracteres)
+    ```
 </p>
