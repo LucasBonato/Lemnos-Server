@@ -130,7 +130,7 @@ public class VerificationUtils {
         Optional<Fornecedor> email = fornecedorRepository.findByEmail(fornecedorDTO.getEmail());
         Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(fornecedorDTO.getCnpj());
         if(email.isPresent()) throw new CadastroEmailAlreadyInUseException();
-        if(cnpj.isPresent()) throw new CadastroCpfAlreadyInUseException();
+        if(cnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
         return new Fornecedor(fornecedorDTO);
     }
