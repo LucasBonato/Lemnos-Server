@@ -1,9 +1,13 @@
 package com.lemnos.server.Services;
 
+import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
+import com.lemnos.server.Exceptions.Cliente.ClienteUpdateNotValidException;
+import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.FuncionarioRepository;
+import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +17,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class FuncionarioService {
+public class FuncionarioService extends Util {
 
     @Autowired private FuncionarioRepository funcionarioRepository;
 
@@ -33,17 +38,10 @@ public class FuncionarioService {
     }
 
     public ResponseEntity<Funcionario> updateFuncionario(Integer id, FuncionarioDTO funcionarioDTO){
-        Funcionario funcionarioEncontrado = getOneById(id).getBody();
-        Funcionario updatedFuncionario = insertData(funcionarioEncontrado, funcionarioDTO);
-
-        Date dataAdmissao = convertData(funcionarioDTO.getDataAdmissao());
-        Date dataNascimento = convertData(funcionarioDTO.getDataNascimento());
-
-        updatedFuncionario.setDataAdmissao(dataAdmissao);
-        updatedFuncionario.setDataNascimento(dataNascimento);
+        Funcionario updatedFuncionario = insertData(id, funcionarioDTO);
         funcionarioRepository.save(updatedFuncionario);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Funcionario> deleteById(Integer id){
@@ -56,45 +54,51 @@ public class FuncionarioService {
         }
     }
 
-    private Funcionario insertData(Funcionario funcionarioEncontrado, FuncionarioDTO funcionarioEnviado) {
-        Funcionario updatedFuncionario = new Funcionario();
-        updatedFuncionario.setId(funcionarioEncontrado.getId());
+    private Funcionario insertData(Integer id, FuncionarioDTO funcionarioEnviado) {
+        Funcionario funcionarioEncontrado = getOneById(id).getBody();
+        assert funcionarioEncontrado != null;
 
-        if(StringUtils.isBlank(funcionarioEncontrado.getNome()) && StringUtils.isNotBlank(funcionarioEncontrado.getNome())){
-            updatedFuncionario.setNome(funcionarioEncontrado.getNome());
-        } else {
-            updatedFuncionario.setNome(funcionarioEnviado.getNome());
+        Date dataNasc;
+        Date dataAdmi;
+
+        if(StringUtils.isBlank(funcionarioEnviado.getNome()) && StringUtils.isBlank(funcionarioEnviado.getCpf()) && StringUtils.isBlank(funcionarioEnviado.getDataAdmissao()) && StringUtils.isBlank(funcionarioEnviado.getDataNascimento()) && StringUtils.isBlank(funcionarioEnviado.getTelefone())){
+            throw new ClienteUpdateNotValidException();
         }
-        if(StringUtils.isBlank(funcionarioEnviado.getCpf()) && StringUtils.isNotBlank(funcionarioEncontrado.getCpf())){
-            updatedFuncionario.setCpf(funcionarioEncontrado.getCpf());
-        } else {
-            updatedFuncionario.setCpf(funcionarioEnviado.getCpf());
+        if(StringUtils.isBlank(funcionarioEnviado.getNome())){
+            funcionarioEnviado.setNome(funcionarioEncontrado.getNome());
         }
-        if(funcionarioEnviado.getNumeroLogradouro() == null){
-            updatedFuncionario.setNumeroLogradouro(funcionarioEncontrado.getNumeroLogradouro());
-        } else {
-            updatedFuncionario.setNumeroLogradouro(funcionarioEnviado.getNumeroLogradouro());
+        if(StringUtils.isBlank(funcionarioEnviado.getCpf())){
+            funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf());
         }
-        if(funcionarioEnviado.getTelefone() == null){
-            updatedFuncionario.setTelefone(funcionarioEncontrado.getTelefone());
+        if(StringUtils.isBlank(funcionarioEnviado.getDataNascimento())){
+            dataNasc = funcionarioEncontrado.getDataNascimento();
         } else {
-            updatedFuncionario.setTelefone(funcionarioEnviado.getTelefone());
+            dataNasc = convertData(funcionarioEnviado.getDataNascimento());
         }
+        if(StringUtils.isBlank(funcionarioEnviado.getDataAdmissao())){
+            dataAdmi = funcionarioEncontrado.getDataAdmissao();
+        } else {
+            dataAdmi = convertData(funcionarioEnviado.getDataAdmissao());
+        }
+        if(StringUtils.isBlank(funcionarioEnviado.getTelefone())){
+            funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone());
+        }
+
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionarioEnviado.getCpf());
+        if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
+
+        Funcionario updatedFuncionario = new Funcionario();
+        updatedFuncionario.setId(id);
+        updatedFuncionario.setNome(funcionarioEnviado.getNome());
+        updatedFuncionario.setCpf(funcionarioEnviado.getCpf());
+        updatedFuncionario.setDataNascimento(dataNasc);
+        updatedFuncionario.setDataAdmissao(dataAdmi);
+        updatedFuncionario.setTelefone(funcionarioEnviado.getTelefone());
+        updatedFuncionario.setNumeroLogradouro(funcionarioEncontrado.getNumeroLogradouro());
         updatedFuncionario.setCadastro(funcionarioEncontrado.getCadastro());
         updatedFuncionario.setEnderecos(funcionarioEncontrado.getEnderecos());
 
         return updatedFuncionario;
-    }
-
-    private Date convertData(String data) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataFormatada;
-        try{
-            dataFormatada = formatter.parse(data);
-        }catch (ParseException e){
-            throw new CadastroWrongDataFormatException();
-        }
-        return dataFormatada;
     }
 }
 

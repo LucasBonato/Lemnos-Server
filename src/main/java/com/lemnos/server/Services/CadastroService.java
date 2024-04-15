@@ -12,6 +12,7 @@ import com.lemnos.server.Repositories.CadastroRepository;
 import com.lemnos.server.Repositories.ClienteRepository;
 import com.lemnos.server.Repositories.FornecedorRepository;
 import com.lemnos.server.Repositories.FuncionarioRepository;
+import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class CadastroService {
+public class CadastroService extends Util {
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private FuncionarioRepository funcionarioRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
@@ -161,16 +162,5 @@ public class CadastroService {
         if(cnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
         return new Fornecedor(fornecedorDTO);
-    }
-
-    private Date convertData(String data) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataFormatada;
-        try{
-            dataFormatada = formatter.parse(data);
-        }catch (ParseException e){
-            throw new CadastroWrongDataFormatException();
-        }
-        return dataFormatada;
     }
 }
