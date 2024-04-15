@@ -1,5 +1,6 @@
 package com.lemnos.server.Models;
 
+import com.lemnos.server.Annotations.CPFValidation;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
@@ -22,7 +23,8 @@ public class Funcionario {
     @Column(name = "Nome")
     private String nome;
 
-    @Column(name = "CPF", unique = true)
+    @Column(name = "CPF")
+    @CPFValidation(message = "CPF preenchido incorretamente!")
     private String cpf;
 
     @Column(name = "Data_Nascimento")
