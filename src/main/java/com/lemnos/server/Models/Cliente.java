@@ -5,7 +5,6 @@ import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,9 +48,13 @@ public class Cliente {
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
 
-    public @Valid Cliente(ClienteDTO clienteDTO){
+    public Cliente(ClienteDTO clienteDTO){
         this.nome = clienteDTO.getNome();
         this.cpf = clienteDTO.getCpf();
         this.cadastro = new Cadastro(clienteDTO);
+    }
+    public Cliente(String nome, String cpf){
+        this.nome = nome;
+        this.cpf = cpf;
     }
 }

@@ -1,5 +1,7 @@
 package com.lemnos.server.Services;
 
+import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
+import com.lemnos.server.Exceptions.Cliente.ClienteUpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Repositories.ClienteRepository;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -45,24 +48,23 @@ public class ClienteService {
         Cliente clienteEncontrado = getOneById(id).getBody();
         assert clienteEncontrado != null;
 
+        if(StringUtils.isBlank(clienteEnviado.getNome()) && StringUtils.isBlank(clienteEnviado.getCpf())){
+            throw new ClienteUpdateNotValidException();
+        }
+        if(StringUtils.isBlank(clienteEnviado.getNome())){
+            clienteEnviado.setNome(clienteEncontrado.getNome());
+        }
+        if(StringUtils.isBlank(clienteEnviado.getCpf())){
+            clienteEnviado.setCpf(clienteEncontrado.getCpf());
+        }
+
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(clienteEnviado.getCpf());
+        if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
+
         Cliente updatedCliente = new Cliente();
         updatedCliente.setId(id);
-
-        if(StringUtils.isBlank(clienteEnviado.getNome()) && StringUtils.isNotBlank(clienteEncontrado.getNome())){
-            updatedCliente.setNome(clienteEncontrado.getNome());
-        } else {
-            updatedCliente.setNome(clienteEnviado.getNome());
-        }
-        if(StringUtils.isBlank(clienteEnviado.getCpf()) && StringUtils.isNotBlank(clienteEncontrado.getCpf())){
-            updatedCliente.setCpf(clienteEncontrado.getCpf());
-        } else {
-            updatedCliente.setCpf(clienteEnviado.getCpf());
-        }
-        if(clienteEnviado.getNumeroLogradouro() == null){
-            updatedCliente.setNumeroLogradouro(clienteEncontrado.getNumeroLogradouro());
-        } else {
-            updatedCliente.setNumeroLogradouro(clienteEnviado.getNumeroLogradouro());
-        }
+        updatedCliente.setNome(clienteEnviado.getNome());
+        updatedCliente.setCpf(clienteEnviado.getCpf());
         updatedCliente.setCadastro(clienteEncontrado.getCadastro());
         updatedCliente.setEnderecos(clienteEncontrado.getEnderecos());
 
