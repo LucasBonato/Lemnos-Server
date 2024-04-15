@@ -19,17 +19,17 @@ public class CadastroController {
     @Autowired private CadastroService cadastroService;
 
     @PostMapping("/cliente")
-    public ResponseEntity cadastrarCliente(@RequestBody @Valid ClienteDTO clienteDTO){
+    public ResponseEntity cadastrarCliente(@RequestBody ClienteDTO clienteDTO){
         return cadastroService.cadastrarCliente(clienteDTO);
     }
 
     @PostMapping("/funcionario")
-    public ResponseEntity cadastrarFuncionario(@RequestBody @Valid FuncionarioDTO funcionarioDTO){
+    public ResponseEntity cadastrarFuncionario(@RequestBody FuncionarioDTO funcionarioDTO){
         return cadastroService.cadastrarFuncionario(funcionarioDTO);
     }
 
     @PostMapping("/fornecedor")
-    public ResponseEntity cadastrarFornecedor(@RequestBody @Valid FornecedorDTO fornecedorDTO){
+    public ResponseEntity cadastrarFornecedor(@RequestBody FornecedorDTO fornecedorDTO){
         return cadastroService.cadastrarFornecedor(fornecedorDTO);
     }
 }
