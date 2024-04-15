@@ -1,6 +1,6 @@
 package com.lemnos.server.Repositories;
 
-import com.lemnos.server.Models.Cadastro;
+import com.lemnos.server.Models.Cadastro.Cadastro;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

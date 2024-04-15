@@ -1,6 +1,7 @@
 package com.lemnos.server.Models;
 
 import com.lemnos.server.Annotations.CPFValidation;
+import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.lemnos.server.Models;
+package com.lemnos.server.Models.Cadastro;
 
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
