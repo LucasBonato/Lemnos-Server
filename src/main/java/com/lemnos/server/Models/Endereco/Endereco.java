@@ -25,11 +25,11 @@ public class Endereco {
     private String bairro;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn(name = "Id_Cidade")
+    @JoinColumn(name = "id_cidade")
     private Cidade cidade;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn(name = "Id_Estado")
+    @JoinColumn(name = "id_estado")
     private Estado estado;
 
     @JsonIgnore
