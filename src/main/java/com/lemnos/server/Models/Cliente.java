@@ -1,5 +1,6 @@
 package com.lemnos.server.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.Annotations.CPFValidation;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
