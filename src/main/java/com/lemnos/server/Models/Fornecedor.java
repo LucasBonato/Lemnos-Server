@@ -6,12 +6,14 @@ import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "Fornecedor")
 @Data
+@NoArgsConstructor
 public class Fornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

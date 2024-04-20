@@ -1,5 +1,3 @@
-USE LemnosDB;
-
 INSERT INTO Estado(UF) VALUES
 ('AC'), ('AL'), ('AP'),
 ('AM'), ('BA'), ('CE'),
