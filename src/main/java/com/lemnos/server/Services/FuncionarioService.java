@@ -3,6 +3,7 @@ package com.lemnos.server.Services;
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
 import com.lemnos.server.Exceptions.Cliente.ClienteUpdateNotValidException;
+import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
@@ -34,7 +35,7 @@ public class FuncionarioService extends Util {
         if(funcionarioOptional.isPresent()){
             return ResponseEntity.ok(funcionarioOptional.get());
         }
-        throw new RuntimeException("Funcionário não encontrado!");
+        throw new FuncionarioNotFoundException();
     }
 
     public ResponseEntity<Funcionario> updateFuncionario(Integer id, FuncionarioDTO funcionarioDTO){
