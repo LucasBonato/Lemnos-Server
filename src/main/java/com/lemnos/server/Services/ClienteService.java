@@ -1,6 +1,7 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
+import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Cliente.ClienteUpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
@@ -28,7 +29,7 @@ public class ClienteService {
         if(clienteOptional.isPresent()){
             return ResponseEntity.ok(clienteOptional.get());
         }
-        throw new RuntimeException("Cliente não encontrado");
+        throw new ClienteNotFoundException();
     }
 
     public ResponseEntity<Cliente> updateCliente(Integer id, ClienteDTO clienteDTO){

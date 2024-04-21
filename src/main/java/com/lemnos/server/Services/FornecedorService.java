@@ -1,5 +1,6 @@
 package com.lemnos.server.Services;
 
+import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Repositories.FornecedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,6 @@ public class FornecedorService {
         if(fornecedorOptional.isPresent()){
             return ResponseEntity.ok(fornecedorOptional.get());
         }
-        throw new RuntimeException("O Fornecedor não foi encontrado!");
+        throw new FornecedorNotFoundException();
     }
 }
