@@ -1,10 +1,8 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
-import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
-import com.lemnos.server.Exceptions.Cliente.ClienteUpdateNotValidException;
 import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
-import com.lemnos.server.Models.Cliente;
+import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.FuncionarioRepository;
@@ -14,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -58,7 +54,7 @@ public class FuncionarioService extends Util {
         Date dataAdmi;
 
         if(StringUtils.isBlank(funcionarioEnviado.getNome()) && StringUtils.isBlank(funcionarioEnviado.getCpf()) && StringUtils.isBlank(funcionarioEnviado.getDataAdmissao()) && StringUtils.isBlank(funcionarioEnviado.getDataNascimento()) && StringUtils.isBlank(funcionarioEnviado.getTelefone())){
-            throw new ClienteUpdateNotValidException();
+            throw new UpdateNotValidException("Funcionário");
         }
         if(StringUtils.isBlank(funcionarioEnviado.getNome())){
             funcionarioEnviado.setNome(funcionarioEncontrado.getNome());
