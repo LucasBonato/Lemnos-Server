@@ -1,8 +1,9 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
+import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
-import com.lemnos.server.Exceptions.Cliente.ClienteUpdateNotValidException;
+import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Repositories.ClienteRepository;
@@ -32,17 +33,17 @@ public class ClienteService {
         throw new ClienteNotFoundException();
     }
 
-    public ResponseEntity<Cliente> updateCliente(Integer id, ClienteDTO clienteDTO){
+    public ResponseEntity<Void> updateCliente(Integer id, ClienteDTO clienteDTO){
         Cliente updatedCliente = insertData(id, clienteDTO);
         clienteRepository.save(updatedCliente);
 
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Cliente> deleteById(Integer id){
+    public ResponseEntity<Void> deleteById(Integer id){
         getOneById(id);
         clienteRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
@@ -50,10 +51,13 @@ public class ClienteService {
         assert clienteEncontrado != null;
 
         if(StringUtils.isBlank(clienteEnviado.getNome()) && StringUtils.isBlank(clienteEnviado.getCpf())){
-            throw new ClienteUpdateNotValidException();
+            throw new UpdateNotValidException("Cliente");
         }
         if(StringUtils.isBlank(clienteEnviado.getNome())){
             clienteEnviado.setNome(clienteEncontrado.getNome());
+        }
+        if(clienteEnviado.getNome().length() < 2 || clienteEnviado.getNome().length() > 40){
+            throw new CadastroNotValidException("O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(StringUtils.isBlank(clienteEnviado.getCpf())){
             clienteEnviado.setCpf(clienteEncontrado.getCpf());
