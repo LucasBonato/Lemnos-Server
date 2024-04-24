@@ -38,7 +38,7 @@ public class Fornecedor {
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "Id_Funcionario")
+    @JoinColumn(name = "Id_Fornecedor")
     private List<Endereco> enderecos;
 
     public Fornecedor(FornecedorDTO fornecedorDTO){
