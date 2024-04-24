@@ -24,83 +24,223 @@ gerenciamento de carrinho.
 
 ### _Url Base_: `http://localhost:8080/api/`
 
-|   Headers    | Description      |
-|:------------:|:-----------------|
-| Content-Type | application/json |
-|   charset    | =utf8            |
+|   Headers    | Description                     |
+|:------------:|:--------------------------------|
+| Content-Type | application/json; charset=UTF-8 |
 
 ---
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints** | **Exemplos**                                          | **O que enviar?**                                               | **Parâmetros** |
-|---------------|-------------------|-------------------------------------------------------|-----------------------------------------------------------------|----------------|
-| /cadastro     |                   | [/cliente](#cliente)<br/>[/funcionario](#funcionario)<br/>[/fornecedor]() | [Json Cliente](#jsoncliente)<br>[Json Funcionario](#jsonfuncionario)<br>[Json Fornecedor]() |
-| /cliente      |                   |                                                       |                                                                 |
-| /funcionario  |                   |                                                       |                                                                 |
-| /fornecedor   |                   |                                                       |                                                                 |
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                           | **O que enviar?**                                                                           | **Parâmetros** |
+|---------------|-------------------------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|----------------|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#cliente)<br/>[funcionario](#funcionario)<br/>[fornecedor]() | [Json Cliente](#jsoncliente)<br>[Json Funcionario](#jsonfuncionario)<br>[Json Fornecedor]() |
+| /cliente      |                                           |                                                                        |                                                                                             |
+| /funcionario  |                                           |                                                                        |                                                                                             |
+| /fornecedor   |                                           |                                                                        |                                                                                             |
 
 
-# Cliente
+# Exemplos
 
-<hr />
+---
 
-O cliente tem 5 métodos para fazer as requisições para a API, sendo elas para criar um cliente, listar
-todos os clientes cadastrados no sistema, para mostrar um cliente em específico, atualizá-lo e deletá-lo,
-com estes três últimos métodos utilizando seu Id como parâmetro.
+## Cadastro
 
-A seguir está os exemplos de como utilizar a API em seu navegador:
--    [GET]  localhost:8080/api/cliente
--    [GET]  localhost:8080/api/cliente/{id}
--    [POST] localhost:8080/api/cadastro/cliente
--    [PUT]  localhost:8080/api/cliente/{id}
--    [DEL]  localhost:8080/api/cliente/{id}
+Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sendo que todas as requisições são de *POST*
 
+### Cliente
 
-# JsonCliente
-
-<hr />
-
-Para poder fazer o POST do Cliente, tem que se usar o seguinte JSON:
+#### Parâmetros:
 ```
-"nome": "qualquernome",
-"telefone": "11400289221", (são 11 caracteres, tirando os símbolos)
-"cpf": "11122233311", (são 11 caracteres, tirando os símbolos)
-"email": "emaildesuaescolha@email.com",
-"senha": senhadesuaescola, (tem que ser no mínimo 8 caracteres)
-"numeroLogradouro": 00 (são no máximo 4 caracteres)
+ (String) "nome": "Qualquer Nome",
+ (String) "telefone": "11400289221",
+ (String) "cpf": "11122233311",
+ (String) "email": "emailDeSuaEscolha@email.com",
+ (String) "senha": "SenhaDoCliente",
+(Integer) "numeroLogradouro": 0001
 ```
-	
 
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
 
+> `{{baseUri}}/cadastro/cliente`
 
-# Funcionario
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
 
-<hr />
+function cadastrarCliente(cliente){
+    
+    cliente = tratarDados(cliente);
 
-O cliente tem 5 métodos para fazer as requisições para a API, sendo elas para criar um cliente, listar
-todos os clientes cadastrados no sistema, para mostrar um cliente em específico, atualizá-lo e deletá-lo,
-com estes três últimos métodos utilizando seu Id como parâmetro.
+    fetch(baseUri + "/cadastro/cliente", {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({
+            nome: cliente.nome,
+            telefone: cliente.telefone,
+            cpf: cliente.cpf,
+            email: cliente.email,
+            senha: cliente.senha,
+            numeroLogradouro: cliente.numeroLogradouro
+        })
+    });
+}
+~~~
 
-A seguir está os exemplos de como utilizar a API em seu navegador:
--    [GET]  localhost:8080/api/cliente
--    [GET]  localhost:8080/api/cliente/{id}
--    [POST] localhost:8080/api/cadastro/funcionario
--    [PUT]  localhost:8080/api/cliente/{id}
--    [DEL]  localhost:8080/api/cliente/{id} 
+JavaScript (Axios)
+~~~javascript
+let baseUri = "https://localhost:8080/api";
 
-# JsonFuncionario
+// ($ npm install axios)
+function cadastrarCliente(cliente) {
+    
+    cliente = tratarDados(cliente);
+    
+    axios.post(baseUri + "/cadastro/cliente", {
+        nome: cliente.nome,
+        telefone: cliente.telefone,
+        cpf: cliente.cpf,
+        email: cliente.email,
+        senha: cliente.senha,
+        numeroLogradouro: cliente.numeroLogradouro
+      })
+      .then((response) => console.log(response.data))
+      .then((error) => console.log(error));
+}
+~~~
 
-<hr />
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-Para poder fazer o POST do Funcionario, tem que se usar o seguinte JSON:
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarCliente(Cliente cliente) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/cadastro/cliente"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "nome": cliente.nome,
+                "telefone": cliente.telefone,
+                "cpf": cliente.cpf,
+                "email": cliente.email,
+                "senha": cliente.senha,
+                "numeroLogradouro": cliente.numeroLogradouro
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
+|-------------|:-----------:|:------------------------------------:|-----------------|
+| 200         |     OK      |        Cadastrou com sucesso         |                 |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 |
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
+
+---
+
+### Funcionário
+#### Parâmetros:
 ```
-"nome": "qualquernome",
-"cpf": "11122233344", (são 11 caracteres, tirando os símbolos)
-"dataNascimento": "01/01/0001",
-"dataAdmissao": "01/01/0001",
-"telefone": "11400289221", (são 11 caracteres, tirando os símbolos)
-"email": "emaildesuaescolha@email.com",
-"senha": senhadesuaescolha, (tem que ser no mínimo 8 caracteres)
-"numeroLogradouro": 00 (são no máximo 4 caracteres)
+ (String) "nome": "Qualquer Nome",
+ (String) "cpf": "11122233344",
+ (String) "dataNascimento": "01/01/0001",
+ (String) "dataAdmissao": "01/01/0001",
+ (String) "telefone": "11400289221",
+ (String) "email": "emailDeSuaEscolha@email.com",
+ (String) "senha": "SenhaDeSuaEscolha",
+(Integer) "numeroLogradouro": 0001
 ```
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/cadastro/funcionario`
+
+JavaScript
+~~~javascript
+
+~~~
+
+Dart
+~~~dart
+
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
+|-------------|:-----------:|:------------------------------------:|-----------------|
+| 200         |     OK      |        Cadastrou com sucesso         |                 |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 |
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
+
+---
+
+### Fornecedor
+#### Parâmetros:
+```
+ (String) "nome": "Nome Do Fornecedor",
+ (String) "cnpj": "09836719874612",
+ (String) "telefone": "11999999999",
+(Integer) "numeroLogradouro": 0001,
+ (String) "email": "emailDoFornecedor@gmail.com",
+ (String) "cep": "0000000"
+```
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/cadastro/fornecedor`
+
+JavaScript
+~~~javascript    
+
+~~~
+
+Dart
+~~~dart
+
+~~~
+
+---
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
+|-------------|:-----------:|:------------------------------------:|-----------------|
+| 200         |     OK      |        Cadastrou com sucesso         |                 |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 |
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
+
+
+
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=lime&style=for-the-badge)
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+~~~ javascript
+GET
+fetch(uri + "/cadastro/cliente")
+    .then((response) => {
+        return response.json();
+    })
+    .then((data) => {
+        let nome = data['nome'];
+        let nome = data['nome'];
+        let nome = data['nome'];
+        let nome = data['nome'];
+        let nome = data['nome'];
+        let nome = data['nome'];
+    })
+    .catch()
+~~~
