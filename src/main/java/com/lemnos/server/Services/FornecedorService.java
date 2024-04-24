@@ -42,7 +42,7 @@ public class FornecedorService {
     private Fornecedor insertData(Integer id, FornecedorDTO fornecedorEnviado){
         Fornecedor fornecedorEncontrado = getOneById(id).getBody();
         assert fornecedorEncontrado != null;
-        if(StringUtils.isBlank(fornecedorEnviado.getNome()) && StringUtils.isBlank(fornecedorEnviado.getTelefone())){
+        if(StringUtils.isBlank(fornecedorEnviado.getNome()) && StringUtils.isBlank(fornecedorEnviado.getTelefone()) && StringUtils.isBlank(fornecedorEnviado.getCnpj())){
             throw new UpdateNotValidException("Fornecedor");
         }
         if(StringUtils.isBlank(fornecedorEnviado.getNome())){
@@ -51,8 +51,11 @@ public class FornecedorService {
         if(fornecedorEnviado.getNome().length() < 2 || fornecedorEnviado.getNome().length() > 40){
             throw new CadastroNotValidException("O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(fornecedorEnviado.getTelefone().length() != 11){
+        if(StringUtils.isNotBlank(fornecedorEnviado.getTelefone()) && fornecedorEnviado.getTelefone().length() != 11){
             throw new CadastroNotValidException("Telefone inválido! (XX)XXXXX-XXXX");
+        }
+        if(StringUtils.isBlank(fornecedorEnviado.getTelefone())){
+            fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone());
         }
         if(fornecedorEnviado.getCnpj().isBlank()){
             fornecedorEnviado.setCnpj(fornecedorEncontrado.getCnpj());

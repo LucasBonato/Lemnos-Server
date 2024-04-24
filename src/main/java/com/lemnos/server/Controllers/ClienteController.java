@@ -25,10 +25,10 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> updateById(@PathVariable Integer id, @RequestBody ClienteDTO clienteDTO){
+    public ResponseEntity<Void> updateById(@PathVariable Integer id, @RequestBody ClienteDTO clienteDTO){
         return clienteService.updateCliente(id, clienteDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Cliente> deleteById(@PathVariable Integer id){ return clienteService.deleteById(id);}
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id){ return clienteService.deleteById(id);}
 }
