@@ -32,17 +32,16 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                           | **O que enviar?**                                                                           | **Parâmetros** |
-|---------------|-------------------------------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|----------------|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#cliente)<br/>[funcionario](#funcionario)<br/>[fornecedor]() | [Json Cliente](#jsoncliente)<br>[Json Funcionario](#jsonfuncionario)<br>[Json Fornecedor]() |
-| /cliente      |                                           |                                                                        |                                                                                             |
-| /funcionario  |                                           |                                                                        |                                                                                             |
-| /fornecedor   |                                           |                                                                        |                                                                                             |
-
-
-# Exemplos
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                      | **O que enviar?**                                                                           | **Parâmetros** |
+|---------------|-------------------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|----------------|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#cliente)<br/>[funcionario](#funcionario)<br/>[fornecedor](#fornecedor) | [Json Cliente](#jsoncliente)<br>[Json Funcionario](#jsonfuncionario)<br>[Json Fornecedor]() |
+| /cliente      |                                           |                                                                                   |                                                                                             |
+| /funcionario  |                                           |                                                                                   |                                                                                             |
+| /fornecedor   |                                           |                                                                                   |                                                                                             |
 
 ---
+
+# Exemplos
 
 ## Cadastro
 
@@ -149,7 +148,7 @@ Class Api{
 
 ---
 
-### Funcionário
+### Funcionario
 #### Parâmetros:
 ```
  (String) "nome": "Qualquer Nome",
