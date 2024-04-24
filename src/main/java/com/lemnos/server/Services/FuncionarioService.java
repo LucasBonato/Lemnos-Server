@@ -46,13 +46,8 @@ public class FuncionarioService extends Util {
     }
 
     public ResponseEntity<Funcionario> deleteById(Integer id){
-        try{
-            funcionarioRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        catch (Exception ex){
-            throw new RuntimeException("Não foi possível deletar o funcionário");
-        }
+        funcionarioRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     private Funcionario insertData(Integer id, FuncionarioDTO funcionarioEnviado) {
