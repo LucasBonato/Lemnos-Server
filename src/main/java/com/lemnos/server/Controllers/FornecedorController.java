@@ -29,4 +29,9 @@ public class FornecedorController {
     public ResponseEntity update(@PathVariable Integer id, @RequestBody FornecedorDTO fornecedorDTO) {
         return fornecedorService.update(id, fornecedorDTO);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable Integer id){
+        return fornecedorService.delete(id);
+    }
 }
