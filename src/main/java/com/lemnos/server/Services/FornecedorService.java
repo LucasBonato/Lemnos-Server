@@ -39,6 +39,11 @@ public class FornecedorService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity delete(Integer id) {
+        fornecedorRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
     private Fornecedor insertData(Integer id, FornecedorDTO fornecedorEnviado){
         Fornecedor fornecedorEncontrado = getOneById(id).getBody();
         assert fornecedorEncontrado != null;
