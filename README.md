@@ -32,12 +32,12 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                      | **O que enviar?**                                                                           | **Parâmetros** |
-|---------------|-------------------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|----------------|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#cliente)<br/>[funcionario](#funcionario)<br/>[fornecedor](#fornecedor) | [Json Cliente](#jsoncliente)<br>[Json Funcionario](#jsonfuncionario)<br>[Json Fornecedor]() |
-| /cliente      |                                           |                                                                                   |                                                                                             |
-| /funcionario  |                                           |                                                                                   |                                                                                             |
-| /fornecedor   |                                           |                                                                                   |                                                                                             |
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                      | **Body**                                                                        |
+|---------------|-------------------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#cliente)<br/>[funcionario](#funcionario)<br/>[fornecedor](#fornecedor) | [Cliente](#cliente)<br>[Funcionario](#funcionario)<br>[Fornecedor](#fornecedor) |
+| /cliente      | /{id}                                     |                                                                                   |                                                                                 |
+| /funcionario  | /{id}                                     |                                                                                   |                                                                                 |
+| /fornecedor   | /{id}                                     |                                                                                   |                                                                                 |
 
 ---
 
@@ -49,7 +49,7 @@ Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sen
 
 ### Cliente
 
-#### Parâmetros:
+#### Body:
 ```
  (String) "nome": "Qualquer Nome",
  (String) "telefone": "11400289221",
@@ -103,7 +103,7 @@ function cadastrarCliente(cliente) {
         numeroLogradouro: cliente.numeroLogradouro
       })
       .then((response) => console.log(response.data))
-      .then((error) => console.log(error));
+      .catch((error) => console.log(error));
 }
 ~~~
 
@@ -145,7 +145,7 @@ Class Api{
 ---
 
 ### Funcionario
-#### Parâmetros:
+#### Body:
 ```
  (String) "nome": "Qualquer Nome",
  (String) "cpf": "11122233344",
@@ -205,7 +205,7 @@ function cadastrarFuncionario(cliente) {
         numeroLogradouro: funcionario.numeroLogradouro
       })
       .then((response) => console.log(response.data))
-      .then((error) => console.log(error));
+      .catch((error) => console.log(error));
 }
 ~~~
 
@@ -249,7 +249,7 @@ Class Api{
 ---
 
 ### Fornecedor
-#### Parâmetros:
+#### Body:
 ```
  (String) "nome": "Nome Do Fornecedor",
  (String) "cnpj": "09836719874612",
@@ -303,7 +303,7 @@ function cadastrarFornecedor(fornecedor) {
         cep: fornecedor.cep,
       })
       .then((response) => console.log(response.data))
-      .then((error) => console.log(error));
+      .catch((error) => console.log(error));
 }
 ~~~
 
@@ -347,9 +347,107 @@ Class Api{
 
 ---
 
+## Cliente
+
+### Exemplos:
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/cliente`
+
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
+
+// Utilizando Axios
+// ($ npm install axios)
+function getClientes() {
+    axios.get(baseUri + "/cliente")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<Cliente>> getClientes() async{
+        var uri = Uri.parse(baseUri + "/cliente");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Cliente> clientes = jsonResponse.map((json) => Cliente.fromJson(json)).toList();
+        return clientes;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
+|-------------|:-----------:|:------------------------------------:|-----------------|
+| 200         |     OK      |         Retornou os valores          |                 |
+
+---
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/cliente/{id}`
+
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
+
+// Utilizando Axios
+// ($ npm install axios)
+function getCliente(id) {
+    axios.get(baseUri + "/cliente/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Cliente> getCliente(int id) async{
+        var uri = Uri.parse(baseUri + "/cliente/$id");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Cliente cliente = jsonResponse.map((json) => Cliente.fromJson(json));
+        return cliente;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                Why?                | Corpo Devolvido |
+|-------------|:-----------:|:----------------------------------:|-----------------|
+| 200         |     OK      |         Retornou o valore          |                 |
+
+---
+
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
 Nada de importante
 
-![GET](https://img.shields.io/static/v1?label=&message=GET&color=lime&style=for-the-badge)
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
