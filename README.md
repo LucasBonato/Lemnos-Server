@@ -87,12 +87,8 @@ function cadastrarCliente(cliente){
         })
     });
 }
-~~~
 
-JavaScript (Axios)
-~~~javascript
-let baseUri = "https://localhost:8080/api";
-
+// Utilizando Axios
 // ($ npm install axios)
 function cadastrarCliente(cliente) {
     
@@ -153,9 +149,9 @@ Class Api{
 ```
  (String) "nome": "Qualquer Nome",
  (String) "cpf": "11122233344",
+ (String) "telefone": "11400289221",
  (String) "dataNascimento": "01/01/0001",
  (String) "dataAdmissao": "01/01/0001",
- (String) "telefone": "11400289221",
  (String) "email": "emailDeSuaEscolha@email.com",
  (String) "senha": "SenhaDeSuaEscolha",
 (Integer) "numeroLogradouro": 0001
@@ -168,12 +164,79 @@ Class Api{
 
 JavaScript
 ~~~javascript
+let baseUri = "https://localhost:8080/api";
 
+function cadastrarFuncionario(funcionario){
+    
+    funcionario = tratarDados(funcionario);
+
+    fetch(baseUri + "/cadastro/funcionario", {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({
+            nome: funcionario.nome,
+            cpf: funcionario.cpf,
+            telefone: funcionario.telefone,
+            dataNascimento: funcionario.dataNascimento,
+            dataAdmissao: funcionario.dataAdmissao,
+            email: funcionario.email,
+            senha: funcionario.senha,
+            numeroLogradouro: funcionario.numeroLogradouro
+        })
+    });
+}
+
+// Utilizando Axios
+// ($ npm install axios)
+function cadastrarFuncionario(cliente) {
+    
+    cliente = tratarDados(cliente);
+    
+    axios.post(baseUri + "/cadastro/funcionario", {
+        nome: funcionario.nome,
+        cpf: funcionario.cpf,
+        telefone: funcionario.telefone,
+        dataNascimento: funcionario.dataNascimento,
+        dataAdmissao: funcionario.dataAdmissao,
+        email: funcionario.email,
+        senha: funcionario.senha,
+        numeroLogradouro: funcionario.numeroLogradouro
+      })
+      .then((response) => console.log(response.data))
+      .then((error) => console.log(error));
+}
 ~~~
 
 Dart
 ~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarFuncionario(Funcionario funcionario) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/cadastro/funcionario"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "nome": funcionario.nome,
+                "cpf": funcionario.cpf,
+                "telefone": funcionario.telefone,
+                "dataNascimento": funcionario.dataNascimento,
+                "dataAdmissao": funcionario.dataAdmissao,
+                "email": funcionario.email,
+                "senha": funcionario.senha,
+                "numeroLogradouro": funcionario.numeroLogradouro
+            })
+        );
+    }
+}
 ~~~
 
 #### Responses:
@@ -202,13 +265,74 @@ Dart
 > `{{baseUri}}/cadastro/fornecedor`
 
 JavaScript
-~~~javascript    
+~~~javascript
+let baseUri = "https://localhost:8080/api";
 
+function cadastrarFornecedor(fornecedor){
+    
+    fornecedor = tratarDados(fornecedor);
+
+    fetch(baseUri + "/cadastro/fornecedor", {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({
+            nome: fornecedor.nome,
+            cnpj: fornecedor.cnpj,
+            telefone: fornecedor.telefone,
+            numeroLogradouro: fornecedor.numeroLogradouro,
+            email: fornecedor.email,
+            cep: fornecedor.cep,
+        })
+    });
+}
+
+// Utilizando Axios
+// ($ npm install axios)
+function cadastrarFornecedor(fornecedor) {
+    
+    fornecedor = tratarDados(fornecedor);
+    
+    axios.post(baseUri + "/cadastro/fornecedor", {
+        nome: fornecedor.nome,
+        cnpj: fornecedor.cnpj,
+        telefone: fornecedor.telefone,
+        numeroLogradouro: fornecedor.numeroLogradouro,
+        email: fornecedor.email,
+        cep: fornecedor.cep,
+      })
+      .then((response) => console.log(response.data))
+      .then((error) => console.log(error));
+}
 ~~~
 
 Dart
 ~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarFornecedor(Fornecedor fornecedor) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/cadastro/fornecedor"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "nome": fornecedor.nome,
+                "cnpj": fornecedor.cnpj,
+                "telefone": fornecedor.telefone,
+                "numeroLogradouro": fornecedor.numeroLogradouro,
+                "email": fornecedor.email,
+                "cep": fornecedor.cep,
+            })
+        );
+    }
+}
 ~~~
 
 ---
@@ -221,7 +345,9 @@ Dart
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
 
 
+---
 
+Nada de importante
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=lime&style=for-the-badge)
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
