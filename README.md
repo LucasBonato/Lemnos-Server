@@ -45,9 +45,26 @@ gerenciamento de carrinho.
 
 ~~~ JSON
 {
+    "id": 0
     "error": "Alguma mensagem de erro."
 }
 ~~~
+
+O que é o Id? Bem, é um identificador para saber sobre qual campo o erro se trata, sendo que os valores são 
+"universais" na API, ou seja, se o id for igual a 1 representa que deu algum problema no campo de Email. 
+Segue a tabela de valores: 
+
+| Id |  Campo que representa  |
+|----|:----------------------:|
+| 1  |         Email          |
+| 2  |         Senha          |
+| 3  |          Nome          |
+| 4  |        Telefone        |
+| 5  |     dataNascimento     |
+| 6  |      dataAdmissão      |
+| 7  |          CPF           |
+| 8  |          CNPJ          |
+| 9  |          CEP           |
 
 # Exemplos
 
@@ -450,9 +467,9 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                Why?                |
-|-------------|:-----------:|:----------------------------------:|
-| 200         |     OK      |         Retornou o valore          |                 
+| Status Code |   Meaning   |               Why?                |
+|-------------|:-----------:|:---------------------------------:|
+| 200         |     OK      |         Retornou o valor          |                 
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
