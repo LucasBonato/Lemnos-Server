@@ -68,7 +68,7 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException("A Senha é obrigatória!");
         }
         if(clienteDTO.getSenha().length() < 8 || clienteDTO.getNome().length() > 16){
-            throw new CadastroNotValidException("O Nome precisa ter mínimo 8 caracteres!");
+            throw new CadastroNotValidException("A Senha precisa ter mínimo 8 caracteres!");
         }
 
         clienteDTO.setEmail(clienteDTO.getEmail().toLowerCase());
