@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 
 public class FuncionarioNotFoundException extends BaseException {
     public FuncionarioNotFoundException() {
-        super(HttpStatus.NOT_FOUND, new ExceptionResponse("Funcionário não encontrado!"));
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(0, "Funcionário não encontrado!"));
     }
 }

@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
                 .get();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ExceptionResponse(error));
+                .body(new ExceptionResponse(0, error));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

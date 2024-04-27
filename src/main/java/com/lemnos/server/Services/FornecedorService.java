@@ -5,6 +5,7 @@ import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
+import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Repositories.FornecedorRepository;
 import io.micrometer.common.util.StringUtils;
@@ -54,10 +55,10 @@ public class FornecedorService {
             fornecedorEnviado.setNome(fornecedorEncontrado.getNome());
         }
         if(fornecedorEnviado.getNome().length() < 2 || fornecedorEnviado.getNome().length() > 40){
-            throw new CadastroNotValidException("O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(StringUtils.isNotBlank(fornecedorEnviado.getTelefone()) && fornecedorEnviado.getTelefone().length() != 11){
-            throw new CadastroNotValidException("Telefone inválido! (XX)XXXXX-XXXX");
+            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
         }
         if(StringUtils.isBlank(fornecedorEnviado.getTelefone())){
             fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone());
