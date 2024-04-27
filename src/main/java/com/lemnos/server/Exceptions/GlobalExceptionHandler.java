@@ -24,17 +24,6 @@ public class GlobalExceptionHandler {
                 .body(exception.getExceptionResponse());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        List<String> errors = exception
-                .getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(FieldError::toString)
-                .toList();
-        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionResponse> handleValidationErrors(ConstraintViolationException exception) {
         String error = exception
@@ -46,6 +35,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse(error));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        List<String> errors = exception
+                .getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::toString)
+                .toList();
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     private Map<String, List<String>> getErrorsMap(List<String> erros) {
