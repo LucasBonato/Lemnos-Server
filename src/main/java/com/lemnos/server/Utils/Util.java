@@ -1,6 +1,7 @@
 package com.lemnos.server.Utils;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
+import com.lemnos.server.Models.Enums.Codigo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +14,7 @@ public class Util {
         try{
             dataFormatada = formatter.parse(data);
         }catch (ParseException e){
-            throw new CadastroWrongDataFormatException();
+            throw new CadastroWrongDataFormatException(Codigo.GLOBAL.ordinal());
         }
         return dataFormatada;
     }

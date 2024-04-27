@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 
 public class CadastroCnpjAlreadyInUseException extends BaseException {
     public CadastroCnpjAlreadyInUseException() {
-        super(HttpStatus.CONFLICT, new ExceptionResponse("O CNPJ inserido já está sendo utilizado!"));
+        super(HttpStatus.CONFLICT, new ExceptionResponse(8, "O CNPJ inserido já está sendo utilizado!"));
     }
 }

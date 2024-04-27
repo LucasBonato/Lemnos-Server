@@ -6,6 +6,7 @@ import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Repositories.ClienteRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class ClienteService {
             clienteEnviado.setNome(clienteEncontrado.getNome());
         }
         if(clienteEnviado.getNome().length() < 2 || clienteEnviado.getNome().length() > 40){
-            throw new CadastroNotValidException("O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(StringUtils.isBlank(clienteEnviado.getCpf())){
             clienteEnviado.setCpf(clienteEncontrado.getCpf());
