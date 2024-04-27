@@ -41,6 +41,14 @@ gerenciamento de carrinho.
 
 ---
 
+# Erros
+
+~~~ JSON
+{
+    "error": "Alguma mensagem de erro."
+}
+~~~
+
 # Exemplos
 
 ## Cadastro
@@ -136,11 +144,13 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
-|-------------|:-----------:|:------------------------------------:|-----------------|
-| 200         |     OK      |        Cadastrou com sucesso         |                 |
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 |
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
+| Status Code | Significado |               Por quê?               |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |        Cadastrou com sucesso         |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
@@ -240,11 +250,13 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
-|-------------|:-----------:|:------------------------------------:|-----------------|
-| 200         |     OK      |        Cadastrou com sucesso         |                 |
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 |
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |        Cadastrou com sucesso         |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
@@ -338,12 +350,13 @@ Class Api{
 ---
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
-|-------------|:-----------:|:------------------------------------:|-----------------|
-| 200         |     OK      |        Cadastrou com sucesso         |                 |
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 |
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 |
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |        Cadastrou com sucesso         |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
 
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
@@ -390,9 +403,11 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 | Corpo Devolvido |
-|-------------|:-----------:|:------------------------------------:|-----------------|
-| 200         |     OK      |         Retornou os valores          |                 |
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |         Retornou os valores          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
@@ -435,9 +450,11 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                Why?                | Corpo Devolvido |
-|-------------|:-----------:|:----------------------------------:|-----------------|
-| 200         |     OK      |         Retornou o valore          |                 |
+| Status Code |   Meaning   |                Why?                |
+|-------------|:-----------:|:----------------------------------:|
+| 200         |     OK      |         Retornou o valore          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
