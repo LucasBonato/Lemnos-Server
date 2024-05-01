@@ -89,7 +89,7 @@ Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sen
 ### Body Cliente:
 ``` JSON
 "nome": "Qualquer Nome",
-"cpf": 11122233311,
+"cpf": "11122233311",
 "email": "emailDeSuaEscolha@email.com",
 "senha": "SenhaDoCliente"
 ```
@@ -182,8 +182,8 @@ Class Api{
 ### Body Funcionario:
 ``` JSON
 "nome": "Qualquer Nome",
-"cpf": 11122233344,
-"telefone": 11400289221,
+"cpf": "11122233344",
+"telefone": "11400289221",
 "dataNascimento": "01/01/0001",
 "dataAdmissao": "01/01/0001",
 "email": "emailDeSuaEscolha@email.com",
@@ -651,10 +651,10 @@ Class Api{
 ### Body Put Funcionário:
 ``` JSON
 "nome": "Qualquer Nome",
-"cpf": 11122233311,
+"cpf": "11122233311",
 "dataNascimento": "01/01/0001",
 "dataAdmissao": "01/01/0001",
-"telefone": 11912345678
+"telefone": "11912345678"
 ```
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
@@ -875,8 +875,8 @@ Class Api{
 ### Body Put Fornecedor:
 ``` JSON
 "nome": "Qualquer Nome",
-"cnpj": 11222333444455,
-"telefone": 11912345678
+"cnpj": "11222333444455",
+"telefone": "11912345678"
 ```
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
