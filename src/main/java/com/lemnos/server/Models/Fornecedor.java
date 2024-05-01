@@ -22,13 +22,13 @@ public class Fornecedor {
 
     @Column(name = "CNPJ")
     @CNPJValidation(message = "Insira um CNPJ válido")
-    private String cnpj;
+    private Long cnpj;
 
     @Column(name = "Nome")
     private String nome;
 
     @Column(name = "Telefone")
-    private String telefone;
+    private Long telefone;
 
     @Column(name = "Numero_Logradouro")
     private Integer numeroLogradouro;

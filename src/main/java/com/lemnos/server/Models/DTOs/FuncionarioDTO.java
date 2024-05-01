@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FuncionarioDTO {
     private String nome;
-    private String cpf;
+    private Long cpf;
     private String dataNascimento;
     private String dataAdmissao;
-    private String telefone;
-    private String cep;
+    private Long telefone;
     private String email;
     private String senha;
-    private Integer numeroLogradouro;
 }

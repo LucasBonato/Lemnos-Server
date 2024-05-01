@@ -12,7 +12,7 @@ public class EnderecoDTO {
 
     @NotNull
     @Positive
-    private String cep;
+    private Long cep;
 
     @NotBlank(message = "O campo Logradouro é obrigatório!")
     @Size(min = 3, max = 50, message = "O logradouro precisa ter no mínimo 3 caracteres e no máximo 50 caracteres!")

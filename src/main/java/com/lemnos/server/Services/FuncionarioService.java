@@ -53,13 +53,13 @@ public class FuncionarioService extends Util {
         Date dataNasc;
         Date dataAdmi;
 
-        if(StringUtils.isBlank(funcionarioEnviado.getNome()) && StringUtils.isBlank(funcionarioEnviado.getCpf()) && StringUtils.isBlank(funcionarioEnviado.getDataAdmissao()) && StringUtils.isBlank(funcionarioEnviado.getDataNascimento()) && StringUtils.isBlank(funcionarioEnviado.getTelefone())){
+        if(StringUtils.isBlank(funcionarioEnviado.getNome()) && funcionarioEnviado.getCpf() == null && StringUtils.isBlank(funcionarioEnviado.getDataAdmissao()) && StringUtils.isBlank(funcionarioEnviado.getDataNascimento()) && funcionarioEnviado.getTelefone() == null){
             throw new UpdateNotValidException("Funcionário");
         }
         if(StringUtils.isBlank(funcionarioEnviado.getNome())){
             funcionarioEnviado.setNome(funcionarioEncontrado.getNome());
         }
-        if(StringUtils.isBlank(funcionarioEnviado.getCpf())){
+        if(funcionarioEnviado.getCpf() == null){
             funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf());
         }
         if(StringUtils.isBlank(funcionarioEnviado.getDataNascimento())){
@@ -72,7 +72,7 @@ public class FuncionarioService extends Util {
         } else {
             dataAdmi = convertData(funcionarioEnviado.getDataAdmissao());
         }
-        if(StringUtils.isBlank(funcionarioEnviado.getTelefone())){
+        if(funcionarioEnviado.getTelefone() == null){
             funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone());
         }
 
@@ -86,7 +86,6 @@ public class FuncionarioService extends Util {
         updatedFuncionario.setDataNascimento(dataNasc);
         updatedFuncionario.setDataAdmissao(dataAdmi);
         updatedFuncionario.setTelefone(funcionarioEnviado.getTelefone());
-        updatedFuncionario.setNumeroLogradouro(funcionarioEncontrado.getNumeroLogradouro());
         updatedFuncionario.setCadastro(funcionarioEncontrado.getCadastro());
         updatedFuncionario.setEnderecos(funcionarioEncontrado.getEnderecos());
 
