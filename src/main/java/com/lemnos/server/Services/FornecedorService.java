@@ -48,7 +48,7 @@ public class FornecedorService {
     private Fornecedor insertData(Integer id, FornecedorDTO fornecedorEnviado){
         Fornecedor fornecedorEncontrado = getOneById(id).getBody();
         assert fornecedorEncontrado != null;
-        if(StringUtils.isBlank(fornecedorEnviado.getNome()) && fornecedorEnviado.getTelefone() == null && fornecedorEnviado.getCnpj() == null){
+        if(StringUtils.isBlank(fornecedorEnviado.getNome()) && (fornecedorEnviado.getTelefone() == null || fornecedorEnviado.getTelefone().isBlank()) && (fornecedorEnviado.getCnpj() == null || fornecedorEnviado.getCnpj().isBlank())){
             throw new UpdateNotValidException("Fornecedor");
         }
         if(StringUtils.isBlank(fornecedorEnviado.getNome())){
@@ -57,24 +57,24 @@ public class FornecedorService {
         if(fornecedorEnviado.getNome().length() < 2 || fornecedorEnviado.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(fornecedorEnviado.getTelefone() != null && fornecedorEnviado.getTelefone().toString().length() != 11){
+        if(fornecedorEnviado.getTelefone() != null && fornecedorEnviado.getTelefone().length() != 11){
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
         }
-        if(fornecedorEnviado.getTelefone() == null){
-            fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone());
+        if(fornecedorEnviado.getTelefone() == null || fornecedorEnviado.getTelefone().isBlank()){
+            fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone().toString());
         }
         if(fornecedorEnviado.getCnpj() == null){
-            fornecedorEnviado.setCnpj(fornecedorEncontrado.getCnpj());
+            fornecedorEnviado.setCnpj(fornecedorEncontrado.getCnpj().toString());
         }
 
-        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(fornecedorEnviado.getCnpj());
+        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(Long.parseLong(fornecedorEnviado.getCnpj()));
         if(cnpj.isPresent() && !Objects.equals(cnpj.get().getId(), id)) throw new CadastroCnpjAlreadyInUseException();
 
         Fornecedor fornecedor = new Fornecedor();
         fornecedor.setId(id);
         fornecedor.setNome(fornecedorEnviado.getNome());
-        fornecedor.setTelefone(fornecedorEnviado.getTelefone());
-        fornecedor.setCnpj(fornecedorEnviado.getCnpj());
+        fornecedor.setTelefone(Long.parseLong(fornecedorEnviado.getTelefone()));
+        fornecedor.setCnpj(Long.parseLong(fornecedorEnviado.getCnpj()));
         fornecedor.setEmail(fornecedorEncontrado.getEmail());
         fornecedor.setNumeroLogradouro(fornecedorEncontrado.getNumeroLogradouro());
         fornecedor.setEnderecos(fornecedorEncontrado.getEnderecos());

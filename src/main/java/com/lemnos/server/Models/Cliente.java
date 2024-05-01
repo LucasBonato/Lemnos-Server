@@ -43,7 +43,7 @@ public class Cliente {
 
     public Cliente(ClienteDTO clienteDTO){
         this.nome = clienteDTO.getNome();
-        this.cpf = clienteDTO.getCpf();
+        this.cpf = Long.parseLong(clienteDTO.getCpf());
         this.cadastro = new Cadastro(clienteDTO);
     }
     public Cliente(String nome, Long cpf){

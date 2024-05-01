@@ -53,14 +53,14 @@ public class FuncionarioService extends Util {
         Date dataNasc;
         Date dataAdmi;
 
-        if(StringUtils.isBlank(funcionarioEnviado.getNome()) && funcionarioEnviado.getCpf() == null && StringUtils.isBlank(funcionarioEnviado.getDataAdmissao()) && StringUtils.isBlank(funcionarioEnviado.getDataNascimento()) && funcionarioEnviado.getTelefone() == null){
+        if(StringUtils.isBlank(funcionarioEnviado.getNome()) && (funcionarioEnviado.getCpf() == null || funcionarioEnviado.getCpf().isBlank()) && StringUtils.isBlank(funcionarioEnviado.getDataAdmissao()) && StringUtils.isBlank(funcionarioEnviado.getDataNascimento()) && (funcionarioEnviado.getTelefone() == null || funcionarioEnviado.getTelefone().isBlank())){
             throw new UpdateNotValidException("Funcionário");
         }
         if(StringUtils.isBlank(funcionarioEnviado.getNome())){
             funcionarioEnviado.setNome(funcionarioEncontrado.getNome());
         }
-        if(funcionarioEnviado.getCpf() == null){
-            funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf());
+        if(funcionarioEnviado.getCpf() == null || funcionarioEnviado.getCpf().isBlank()){
+            funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf().toString());
         }
         if(StringUtils.isBlank(funcionarioEnviado.getDataNascimento())){
             dataNasc = funcionarioEncontrado.getDataNascimento();
@@ -72,20 +72,20 @@ public class FuncionarioService extends Util {
         } else {
             dataAdmi = convertData(funcionarioEnviado.getDataAdmissao());
         }
-        if(funcionarioEnviado.getTelefone() == null){
-            funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone());
+        if(funcionarioEnviado.getTelefone() == null || funcionarioEnviado.getTelefone().isBlank()){
+            funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone().toString());
         }
 
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(funcionarioEnviado.getCpf());
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(Long.parseLong(funcionarioEnviado.getCpf()));
         if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Funcionario updatedFuncionario = new Funcionario();
         updatedFuncionario.setId(id);
         updatedFuncionario.setNome(funcionarioEnviado.getNome());
-        updatedFuncionario.setCpf(funcionarioEnviado.getCpf());
+        updatedFuncionario.setCpf(Long.parseLong(funcionarioEnviado.getCpf()));
         updatedFuncionario.setDataNascimento(dataNasc);
         updatedFuncionario.setDataAdmissao(dataAdmi);
-        updatedFuncionario.setTelefone(funcionarioEnviado.getTelefone());
+        updatedFuncionario.setTelefone(Long.parseLong(funcionarioEnviado.getTelefone()));
         updatedFuncionario.setCadastro(funcionarioEncontrado.getCadastro());
         updatedFuncionario.setEnderecos(funcionarioEncontrado.getEnderecos());
 
