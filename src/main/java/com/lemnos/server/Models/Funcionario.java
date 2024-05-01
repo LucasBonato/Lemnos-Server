@@ -51,10 +51,10 @@ public class Funcionario {
 
     public Funcionario(FuncionarioDTO funcionarioDTO, Date dataNascimento, Date dataAdmissao){
         this.nome = funcionarioDTO.getNome();
-        this.cpf = funcionarioDTO.getCpf();
+        this.cpf = Long.parseLong(funcionarioDTO.getCpf());
         this.dataNascimento = dataNascimento;
         this.dataAdmissao = dataAdmissao;
-        this.telefone = funcionarioDTO.getTelefone();
+        this.telefone = Long.parseLong(funcionarioDTO.getTelefone());
         this.cadastro = new Cadastro(funcionarioDTO);
     }
 }

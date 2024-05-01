@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FornecedorDTO {
     private String nome;
-    private Long cnpj;
-    private Long telefone;
+    private String cnpj;
+    private String telefone;
     private Integer numeroLogradouro;
     private String email;
 }

@@ -51,7 +51,7 @@ public class ClienteService {
         Cliente clienteEncontrado = getOneById(id).getBody();
         assert clienteEncontrado != null;
 
-        if(StringUtils.isBlank(clienteEnviado.getNome()) && clienteEnviado.getCpf() == null){
+        if(StringUtils.isBlank(clienteEnviado.getNome()) && (clienteEnviado.getCpf() == null || clienteEnviado.getCpf().isBlank())){
             throw new UpdateNotValidException("Cliente");
         }
         if(StringUtils.isBlank(clienteEnviado.getNome())){
@@ -61,16 +61,16 @@ public class ClienteService {
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(clienteEnviado.getCpf() == null){
-            clienteEnviado.setCpf(clienteEncontrado.getCpf());
+            clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
 
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(clienteEnviado.getCpf());
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(Long.parseLong(clienteEnviado.getCpf()));
         if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Cliente updatedCliente = new Cliente();
         updatedCliente.setId(id);
         updatedCliente.setNome(clienteEnviado.getNome());
-        updatedCliente.setCpf(clienteEnviado.getCpf());
+        updatedCliente.setCpf(Long.parseLong(clienteEnviado.getCpf()));
         updatedCliente.setCadastro(clienteEncontrado.getCadastro());
         updatedCliente.setEnderecos(clienteEncontrado.getEnderecos());
 

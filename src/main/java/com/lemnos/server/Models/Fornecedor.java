@@ -42,9 +42,9 @@ public class Fornecedor {
     private List<Endereco> enderecos;
 
     public Fornecedor(FornecedorDTO fornecedorDTO){
-        this.cnpj = fornecedorDTO.getCnpj();
+        this.cnpj = Long.parseLong(fornecedorDTO.getCnpj());
         this.nome = fornecedorDTO.getNome();
-        this.telefone = fornecedorDTO.getTelefone();
+        this.telefone = Long.parseLong(fornecedorDTO.getTelefone());
         this.numeroLogradouro = fornecedorDTO.getNumeroLogradouro();
         this.email = fornecedorDTO.getEmail();
     }

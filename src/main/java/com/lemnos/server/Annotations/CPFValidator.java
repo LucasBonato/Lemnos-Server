@@ -23,9 +23,7 @@ public class CPFValidator implements ConstraintValidator<CPFValidation, Long> {
     }
 
     private String isValidCPF(String cpf) {
-        if (!cpf.matches("[0-9]{11}")) {
-            return "Formato errado!";
-        }
+        if (!cpf.matches("[0-9]{11}")) return "Formato errado!";
 
         boolean allDigitsEqual = true;
         for (int i = 1; i < cpf.length(); i++) {
@@ -34,9 +32,8 @@ public class CPFValidator implements ConstraintValidator<CPFValidation, Long> {
                 break;
             }
         }
-        if(allDigitsEqual){
-            return "Todos os números iguais";
-        }
+        if(allDigitsEqual)return "Todos os números iguais";
+
         return "CPF válido";
     }
 }

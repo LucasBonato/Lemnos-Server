@@ -20,9 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -59,7 +56,7 @@ public class CadastroService extends Util {
         if(clienteDTO.getNome().length() < 2 || clienteDTO.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(clienteDTO.getCpf() == null){
+        if(clienteDTO.getCpf() == null || clienteDTO.getCpf().isBlank()){
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
         if(StringUtils.isBlank(clienteDTO.getEmail())){
@@ -75,7 +72,7 @@ public class CadastroService extends Util {
         clienteDTO.setEmail(clienteDTO.getEmail().toLowerCase());
 
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(clienteDTO.getEmail());
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(clienteDTO.getCpf());
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(Long.parseLong(clienteDTO.getCpf()));
         if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(clienteOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
 
@@ -88,7 +85,7 @@ public class CadastroService extends Util {
         if(funcionarioDTO.getNome().length() < 2 || funcionarioDTO.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(funcionarioDTO.getCpf() == null){
+        if(funcionarioDTO.getCpf() == null || funcionarioDTO.getCpf().isBlank()){
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
         if(StringUtils.isBlank(funcionarioDTO.getDataNascimento())){
@@ -97,7 +94,7 @@ public class CadastroService extends Util {
         if(StringUtils.isBlank(funcionarioDTO.getDataAdmissao())){
             throw new CadastroNotValidException(Codigo.DATAADMI.ordinal(), "A Data de Admissão é obrigatória!");
         }
-        if(funcionarioDTO.getTelefone() == null){
+        if(funcionarioDTO.getTelefone() == null || funcionarioDTO.getTelefone().isBlank()){
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
         }
         if(StringUtils.isBlank(funcionarioDTO.getEmail())){
@@ -112,7 +109,7 @@ public class CadastroService extends Util {
         funcionarioDTO.setEmail(funcionarioDTO.getEmail().toLowerCase());
 
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(funcionarioDTO.getEmail());
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(funcionarioDTO.getCpf());
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(Long.parseLong(funcionarioDTO.getCpf()));
         if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(clienteOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
 
@@ -129,10 +126,10 @@ public class CadastroService extends Util {
         if(fornecedorDTO.getNome().length() < 2 || fornecedorDTO.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(fornecedorDTO.getCnpj() == null){
+        if(fornecedorDTO.getCnpj() == null || fornecedorDTO.getCnpj().isBlank()){
             throw new CadastroNotValidException(Codigo.CNPJ.ordinal(), "O CNPJ é obrigatório!");
         }
-        if(fornecedorDTO.getTelefone() == null){
+        if(fornecedorDTO.getTelefone() == null || fornecedorDTO.getTelefone().isBlank()){
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
         }
         if(fornecedorDTO.getNumeroLogradouro() == null){
@@ -146,7 +143,7 @@ public class CadastroService extends Util {
         }
 
         Optional<Fornecedor> email = fornecedorRepository.findByEmail(fornecedorDTO.getEmail());
-        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(fornecedorDTO.getCnpj());
+        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(Long.parseLong(fornecedorDTO.getCnpj()));
         if(email.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(cnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 

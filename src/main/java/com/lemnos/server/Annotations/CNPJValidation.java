@@ -1,15 +1,20 @@
 package com.lemnos.server.Annotations;
 
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 import jakarta.validation.ReportAsSingleViolation;
 import jakarta.validation.constraints.Pattern;
 import java.lang.annotation.*;
 
 //"([0-9]{2}[.]?[0-9]{3}[.]?[0-9]{3}/?[0-9]{4}-?[0-9]{2})"
-@Pattern(regexp = "([0-9]{2}?[0-9]{3}?[0-9]{3}?[0-9]{4}?[0-9]{2})")
-@ReportAsSingleViolation
+//"([0-9]{2}?[0-9]{3}?[0-9]{3}?[0-9]{4}?[0-9]{2})"
 @Documented
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
+@ReportAsSingleViolation
+@Constraint(validatedBy = CPNJValidator.class)
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CNPJValidation {
-    String message() default "{org.hibernate.validator.constraints.br.CNPJ.message}";
+    String message() default "CNPJ inválido";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
 }
