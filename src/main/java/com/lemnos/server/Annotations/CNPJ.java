@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = CPNJValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CNPJValidation {
+public @interface CNPJ {
     String message() default "CNPJ inválido";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

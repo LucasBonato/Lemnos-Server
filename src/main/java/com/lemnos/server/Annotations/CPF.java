@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CPFValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CPFValidation {
+public @interface CPF {
     String message() default "CPF inválido";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
