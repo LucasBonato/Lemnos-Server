@@ -1,12 +1,10 @@
 package com.lemnos.server.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.Annotations.CPFValidation;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,13 +27,7 @@ public class Cliente {
 
     @Column(name = "CPF")
     @CPFValidation(message = "CPF preenchido incorretamente!")
-    private String cpf;
-
-    @Column(name = "Numero_Logradouro")
-    @Null
-    @PositiveOrZero(message = "Digite um número válido")
-    @Max(value = 9999, message = "O número inserido é muito alto!")
-    private Integer numeroLogradouro;
+    private Long cpf;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -54,7 +46,7 @@ public class Cliente {
         this.cpf = clienteDTO.getCpf();
         this.cadastro = new Cadastro(clienteDTO);
     }
-    public Cliente(String nome, String cpf){
+    public Cliente(String nome, Long cpf){
         this.nome = nome;
         this.cpf = cpf;
     }

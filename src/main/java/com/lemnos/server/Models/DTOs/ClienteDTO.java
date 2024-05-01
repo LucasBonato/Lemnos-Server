@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClienteDTO {
     private String nome;
-    private String cpf;
+    private Long cpf;
     private String email;
     private String senha;
 }

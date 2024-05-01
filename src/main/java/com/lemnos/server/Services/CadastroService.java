@@ -59,7 +59,7 @@ public class CadastroService extends Util {
         if(clienteDTO.getNome().length() < 2 || clienteDTO.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(StringUtils.isBlank(clienteDTO.getCpf())){
+        if(clienteDTO.getCpf() == null){
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
         if(StringUtils.isBlank(clienteDTO.getEmail())){
@@ -88,7 +88,7 @@ public class CadastroService extends Util {
         if(funcionarioDTO.getNome().length() < 2 || funcionarioDTO.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(StringUtils.isBlank(funcionarioDTO.getCpf())){
+        if(funcionarioDTO.getCpf() == null){
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
         if(StringUtils.isBlank(funcionarioDTO.getDataNascimento())){
@@ -97,17 +97,8 @@ public class CadastroService extends Util {
         if(StringUtils.isBlank(funcionarioDTO.getDataAdmissao())){
             throw new CadastroNotValidException(Codigo.DATAADMI.ordinal(), "A Data de Admissão é obrigatória!");
         }
-        if(funcionarioDTO.getTelefone().length() != 11){
+        if(funcionarioDTO.getTelefone() == null){
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
-        }
-        if(funcionarioDTO.getCep().length() != 8){
-            throw new CadastroNotValidException(Codigo.CEP.ordinal(), "CEP inválido! XXXXX-XXX");
-        }
-        if(funcionarioDTO.getNumeroLogradouro() == null){
-            throw new CadastroNotValidException(Codigo.GLOBAL.ordinal(), "O Número do Logradouro é obrigatório!");
-        }
-        if(funcionarioDTO.getNumeroLogradouro() < 1 || funcionarioDTO.getNumeroLogradouro() > 9999) {
-            throw new CadastroNotValidException(Codigo.GLOBAL.ordinal(), "Número do logradouro muito alto ou muito baixo! (1, 9999)");
         }
         if(StringUtils.isBlank(funcionarioDTO.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
@@ -138,10 +129,10 @@ public class CadastroService extends Util {
         if(fornecedorDTO.getNome().length() < 2 || fornecedorDTO.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(StringUtils.isBlank(fornecedorDTO.getCnpj())){
+        if(fornecedorDTO.getCnpj() == null){
             throw new CadastroNotValidException(Codigo.CNPJ.ordinal(), "O CNPJ é obrigatório!");
         }
-        if(fornecedorDTO.getTelefone().length() != 11){
+        if(fornecedorDTO.getTelefone() == null){
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
         }
         if(fornecedorDTO.getNumeroLogradouro() == null){
@@ -152,9 +143,6 @@ public class CadastroService extends Util {
         }
         if(StringUtils.isBlank(fornecedorDTO.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
-        }
-        if(fornecedorDTO.getCep().length() != 8){
-            throw new CadastroNotValidException(Codigo.CEP.ordinal(), "CEP inválido! XXXXX-XXX");
         }
 
         Optional<Fornecedor> email = fornecedorRepository.findByEmail(fornecedorDTO.getEmail());

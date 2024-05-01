@@ -26,7 +26,7 @@ public class Funcionario {
 
     @Column(name = "CPF")
     @CPFValidation(message = "CPF preenchido incorretamente!")
-    private String cpf;
+    private Long cpf;
 
     @Column(name = "Data_Nascimento")
     private Date dataNascimento;
@@ -35,10 +35,7 @@ public class Funcionario {
     private Date dataAdmissao;
 
     @Column(name = "Telefone")
-    private String telefone;
-
-    @Column(name = "Numero_Logradouro")
-    private Integer numeroLogradouro;
+    private Long telefone;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -58,7 +55,6 @@ public class Funcionario {
         this.dataNascimento = dataNascimento;
         this.dataAdmissao = dataAdmissao;
         this.telefone = funcionarioDTO.getTelefone();
-        this.numeroLogradouro = funcionarioDTO.getNumeroLogradouro();
         this.cadastro = new Cadastro(funcionarioDTO);
     }
 }

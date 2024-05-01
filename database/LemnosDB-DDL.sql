@@ -44,7 +44,6 @@ CREATE TABLE Fornecedor (
     Email varchar(100) UNIQUE NOT NULL,
     Telefone numeric(11) NOT NULL,
     CNPJ numeric(14) UNIQUE NOT NULL,
-    CEP numeric(8),
     Numero_Logradouro int NOT NULL
 );
 CREATE TABLE Pedido (
