@@ -2,7 +2,7 @@
     <br />
     <img src="src/main/resources/imagens/Logo-Lemnos-Horizontal-Branco.png" alt="Logo" />
     <hr />
-    <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge" alt="..." />
+    <img src="https://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge" alt="..." />
     <img src="https://img.shields.io/static/v1?label=Projeto%20de&message=TCC&color=blue&style=for-the-badge" alt="..." />
     <hr />
     <p>
@@ -45,12 +45,12 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                      | **Body**                                                                        |
-|---------------|-------------------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#cliente)<br/>[funcionario](#funcionario)<br/>[fornecedor](#fornecedor) | [Cliente](#cliente)<br>[Funcionario](#funcionario)<br>[Fornecedor](#fornecedor) |
-| /cliente      | /{id}                                     |                                                                                   |                                                                                 |
-| /funcionario  | /{id}                                     |                                                                                   |                                                                                 |
-| /fornecedor   | /{id}                                     |                                                                                   |                                                                                 |
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |
+|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |
+| /cliente      | /{id}                                     | [cliente](#Cliente)                                                                              | [cliente](#body-put-cliente)                                                                   |
+| /funcionario  | /{id}                                     | [funcionario](#Funcionário)                                                                      | [funcionario](#body-put-funcionário)                                                           |
+| /fornecedor   | /{id}                                     | [fornecedor](#Fornecedor)                                                                        | [fornecedor](#body-put-fornecedor)                                                             |
 
 ---
 
@@ -428,7 +428,7 @@ Class Api{
 
 ---
 
-### Body Cliente:
+### Body Put Cliente:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": "11122233311",
@@ -579,7 +579,7 @@ Class Api{
     
         var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
         List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
-        List<Cliente> funcionarios = jsonResponse.map((json) => Funcionario.fromJson(json)).toList();
+        List<Funcionario> funcionarios = jsonResponse.map((json) => Funcionario.fromJson(json)).toList();
         return funcionarios;
     }
 }
@@ -626,7 +626,7 @@ Class Api{
     
         var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
         dynamic jsonResponse = json.decode(responseBodyUtf8);
-        Cliente funcionario = jsonResponse.map((json) => Funcionario.fromJson(json));
+        Funcionario funcionario = jsonResponse.map((json) => Funcionario.fromJson(json));
         return funcionario;
     }
 }
@@ -641,7 +641,7 @@ Class Api{
 
 ---
 
-### Body Funcionário:
+### Body Put Funcionário:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": 11122233311,
@@ -769,7 +769,219 @@ Class Api{
 
 ## Fornecedor
 
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
+> `{{baseUri}}/fornecedor`
+
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
+
+// Utilizando Axios
+// ($ npm install axios)
+function getFornecedores() {
+    axios.get(baseUri + "/fornecedor")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<Fornecedor>> getFornecedores() async{
+        var uri = Uri.parse(baseUri + "/fornecedor");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Fornecedor> fornecedores = jsonResponse.map((json) => Fornecedor.fromJson(json)).toList();
+        return fornecedores;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |         Retornou os valores          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/fornecedor/{id}`
+
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
+
+// Utilizando Axios
+// ($ npm install axios)
+function getFornecedor(id) {
+    axios.get(baseUri + "/fornecedor/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Fornecedor> getFornecedor(int id) async{
+        var uri = Uri.parse(baseUri + "/fornecedor/$id");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Fornecedor fornecedor = jsonResponse.map((json) => Fornecedor.fromJson(json));
+        return fornecedor;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |               Why?                |
+|-------------|:-----------:|:---------------------------------:|
+| 200         |     OK      |         Retornou o valor          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Body Put Fornecedor:
+``` JSON
+"nome": "Qualquer Nome",
+"cnpj": 11222333444455,
+"telefone": 11912345678
+```
+
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
+> `{{baseUri}}/fornecedor/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function alterarFornecedor(fornecedor) {
+    axios.put(baseUri + "/fornecedor/${fornecedor.id}", {
+        nome: fornecedor.nome,
+        cnpj: fornecedor.cnpj,
+        telefone: fornecedor.telefone
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> alterarFornecedor(Fornecedor fornecedor) async{
+        var response = await client.put(
+          Uri.parse("$baseUri/fornecedor/${fornecedor.id}"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+            "nome": fornecedor.nome,
+            "cnpj": fornecedor.cnpj,
+            "telefone": fornecedor.telefone
+          }),
+        );
+        if(response.statusCode != 200){
+          dynamic body = jsonDecode(utf8.decode(response.body.runes.toList()));
+          return body;
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                           Why?                           |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 209         |  CONFLICT   |         Algum dado único já foi cadastrado antes         |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |          O objeto procurado não foi encontrado           |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/fornecedor/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function excluirFornecedor(id) {
+    axios.delete(baseUri + "/fornecedor/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> excluirFornecedor(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/fornecedor/${id}"));
+        if(response.statusCode != 200){
+          return "Objeto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |           Retornou o valor            |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
 
 Nada de importante
 
