@@ -525,7 +525,7 @@ Class Api{
     String baseUri = "https//localhost:8080/api";
     
     Future<dynamic> excluirCliente(int id) async{
-        var response = await client.delete(Uri.parse("$baseUri/${cliente.id}"));
+        var response = await client.delete(Uri.parse("$baseUri/cliente/${cliente.id}"));
         if(response.statusCode != 200){
           return "Objeto não encontrado";
         }
@@ -546,6 +546,226 @@ Class Api{
 ---
 
 ## Funcionário
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/funcionario`
+
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
+
+// Utilizando Axios
+// ($ npm install axios)
+function getFuncionarios() {
+    axios.get(baseUri + "/funcionario")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<Funcionario>> getFuncionarios() async{
+        var uri = Uri.parse(baseUri + "/funcionario");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Cliente> funcionarios = jsonResponse.map((json) => Funcionario.fromJson(json)).toList();
+        return funcionarios;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |         Retornou os valores          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/funcionario/{id}`
+
+JavaScript
+~~~javascript
+let baseUri = "https://localhost:8080/api";
+
+// Utilizando Axios
+// ($ npm install axios)
+function getFuncionario(id) {
+    axios.get(baseUri + "/funcionario/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Funcionario> getFuncionario(int id) async{
+        var uri = Uri.parse(baseUri + "/funcionario/$id");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Cliente funcionario = jsonResponse.map((json) => Funcionario.fromJson(json));
+        return funcionario;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |               Why?                |
+|-------------|:-----------:|:---------------------------------:|
+| 200         |     OK      |         Retornou o valor          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Body Funcionário:
+``` JSON
+"nome": "Qualquer Nome",
+"cpf": 11122233311,
+"dataNascimento": "01/01/0001",
+"dataAdmissao": "01/01/0001",
+"telefone": 11912345678
+```
+
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
+> `{{baseUri}}/funcionario/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function alterarFuncionario(funcionario) {
+    axios.put(baseUri + "/funcionario/${funcionario.id}", {
+        nome: funcionario.nome,
+        cpf: funcionario.cpf,
+        dataNascimento: funcionario.dtNasc,
+        dataAdmissao: funcionario.dtAdmi,
+        telefone: funcionario.telefone
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> alterarFuncionario(Funcionario funcionario) async{
+        var response = await client.put(
+          Uri.parse("$baseUri/funcionario/${funcionario.id}"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+            "nome": funcionario.nome,
+            "cpf": funcionario.cpf,
+            "dataNascimento": funcionario.dtNasc,
+            "dataAdmissao": funcionario.dtAdmi,
+            "telefone": funcionario.telefone
+          }),
+        );
+        if(response.statusCode != 200){
+          dynamic body = jsonDecode(utf8.decode(response.body.runes.toList()));
+          return body;
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                           Why?                           |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 209         |  CONFLICT   |         Algum dado único já foi cadastrado antes         |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |          O objeto procurado não foi encontrado           |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/funcionario/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function excluirFuncionario(id) {
+    axios.delete(baseUri + "/funcionario/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> excluirFuncionario(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/funcionario/${id}"));
+        if(response.statusCode != 200){
+          return "Objeto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |           Retornou o valor            |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
 
 ## Fornecedor
 
