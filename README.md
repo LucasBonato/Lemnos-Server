@@ -14,6 +14,17 @@
     <hr />
 </div>
 
+- [Como Utilizar](#Como-utilizar-a-API)
+- [Headers](#Headers)
+- [EndPoints](#Endpoints)
+- [Erros](#Erros)
+- [Exemplos](#Exemplos)
+  - [Cadastro](#Cadastro)
+  - [Cliente](#Cliente)
+  - [Funcionário](#Funcionário)
+  - [Fornecedor](#Fornecedor)
+
+
 # Como utilizar a API
 
 API criada nesse projeto vem com a ideia de facilitar o trabalho na criação do e-commerce Lemnos, possuindo formas 
@@ -23,6 +34,8 @@ gerenciamento de carrinho.
 > _<ins>Ainda não foi feito o Deploy da API</ins>_
 
 ### _Url Base_: `http://localhost:8080/api/`
+
+# Headers
 
 |   Headers    | Description                     |
 |:------------:|:--------------------------------|
@@ -54,17 +67,18 @@ O que é o Id? Bem, é um identificador para saber sobre qual campo o erro se tr
 "universais" na API, ou seja, se o id for igual a 1 representa que deu algum problema no campo de Email. 
 Segue a tabela de valores: 
 
-| Id |  Campo que representa  |
-|----|:----------------------:|
-| 1  |         Email          |
-| 2  |         Senha          |
-| 3  |          Nome          |
-| 4  |        Telefone        |
-| 5  |     dataNascimento     |
-| 6  |      dataAdmissão      |
-| 7  |          CPF           |
-| 8  |          CNPJ          |
-| 9  |          CEP           |
+| Id |  Campo que representa   |
+|----|:-----------------------:|
+| 0  | Não implementado/Global |
+| 1  |          Email          |
+| 2  |          Senha          |
+| 3  |          Nome           |
+| 4  |        Telefone         |
+| 5  |     dataNascimento      |
+| 6  |      dataAdmissão       |
+| 7  |           CPF           |
+| 8  |          CNPJ           |
+| 9  |           CEP           |
 
 # Exemplos
 
@@ -72,25 +86,20 @@ Segue a tabela de valores:
 
 Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sendo que todas as requisições são de *POST*
 
-### Cliente
-
-#### Body:
-```
- (String) "nome": "Qualquer Nome",
- (String) "telefone": "11400289221",
- (String) "cpf": "11122233311",
- (String) "email": "emailDeSuaEscolha@email.com",
- (String) "senha": "SenhaDoCliente",
-(Integer) "numeroLogradouro": 0001
+### Body Cliente:
+``` JSON
+"nome": "Qualquer Nome",
+"cpf": 11122233311,
+"email": "emailDeSuaEscolha@email.com",
+"senha": "SenhaDoCliente"
 ```
 
-#### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
 
 > `{{baseUri}}/cadastro/cliente`
 
 JavaScript
-~~~javascript
+~~~ javascript
 let baseUri = "https://localhost:8080/api";
 
 function cadastrarCliente(cliente){
@@ -107,8 +116,7 @@ function cadastrarCliente(cliente){
             telefone: cliente.telefone,
             cpf: cliente.cpf,
             email: cliente.email,
-            senha: cliente.senha,
-            numeroLogradouro: cliente.numeroLogradouro
+            senha: cliente.senha
         })
     });
 }
@@ -124,8 +132,7 @@ function cadastrarCliente(cliente) {
         telefone: cliente.telefone,
         cpf: cliente.cpf,
         email: cliente.email,
-        senha: cliente.senha,
-        numeroLogradouro: cliente.numeroLogradouro
+        senha: cliente.senha
       })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -152,8 +159,7 @@ Class Api{
                 "telefone": cliente.telefone,
                 "cpf": cliente.cpf,
                 "email": cliente.email,
-                "senha": cliente.senha,
-                "numeroLogradouro": cliente.numeroLogradouro
+                "senha": cliente.senha
             })
         );
     }
@@ -171,20 +177,17 @@ Class Api{
 
 ---
 
-### Funcionario
-#### Body:
-```
- (String) "nome": "Qualquer Nome",
- (String) "cpf": "11122233344",
- (String) "telefone": "11400289221",
- (String) "dataNascimento": "01/01/0001",
- (String) "dataAdmissao": "01/01/0001",
- (String) "email": "emailDeSuaEscolha@email.com",
- (String) "senha": "SenhaDeSuaEscolha",
-(Integer) "numeroLogradouro": 0001
+### Body Funcionario:
+``` JSON
+"nome": "Qualquer Nome",
+"cpf": 11122233344,
+"telefone": 11400289221,
+"dataNascimento": "01/01/0001",
+"dataAdmissao": "01/01/0001",
+"email": "emailDeSuaEscolha@email.com",
+"senha": "SenhaDeSuaEscolha"
 ```
 
-#### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
 > `{{baseUri}}/cadastro/funcionario`
@@ -192,28 +195,6 @@ Class Api{
 JavaScript
 ~~~javascript
 let baseUri = "https://localhost:8080/api";
-
-function cadastrarFuncionario(funcionario){
-    
-    funcionario = tratarDados(funcionario);
-
-    fetch(baseUri + "/cadastro/funcionario", {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        },
-        body: JSON.stringify({
-            nome: funcionario.nome,
-            cpf: funcionario.cpf,
-            telefone: funcionario.telefone,
-            dataNascimento: funcionario.dataNascimento,
-            dataAdmissao: funcionario.dataAdmissao,
-            email: funcionario.email,
-            senha: funcionario.senha,
-            numeroLogradouro: funcionario.numeroLogradouro
-        })
-    });
-}
 
 // Utilizando Axios
 // ($ npm install axios)
@@ -228,8 +209,7 @@ function cadastrarFuncionario(cliente) {
         dataNascimento: funcionario.dataNascimento,
         dataAdmissao: funcionario.dataAdmissao,
         email: funcionario.email,
-        senha: funcionario.senha,
-        numeroLogradouro: funcionario.numeroLogradouro
+        senha: funcionario.senha
       })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -258,8 +238,7 @@ Class Api{
                 "dataNascimento": funcionario.dataNascimento,
                 "dataAdmissao": funcionario.dataAdmissao,
                 "email": funcionario.email,
-                "senha": funcionario.senha,
-                "numeroLogradouro": funcionario.numeroLogradouro
+                "senha": funcionario.senha
             })
         );
     }
@@ -277,18 +256,15 @@ Class Api{
 
 ---
 
-### Fornecedor
-#### Body:
-```
- (String) "nome": "Nome Do Fornecedor",
- (String) "cnpj": "09836719874612",
- (String) "telefone": "11999999999",
-(Integer) "numeroLogradouro": 0001,
- (String) "email": "emailDoFornecedor@gmail.com",
- (String) "cep": "0000000"
+### Body Fornecedor:
+``` JSON
+"nome": "Nome Do Fornecedor",
+"cnpj": "09836719874612",
+"telefone": "11999999999",
+"numeroLogradouro": 0001,
+"email": "emailDoFornecedor@gmail.com"
 ```
 
-#### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
 > `{{baseUri}}/cadastro/fornecedor`
@@ -296,26 +272,6 @@ Class Api{
 JavaScript
 ~~~javascript
 let baseUri = "https://localhost:8080/api";
-
-function cadastrarFornecedor(fornecedor){
-    
-    fornecedor = tratarDados(fornecedor);
-
-    fetch(baseUri + "/cadastro/fornecedor", {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        },
-        body: JSON.stringify({
-            nome: fornecedor.nome,
-            cnpj: fornecedor.cnpj,
-            telefone: fornecedor.telefone,
-            numeroLogradouro: fornecedor.numeroLogradouro,
-            email: fornecedor.email,
-            cep: fornecedor.cep,
-        })
-    });
-}
 
 // Utilizando Axios
 // ($ npm install axios)
@@ -328,8 +284,7 @@ function cadastrarFornecedor(fornecedor) {
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone,
         numeroLogradouro: fornecedor.numeroLogradouro,
-        email: fornecedor.email,
-        cep: fornecedor.cep,
+        email: fornecedor.email
       })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -356,8 +311,7 @@ Class Api{
                 "cnpj": fornecedor.cnpj,
                 "telefone": fornecedor.telefone,
                 "numeroLogradouro": fornecedor.numeroLogradouro,
-                "email": fornecedor.email,
-                "cep": fornecedor.cep,
+                "email": fornecedor.email
             })
         );
     }
@@ -378,8 +332,6 @@ Class Api{
 ---
 
 ## Cliente
-
-### Exemplos:
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
@@ -475,9 +427,128 @@ Class Api{
 
 ---
 
+### Body Cliente:
+``` JSON
+"nome": "Qualquer Nome",
+"cpf": "11122233311",
+```
+
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
+> `{{baseUri}}/cliente/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function alterarCliente(cliente) {
+    axios.put(baseUri + "/cliente/${cliente.id}", {
+        nome: cliente.nome,
+        cpf: cliente.cpf,
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> alterarCliente(Cliente cliente) async{
+        var response = await client.put(
+          Uri.parse("$baseUri/${cliente.id}"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+            "nome": cliente.nome,
+            "cpf": cliente.cpf,
+          }),
+        );
+        if(response.statusCode != 200){
+          dynamic body = jsonDecode(utf8.decode(response.body.runes.toList()));
+          return body;
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                           Why?                           |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 209         |  CONFLICT   |         Algum dado único já foi cadastrado antes         |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |          O objeto procurado não foi encontrado           |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/cliente/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function excluirCliente(id) {
+    axios.delete(baseUri + "/cliente/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> excluirCliente(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/${cliente.id}"));
+        if(response.statusCode != 200){
+          return "Objeto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |           Retornou o valor            |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Funcionário
+
+## Fornecedor
+
+
 
 Nada de importante
 
@@ -485,19 +556,3 @@ Nada de importante
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
-~~~ javascript
-GET
-fetch(uri + "/cadastro/cliente")
-    .then((response) => {
-        return response.json();
-    })
-    .then((data) => {
-        let nome = data['nome'];
-        let nome = data['nome'];
-        let nome = data['nome'];
-        let nome = data['nome'];
-        let nome = data['nome'];
-        let nome = data['nome'];
-    })
-    .catch()
-~~~
