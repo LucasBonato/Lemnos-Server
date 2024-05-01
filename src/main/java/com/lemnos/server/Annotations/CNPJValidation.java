@@ -3,11 +3,8 @@ package com.lemnos.server.Annotations;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.ReportAsSingleViolation;
-import jakarta.validation.constraints.Pattern;
 import java.lang.annotation.*;
 
-//"([0-9]{2}[.]?[0-9]{3}[.]?[0-9]{3}/?[0-9]{4}-?[0-9]{2})"
-//"([0-9]{2}?[0-9]{3}?[0-9]{3}?[0-9]{4}?[0-9]{2})"
 @Documented
 @ReportAsSingleViolation
 @Constraint(validatedBy = CPNJValidator.class)

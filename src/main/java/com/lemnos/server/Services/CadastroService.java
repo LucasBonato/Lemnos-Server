@@ -1,6 +1,9 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.*;
+import com.lemnos.server.Exceptions.Global.CnpjNotValidException;
+import com.lemnos.server.Exceptions.Global.CpfNotValidException;
+import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
@@ -50,6 +53,13 @@ public class CadastroService extends Util {
     }
 
     private Cliente verificarRegraDeNegocio(ClienteDTO clienteDTO) {
+        Long CPF;
+        try{
+            CPF = Long.parseLong(clienteDTO.getCpf());
+        } catch (NumberFormatException e){
+            throw new CpfNotValidException("CPF inválido: utilize só números");
+        }
+
         if(StringUtils.isBlank(clienteDTO.getNome())){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
         }
@@ -72,13 +82,26 @@ public class CadastroService extends Util {
         clienteDTO.setEmail(clienteDTO.getEmail().toLowerCase());
 
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(clienteDTO.getEmail());
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(Long.parseLong(clienteDTO.getCpf()));
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(CPF);
         if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(clienteOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
 
         return new Cliente(clienteDTO);
     }
     private Funcionario verificarRegraDeNegocio(FuncionarioDTO funcionarioDTO) {
+        Long CPF, Telefone;
+        try{
+            CPF = Long.parseLong(funcionarioDTO.getCpf());
+        } catch (NumberFormatException e) {
+            throw new CpfNotValidException("CPF inválido: utilize só números");
+        }
+
+        try {
+            Telefone = Long.parseLong(funcionarioDTO.getTelefone());
+        } catch (NumberFormatException e) {
+            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
+        }
+
         if(StringUtils.isBlank(funcionarioDTO.getNome())){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
         }
@@ -109,9 +132,9 @@ public class CadastroService extends Util {
         funcionarioDTO.setEmail(funcionarioDTO.getEmail().toLowerCase());
 
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(funcionarioDTO.getEmail());
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(Long.parseLong(funcionarioDTO.getCpf()));
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(CPF);
         if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
-        if(clienteOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
+        if(funcionarioOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
 
         return new Funcionario(
                 funcionarioDTO,
@@ -120,6 +143,19 @@ public class CadastroService extends Util {
         );
     }
     private Fornecedor verificarRegraDeNegocio(FornecedorDTO fornecedorDTO) {
+        Long CNPJ, Telefone;
+        try{
+            CNPJ = Long.parseLong(fornecedorDTO.getCnpj());
+        } catch (NumberFormatException e) {
+            throw new CnpjNotValidException("CNPJ inválido: utilize só números");
+        }
+
+        try {
+            Telefone = Long.parseLong(fornecedorDTO.getTelefone());
+        } catch (NumberFormatException e) {
+            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
+        }
+
         if(StringUtils.isBlank(fornecedorDTO.getNome())){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
         }
@@ -143,7 +179,7 @@ public class CadastroService extends Util {
         }
 
         Optional<Fornecedor> email = fornecedorRepository.findByEmail(fornecedorDTO.getEmail());
-        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(Long.parseLong(fornecedorDTO.getCnpj()));
+        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(CNPJ);
         if(email.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(cnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
