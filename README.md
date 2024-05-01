@@ -2,7 +2,7 @@
     <br />
     <img src="src/main/resources/imagens/Logo-Lemnos-Horizontal-Branco.png" alt="Logo" />
     <hr />
-    <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge" alt="..." />
+    <img src="https://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge" alt="..." />
     <img src="https://img.shields.io/static/v1?label=Projeto%20de&message=TCC&color=blue&style=for-the-badge" alt="..." />
     <hr />
     <p>
@@ -477,6 +477,50 @@ Class Api{
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
+> `{{baseUri}}/cliente/{$id}`
+
+JavaScript
+
+~~~ JavaScript
+
+const uri = 'http://localhost:8080/api';
+
+function updateCliente(cliente, id){
+    fetch(uri + "/cliente/${id}", {
+        method: PUT,
+        headers: {
+        "Content-type": "application/json; charset=UTF-8"
+    },
+    body: JSON.stringify({
+        nome: cliente.nome(nome),
+        telefone: cliente.telefone(telefone),
+        cpf: cliente.cpf(cpf),
+        email: cliente.email(email),
+        senha: cliente.senha(senha),
+        numeroLogradouro: cliente.numLogradouro(numLogradouro)
+        })
+    });
+}
+
+// Utilizando Axios
+// ($ npm install axios)
+
+function updateCliente(cliente, id){
+
+    axios.put(uri + "/cliente/${id}", {
+        nome: cliente.nome(nome),
+        telefone: cliente.telefone(telefone),
+        cpf: cliente.cpf(cpf),
+        email: cliente.email(email),
+        senha: cliente.senha(senha),
+        numeroLogradouro: cliente.numLogradouro(numLogradouro)
+        })
+        .then((response) => console.log(response.data))
+        .catch((error) => console.log(error));
+}
+
+~~~
+
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
 Nada de importante
@@ -484,6 +528,7 @@ Nada de importante
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 ~~~ javascript
 GET
