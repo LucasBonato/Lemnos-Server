@@ -54,11 +54,6 @@ public class CadastroService extends Util {
 
     private Cliente verificarRegraDeNegocio(ClienteDTO clienteDTO) {
         Long CPF;
-        try{
-            CPF = Long.parseLong(clienteDTO.getCpf());
-        } catch (NumberFormatException e){
-            throw new CpfNotValidException("CPF inválido: utilize só números");
-        }
 
         if(StringUtils.isBlank(clienteDTO.getNome())){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
@@ -69,6 +64,13 @@ public class CadastroService extends Util {
         if(clienteDTO.getCpf() == null || clienteDTO.getCpf().isBlank()){
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
+
+        try{
+            CPF = Long.parseLong(clienteDTO.getCpf());
+        } catch (NumberFormatException e){
+            throw new CpfNotValidException("CPF inválido: utilize só números");
+        }
+
         if(StringUtils.isBlank(clienteDTO.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
         }
@@ -89,18 +91,7 @@ public class CadastroService extends Util {
         return new Cliente(clienteDTO);
     }
     private Funcionario verificarRegraDeNegocio(FuncionarioDTO funcionarioDTO) {
-        Long CPF, Telefone;
-        try{
-            CPF = Long.parseLong(funcionarioDTO.getCpf());
-        } catch (NumberFormatException e) {
-            throw new CpfNotValidException("CPF inválido: utilize só números");
-        }
-
-        try {
-            Telefone = Long.parseLong(funcionarioDTO.getTelefone());
-        } catch (NumberFormatException e) {
-            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
-        }
+        Long CPF;
 
         if(StringUtils.isBlank(funcionarioDTO.getNome())){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
@@ -111,6 +102,14 @@ public class CadastroService extends Util {
         if(funcionarioDTO.getCpf() == null || funcionarioDTO.getCpf().isBlank()){
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
+
+        try{
+            CPF = Long.parseLong(funcionarioDTO.getCpf());
+        } catch (NumberFormatException e) {
+            throw new CpfNotValidException("CPF inválido: utilize só números");
+        }
+
+
         if(StringUtils.isBlank(funcionarioDTO.getDataNascimento())){
             throw new CadastroNotValidException(Codigo.DATANASC.ordinal(), "A Data de Nascimento é obrigatória!");
         }
@@ -118,8 +117,15 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException(Codigo.DATAADMI.ordinal(), "A Data de Admissão é obrigatória!");
         }
         if(funcionarioDTO.getTelefone() == null || funcionarioDTO.getTelefone().isBlank()){
-            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
+            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone é obrigatório");
         }
+
+        try {
+            Long.parseLong(funcionarioDTO.getTelefone());
+        } catch (NumberFormatException e) {
+            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
+        }
+
         if(StringUtils.isBlank(funcionarioDTO.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
         }
@@ -143,18 +149,7 @@ public class CadastroService extends Util {
         );
     }
     private Fornecedor verificarRegraDeNegocio(FornecedorDTO fornecedorDTO) {
-        Long CNPJ, Telefone;
-        try{
-            CNPJ = Long.parseLong(fornecedorDTO.getCnpj());
-        } catch (NumberFormatException e) {
-            throw new CnpjNotValidException("CNPJ inválido: utilize só números");
-        }
-
-        try {
-            Telefone = Long.parseLong(fornecedorDTO.getTelefone());
-        } catch (NumberFormatException e) {
-            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
-        }
+        Long CNPJ;
 
         if(StringUtils.isBlank(fornecedorDTO.getNome())){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
@@ -165,9 +160,23 @@ public class CadastroService extends Util {
         if(fornecedorDTO.getCnpj() == null || fornecedorDTO.getCnpj().isBlank()){
             throw new CadastroNotValidException(Codigo.CNPJ.ordinal(), "O CNPJ é obrigatório!");
         }
-        if(fornecedorDTO.getTelefone() == null || fornecedorDTO.getTelefone().isBlank()){
-            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
+
+        try{
+            CNPJ = Long.parseLong(fornecedorDTO.getCnpj());
+        } catch (NumberFormatException e) {
+            throw new CnpjNotValidException("CNPJ inválido: utilize só números");
         }
+
+        if(fornecedorDTO.getTelefone() == null || fornecedorDTO.getTelefone().isBlank()){
+            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "O Telefone é obrigatório!");
+        }
+
+        try {
+            Long.parseLong(fornecedorDTO.getTelefone());
+        } catch (NumberFormatException e) {
+            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
+        }
+
         if(fornecedorDTO.getNumeroLogradouro() == null){
             throw new CadastroNotValidException(Codigo.GLOBAL.ordinal(), "O Número do Logradouro é obrigatório!");
         }
