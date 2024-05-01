@@ -94,6 +94,7 @@ Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sen
 "senha": "SenhaDoCliente"
 ```
 
+#### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
 
 > `{{baseUri}}/cadastro/cliente`
