@@ -109,7 +109,6 @@ public class CadastroService extends Util {
             throw new CpfNotValidException("CPF inválido: utilize só números");
         }
 
-
         if(StringUtils.isBlank(funcionarioDTO.getDataNascimento())){
             throw new CadastroNotValidException(Codigo.DATANASC.ordinal(), "A Data de Nascimento é obrigatória!");
         }

@@ -2,6 +2,8 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
+import com.lemnos.server.Exceptions.Global.CpfNotValidException;
+import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
@@ -47,6 +49,7 @@ public class FuncionarioService extends Util {
     }
 
     private Funcionario insertData(Integer id, FuncionarioDTO funcionarioEnviado) {
+        Long CPF, Telefone;
         Funcionario funcionarioEncontrado = getOneById(id).getBody();
         assert funcionarioEncontrado != null;
 
@@ -62,6 +65,11 @@ public class FuncionarioService extends Util {
         if(funcionarioEnviado.getCpf() == null || funcionarioEnviado.getCpf().isBlank()){
             funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf().toString());
         }
+        try{
+            CPF = Long.parseLong(funcionarioEnviado.getCpf());
+        } catch (NumberFormatException e) {
+            throw new CpfNotValidException("CPF inválido: utilize só números");
+        }
         if(StringUtils.isBlank(funcionarioEnviado.getDataNascimento())){
             dataNasc = funcionarioEncontrado.getDataNascimento();
         } else {
@@ -75,17 +83,22 @@ public class FuncionarioService extends Util {
         if(funcionarioEnviado.getTelefone() == null || funcionarioEnviado.getTelefone().isBlank()){
             funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone().toString());
         }
+        try {
+            Telefone = Long.parseLong(funcionarioEnviado.getTelefone());
+        } catch (NumberFormatException e) {
+            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
+        }
 
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(Long.parseLong(funcionarioEnviado.getCpf()));
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(CPF);
         if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Funcionario updatedFuncionario = new Funcionario();
         updatedFuncionario.setId(id);
         updatedFuncionario.setNome(funcionarioEnviado.getNome());
-        updatedFuncionario.setCpf(Long.parseLong(funcionarioEnviado.getCpf()));
+        updatedFuncionario.setCpf(CPF);
         updatedFuncionario.setDataNascimento(dataNasc);
         updatedFuncionario.setDataAdmissao(dataAdmi);
-        updatedFuncionario.setTelefone(Long.parseLong(funcionarioEnviado.getTelefone()));
+        updatedFuncionario.setTelefone(Telefone);
         updatedFuncionario.setCadastro(funcionarioEncontrado.getCadastro());
         updatedFuncionario.setEnderecos(funcionarioEncontrado.getEnderecos());
 

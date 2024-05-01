@@ -3,6 +3,7 @@ package com.lemnos.server.Services;
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
+import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
@@ -48,6 +49,7 @@ public class ClienteService {
     }
 
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
+        Long CPF;
         Cliente clienteEncontrado = getOneById(id).getBody();
         assert clienteEncontrado != null;
 
@@ -63,14 +65,19 @@ public class ClienteService {
         if(clienteEnviado.getCpf() == null){
             clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
+        try{
+            CPF = Long.parseLong(clienteEnviado.getCpf());
+        } catch (NumberFormatException e) {
+            throw new CpfNotValidException("CPF inválido: utilize só números");
+        }
 
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(Long.parseLong(clienteEnviado.getCpf()));
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(CPF);
         if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Cliente updatedCliente = new Cliente();
         updatedCliente.setId(id);
         updatedCliente.setNome(clienteEnviado.getNome());
-        updatedCliente.setCpf(Long.parseLong(clienteEnviado.getCpf()));
+        updatedCliente.setCpf(CPF);
         updatedCliente.setCadastro(clienteEncontrado.getCadastro());
         updatedCliente.setEnderecos(clienteEncontrado.getEnderecos());
 
