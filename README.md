@@ -122,8 +122,9 @@ function cadastrarCliente(cliente){
     });
 }
 
-// Utilizando Axios
-// ($ npm install axios)
+import axios from 'axios';
+const axios = require("axios");
+
 function cadastrarCliente(cliente) {
     
     cliente = tratarDados(cliente);
@@ -195,10 +196,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function cadastrarFuncionario(cliente) {
     
     cliente = tratarDados(cliente);
@@ -272,10 +274,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function cadastrarFornecedor(fornecedor) {
     
     fornecedor = tratarDados(fornecedor);
@@ -340,10 +343,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function getClientes() {
     axios.get(baseUri + "/cliente")
       .then((response) => console.log(response.data))
@@ -387,10 +391,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function getCliente(id) {
     axios.get(baseUri + "/cliente/${id}")
       .then((response) => console.log(response.data))
@@ -553,10 +558,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function getFuncionarios() {
     axios.get(baseUri + "/funcionario")
       .then((response) => console.log(response.data))
@@ -600,10 +606,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function getFuncionario(id) {
     axios.get(baseUri + "/funcionario/${id}")
       .then((response) => console.log(response.data))
@@ -775,10 +782,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function getFornecedores() {
     axios.get(baseUri + "/fornecedor")
       .then((response) => console.log(response.data))
@@ -822,10 +830,11 @@ Class Api{
 
 JavaScript
 ~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
 let baseUri = "https://localhost:8080/api";
 
-// Utilizando Axios
-// ($ npm install axios)
 function getFornecedor(id) {
     axios.get(baseUri + "/fornecedor/${id}")
       .then((response) => console.log(response.data))
