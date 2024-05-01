@@ -1,3 +1,7 @@
+-- Database: LemnosDB
+
+-- DROP DATABASE IF EXISTS "LemnosDB";
+
 CREATE DATABASE "LemnosDB"
     WITH
     OWNER = postgres
@@ -18,8 +22,7 @@ CREATE TABLE Cadastro (
 CREATE TABLE Cliente (
     Id SERIAL PRIMARY KEY,
     Nome varchar(40) NOT NULL,
-    CPF char(11) UNIQUE NOT NULL,
-    Numero_Logradouro int,
+    CPF numeric(11) UNIQUE NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_cliente_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -27,11 +30,10 @@ CREATE TABLE Cliente (
 CREATE TABLE Funcionario (
     Id SERIAL PRIMARY KEY,
     Nome varchar(40) NOT NULL,
-    CPF char(11) UNIQUE NOT NULL,
+    CPF numeric(11) UNIQUE NOT NULL,
     Data_Nascimento date NOT NULL,
     Data_Admissao date NOT NULL,
-    Numero_Logradouro int NOT NULL,
-    Telefone char(11),
+    Telefone numeric(11),
     Id_Cadastro int,
     CONSTRAINT fk_funcionario_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -40,17 +42,17 @@ CREATE TABLE Fornecedor (
     Id SERIAL PRIMARY KEY,
     Nome varchar(50) NOT NULL,
     Email varchar(100) UNIQUE NOT NULL,
-    Telefone char(11) NOT NULL,
-    CNPJ char(14) UNIQUE NOT NULL,
-    CEP char(8),
+    Telefone numeric(11) NOT NULL,
+    CNPJ numeric(14) UNIQUE NOT NULL,
+    CEP numeric(8),
     Numero_Logradouro int NOT NULL
 );
 CREATE TABLE Pedido (
     Id SERIAL PRIMARY KEY,
-    Valor_Pedido numeric(10,2) NOT NULL,
+    Valor_Pedido numeric(10, 2) NOT NULL,
     Metodo_Pagamento varchar(20) NOT NULL,
     Data_Pedido date NOT NULL,
-    Valor_Pagamento numeric(10,2) NOT NULL,
+    Valor_Pagamento numeric(10, 2) NOT NULL,
     Quantidade_Produtos int NOT NULL,
     Data_Pagamento date NOT NULL,
     Descricao varchar(255) NOT NULL,
@@ -58,7 +60,7 @@ CREATE TABLE Pedido (
 );
 CREATE TABLE Carrinho (
     Id SERIAL PRIMARY KEY,
-    Valor numeric(10,2) NOT NULL,
+    Valor numeric(10, 2) NOT NULL,
     Quantidade_Produtos int NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_carrinho_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
@@ -135,7 +137,7 @@ CREATE TABLE Cidade(
     Cidade varchar(30) UNIQUE NOT NULL
 );
 CREATE TABLE Endereco (
-    CEP char(8) PRIMARY KEY,
+    CEP numeric(8) PRIMARY KEY,
     Logradouro varchar(50) NOT NULL,
     Bairro varchar(30) NOT NULL,
     Id_Fornecedor int,
@@ -177,14 +179,14 @@ CREATE TABLE Entrega (
     CONSTRAINT fk_entrega_pedido FOREIGN KEY(Id_Pedido) REFERENCES Pedido(Id)
 );
 CREATE TABLE Cliente_Possui_Endereco (
-    CEP char(8),
+    CEP numeric(8),
     Id_Cliente int,
     PRIMARY KEY(CEP, Id_Cliente),
     CONSTRAINT fk_cliente_possui_endereco_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP),
     CONSTRAINT fk_cliente_possui_endereco_cliente FOREIGN KEY(Id_Cliente) REFERENCES Cliente(Id)
 );
 CREATE TABLE Funcionario_Possui_Endereco (
-    CEP char(8),
+    CEP numeric(8),
     Id_Funcionario int,
     PRIMARY KEY(CEP, Id_Funcionario),
     CONSTRAINT fk_funcionario_possui_endereco_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP),
