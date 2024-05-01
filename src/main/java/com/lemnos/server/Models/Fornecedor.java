@@ -1,6 +1,6 @@
 package com.lemnos.server.Models;
 
-import com.lemnos.server.Annotations.CNPJValidation;
+import com.lemnos.server.Annotations.CNPJ;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ public class Fornecedor {
     private Integer id;
 
     @Column(name = "CNPJ")
-    @CNPJValidation(message = "Insira um CNPJ válido")
+    @CNPJ(message = "Insira um CNPJ válido")
     private Long cnpj;
 
     @Column(name = "Nome")

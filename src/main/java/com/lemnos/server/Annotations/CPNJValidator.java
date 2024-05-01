@@ -4,9 +4,9 @@ import com.lemnos.server.Exceptions.Global.CnpjNotValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CPNJValidator implements ConstraintValidator<CNPJValidation, Long> {
+public class CPNJValidator implements ConstraintValidator<CNPJ, Long> {
     @Override
-    public void initialize(CNPJValidation constraintAnnotation) {
+    public void initialize(CNPJ constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 

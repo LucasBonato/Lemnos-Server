@@ -4,9 +4,9 @@ import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CPFValidator implements ConstraintValidator<CPFValidation, Long> {
+public class CPFValidator implements ConstraintValidator<CPF, Long> {
     @Override
-    public void initialize(CPFValidation constraintAnnotation) {
+    public void initialize(CPF constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
