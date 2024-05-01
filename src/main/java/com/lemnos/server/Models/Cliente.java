@@ -1,9 +1,9 @@
 package com.lemnos.server.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.Annotations.CPFValidation;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -49,6 +49,10 @@ public class Cliente {
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Situacao")
+    private Situacao situacao = Situacao.ATIVO;
+
     public Cliente(ClienteDTO clienteDTO){
         this.nome = clienteDTO.getNome();
         this.cpf = clienteDTO.getCpf();
@@ -57,5 +61,9 @@ public class Cliente {
     public Cliente(String nome, String cpf){
         this.nome = nome;
         this.cpf = cpf;
+    }
+
+    public Cliente(Situacao situacao){
+        this.situacao = situacao;
     }
 }
