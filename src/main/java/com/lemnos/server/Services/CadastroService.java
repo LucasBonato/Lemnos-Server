@@ -119,7 +119,7 @@ public class CadastroService extends Util {
         if(funcionarioDTO.getSenha().length() < 8 || funcionarioDTO.getSenha().length() > 16){
             throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha precisa ter mínimo 8 caracteres!");
         }
-        funcionarioDTO.setSituacao(Situacao.ATIVO.getSituacao());
+        
         funcionarioDTO.setEmail(funcionarioDTO.getEmail().toLowerCase());
 
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(funcionarioDTO.getEmail());
@@ -159,7 +159,6 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException(Codigo.CEP.ordinal(), "CEP inválido! XXXXX-XXX");
         }
 
-        fornecedorDTO.setSituacao(Situacao.ATIVO.getSituacao());
         Optional<Fornecedor> email = fornecedorRepository.findByEmail(fornecedorDTO.getEmail());
         Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(fornecedorDTO.getCnpj());
         if(email.isPresent()) throw new CadastroEmailAlreadyInUseException();
