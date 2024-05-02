@@ -8,7 +8,9 @@ import com.lemnos.server.Models.Endereco.Cidade;
 import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Endereco.Estado;
 import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
+import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Codigo;
+import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.*;
 import com.lemnos.server.Utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +28,39 @@ public class EnderecoService extends Util{
     @Autowired private EstadoRepository estadoRepository;
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
+    @Autowired private FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
     @Autowired private ClienteService clienteService;
+    @Autowired private FuncionarioService funcionarioService;
 
     public ResponseEntity createEnderecoCliente(Integer id, EnderecoDTO enderecoDTO) {
         Cliente cliente = clienteService.getOneById(id).getBody();
         assert cliente != null;
 
+        Endereco endereco = getEndereco(enderecoDTO);
+
+        ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro());
+        clientePossuiEnderecoRepository.save(clientePossuiEndereco);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity createEnderecoFuncionario(Integer id, EnderecoDTO enderecoDTO) {
+        Funcionario funcionario = funcionarioService.getOneById(id).getBody();
+        assert funcionario != null;
+
+        Endereco endereco = getEndereco(enderecoDTO);
+
+        FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoDTO.getNumeroLogradouro());
+        funcionarioPossuiEnderecoRepository.save(funcionarioPossuiEndereco);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity createEnderecoFornecedor(Integer id, EnderecoDTO enderecoDTO) {
+        return ResponseEntity.ok().build();
+    }
+
+    private Endereco getEndereco(EnderecoDTO enderecoDTO) {
         String cep = enderecoDTO.getCep();
         Endereco endereco;
 
@@ -42,19 +71,7 @@ public class EnderecoService extends Util{
         } else {
             endereco = optionalEndereco.get();
         }
-
-        ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro());
-        clientePossuiEnderecoRepository.save(clientePossuiEndereco);
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity createEnderecoFuncionario(Integer id, EnderecoDTO enderecoDTO) {
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity createEnderecoFornecedor(Integer id, EnderecoDTO enderecoDTO) {
-        return ResponseEntity.ok().build();
+        return endereco;
     }
 
     private void verificarCamposEndereco(EnderecoDTO enderecoDTO) {
