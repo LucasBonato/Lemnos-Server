@@ -42,14 +42,15 @@ public class ClienteService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> safeDeleteById(Integer id){
+    public ResponseEntity<Void> deleteById(Integer id){
         Cliente clienteDeletado = getOneById(id).getBody();
 
         assert clienteDeletado != null;
         if(clienteDeletado.getSituacao() == Situacao.ATIVO) {
             clienteDeletado.setSituacao(Situacao.INATIVO);
+            clienteRepository.save(clienteDeletado);
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
