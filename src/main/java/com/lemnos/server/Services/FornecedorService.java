@@ -4,8 +4,10 @@ import com.lemnos.server.Exceptions.Cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
+import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Enums.Codigo;
+import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Repositories.FornecedorRepository;
 import io.micrometer.common.util.StringUtils;
@@ -34,14 +36,20 @@ public class FornecedorService {
         throw new FornecedorNotFoundException();
     }
 
-    public ResponseEntity update(Integer id, FornecedorDTO fornecedorDTO) {
+    public ResponseEntity updateFornecedor(Integer id, FornecedorDTO fornecedorDTO) {
         Fornecedor updatedFornecedor = insertData(id, fornecedorDTO);
         fornecedorRepository.save(updatedFornecedor);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity delete(Integer id) {
-        fornecedorRepository.deleteById(id);
+    public ResponseEntity deleteById(Integer id) {
+        Fornecedor fornecedorDeletado = getOneById(id).getBody();
+
+        assert fornecedorDeletado != null;
+        if(fornecedorDeletado.getSituacao() == Situacao.ATIVO) {
+            fornecedorDeletado.setSituacao(Situacao.INATIVO);
+            fornecedorRepository.save(fornecedorDeletado);
+        }
         return ResponseEntity.ok().build();
     }
 

@@ -27,11 +27,11 @@ public class FornecedorController {
 
     @PutMapping("/{id}")
     public ResponseEntity update(@PathVariable Integer id, @RequestBody FornecedorDTO fornecedorDTO) {
-        return fornecedorService.update(id, fornecedorDTO);
+        return fornecedorService.updateFornecedor(id, fornecedorDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Integer id){
-        return fornecedorService.delete(id);
+        return fornecedorService.deleteById(id);
     }
 }
