@@ -13,4 +13,5 @@ public class FornecedorDTO {
     private String telefone;
     private Integer numeroLogradouro;
     private String email;
+    private String situacao;
 }

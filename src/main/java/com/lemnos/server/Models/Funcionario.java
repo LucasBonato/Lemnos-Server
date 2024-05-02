@@ -4,6 +4,7 @@ import com.lemnos.server.Annotations.CPF;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
+import com.lemnos.server.Models.Enums.Situacao;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +45,10 @@ public class Funcionario {
             inverseJoinColumns = @JoinColumn(name = "CEP")
     )
     private List<Endereco> enderecos;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Situacao")
+    private Situacao situacao = Situacao.ATIVO;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Cadastro")

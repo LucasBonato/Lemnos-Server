@@ -1,7 +1,3 @@
--- Database: LemnosDB
-
--- DROP DATABASE IF EXISTS "LemnosDB";
-
 CREATE DATABASE "LemnosDB"
     WITH
     OWNER = postgres
@@ -23,6 +19,7 @@ CREATE TABLE Cliente (
     Id SERIAL PRIMARY KEY,
     Nome varchar(40) NOT NULL,
     CPF numeric(11) UNIQUE NOT NULL,
+    Situacao varchar(7) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_cliente_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -34,6 +31,7 @@ CREATE TABLE Funcionario (
     Data_Nascimento date NOT NULL,
     Data_Admissao date NOT NULL,
     Telefone numeric(11),
+    Situacao varchar(7) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_funcionario_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -44,7 +42,8 @@ CREATE TABLE Fornecedor (
     Email varchar(100) UNIQUE NOT NULL,
     Telefone numeric(11) NOT NULL,
     CNPJ numeric(14) UNIQUE NOT NULL,
-    Numero_Logradouro int NOT NULL
+    Numero_Logradouro int NOT NULL,
+    Situacao varchar(7) NOT NULL
 );
 CREATE TABLE Pedido (
     Id SERIAL PRIMARY KEY,

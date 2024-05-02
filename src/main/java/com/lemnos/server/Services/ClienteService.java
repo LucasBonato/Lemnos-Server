@@ -8,6 +8,7 @@ import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.Enums.Codigo;
+import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Repositories.ClienteRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,13 @@ public class ClienteService {
     }
 
     public ResponseEntity<Void> deleteById(Integer id){
-        getOneById(id);
-        clienteRepository.deleteById(id);
+        Cliente clienteDeletado = getOneById(id).getBody();
+
+        assert clienteDeletado != null;
+        if(clienteDeletado.getSituacao() == Situacao.ATIVO) {
+            clienteDeletado.setSituacao(Situacao.INATIVO);
+            clienteRepository.save(clienteDeletado);
+        }
         return ResponseEntity.ok().build();
     }
 
