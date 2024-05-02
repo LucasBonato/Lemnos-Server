@@ -1,5 +1,6 @@
 package com.lemnos.server.Controllers;
 
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Services.FornecedorService;
@@ -26,12 +27,17 @@ public class FornecedorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity update(@PathVariable Integer id, @RequestBody FornecedorDTO fornecedorDTO) {
+    public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody FornecedorDTO fornecedorDTO) {
         return fornecedorService.updateFornecedor(id, fornecedorDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(@PathVariable Integer id){
         return fornecedorService.deleteById(id);
+    }
+
+    @PostMapping("/endereco")
+    public ResponseEntity<Void> createEndereco(@RequestParam(required = true, value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
+        return fornecedorService.createEndereco(id, enderecoDTO);
     }
 }

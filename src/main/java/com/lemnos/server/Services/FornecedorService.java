@@ -2,9 +2,12 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
+import com.lemnos.server.Exceptions.Fornecedor.FornecedorAlreadyHasEnderecoException;
 import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
+import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Fornecedor;
@@ -12,6 +15,7 @@ import com.lemnos.server.Repositories.FornecedorRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +40,27 @@ public class FornecedorService extends Util {
         throw new FornecedorNotFoundException();
     }
 
-    public ResponseEntity updateFornecedor(Integer id, FornecedorDTO fornecedorDTO) {
+    public ResponseEntity<Void> createEndereco(Integer id, EnderecoDTO enderecoDTO) {
+        Fornecedor fornecedor = getOneById(id).getBody();
+        assert fornecedor != null;
+
+        Endereco endereco = getEndereco(enderecoDTO);
+
+        if(fornecedor.getEndereco() != null) throw new FornecedorAlreadyHasEnderecoException();
+
+        fornecedor.setEndereco(endereco);
+        fornecedorRepository.save(fornecedor);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> updateFornecedor(Integer id, FornecedorDTO fornecedorDTO) {
         Fornecedor updatedFornecedor = insertData(id, fornecedorDTO);
         fornecedorRepository.save(updatedFornecedor);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity deleteById(Integer id) {
+    public ResponseEntity<Void> deleteById(Integer id) {
         Fornecedor fornecedorDeletado = getOneById(id).getBody();
 
         assert fornecedorDeletado != null;

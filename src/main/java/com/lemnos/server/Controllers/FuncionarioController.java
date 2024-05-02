@@ -1,5 +1,6 @@
 package com.lemnos.server.Controllers;
 
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Services.FuncionarioService;
@@ -27,12 +28,17 @@ class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Funcionario> updateFuncionario(@PathVariable Integer id, @RequestBody @Valid FuncionarioDTO funcionarioDTO){
+    public ResponseEntity<Void> updateFuncionario(@PathVariable Integer id, @RequestBody @Valid FuncionarioDTO funcionarioDTO){
         return funcionarioService.updateFuncionario(id, funcionarioDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Funcionario> deleteById(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
         return funcionarioService.deleteById(id);
+    }
+
+    @PostMapping("/endereco")
+    public ResponseEntity<Void> createEndereco(@RequestParam(required = true, value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
+        return funcionarioService.createEndereco(id, enderecoDTO);
     }
 }
