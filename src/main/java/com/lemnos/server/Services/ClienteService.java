@@ -6,8 +6,11 @@ import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
+import com.lemnos.server.Models.Records.ClienteRecord;
+import com.lemnos.server.Models.Records.EnderecoRecord;
 import com.lemnos.server.Repositories.ClienteRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,8 +28,22 @@ public class ClienteService extends Util {
 
     @Autowired private ClienteRepository clienteRepository;
 
-    public ResponseEntity<List<Cliente>> getAll() {
-        return ResponseEntity.ok(clienteRepository.findAll());
+    public ResponseEntity<List<ClienteRecord>> getAll() {
+        List<Cliente> clientes = clienteRepository.findAll();
+        List<ClienteRecord> dto = new ArrayList<>();
+        for(Cliente cliente : clientes){
+            List<EnderecoRecord> enderecoRecords = getEnderecoRecords(cliente);
+            ClienteRecord record = new ClienteRecord(
+                    cliente.getNome(),
+                    cliente.getCpf(),
+                    cliente.getCadastro().getEmail(),
+                    cliente.getCadastro().getSenha(),
+                    enderecoRecords
+            );
+            dto.add(record);
+        }
+
+        return ResponseEntity.ok(dto);
     }
 
     public ResponseEntity<Cliente> getOneById(Integer id) {
@@ -52,6 +70,22 @@ public class ClienteService extends Util {
             clienteRepository.save(clienteDeletado);
         }
         return ResponseEntity.ok().build();
+    }
+
+    private static List<EnderecoRecord> getEnderecoRecords(Cliente cliente) {
+        List<EnderecoRecord> enderecoRecords = new ArrayList<>();
+        for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
+            EnderecoRecord enderecoRecord = new EnderecoRecord(
+                    cpe.getEndereco().getCep(),
+                    cpe.getEndereco().getLogradouro(),
+                    cpe.getNumeroLogradouro(),
+                    cpe.getEndereco().getBairro(),
+                    cpe.getEndereco().getCidade().getCidade(),
+                    cpe.getEndereco().getEstado().getUf()
+            );
+            enderecoRecords.add(enderecoRecord);
+        }
+        return enderecoRecords;
     }
 
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
