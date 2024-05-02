@@ -42,9 +42,9 @@ public class Fornecedor {
     @Column(name = "Situacao")
     private Situacao situacao = Situacao.ATIVO;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "Id_Fornecedor")
-    private List<Endereco> enderecos;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CEP")
+    private Endereco endereco;
 
     public Fornecedor(FornecedorDTO fornecedorDTO){
         this.cnpj = Long.parseLong(fornecedorDTO.getCnpj());

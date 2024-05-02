@@ -2,11 +2,9 @@ package com.lemnos.server.Models.Endereco;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.Annotations.CEP;
-import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
-import com.lemnos.server.Models.Funcionario;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,10 +34,6 @@ public class Endereco {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_estado")
     private Estado estado;
-
-    @JsonIgnore
-    @Column(name = "Id_Fornecedor")
-    private Integer id_Fornecedor;
 
     @JsonIgnore
     @OneToMany(mappedBy = "endereco")

@@ -36,15 +36,6 @@ CREATE TABLE Funcionario (
     CONSTRAINT fk_funcionario_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
 );
-CREATE TABLE Fornecedor (
-    Id SERIAL PRIMARY KEY,
-    Nome varchar(50) NOT NULL,
-    Email varchar(100) UNIQUE NOT NULL,
-    Telefone numeric(11) NOT NULL,
-    CNPJ numeric(14) UNIQUE NOT NULL,
-    Numero_Logradouro int NOT NULL,
-    Situacao varchar(7) NOT NULL
-);
 CREATE TABLE Pedido (
     Id SERIAL PRIMARY KEY,
     Valor_Pedido numeric(10, 2) NOT NULL,
@@ -139,13 +130,22 @@ CREATE TABLE Endereco (
     CEP char(8) PRIMARY KEY,
     Logradouro varchar(50) NOT NULL,
     Bairro varchar(30) NOT NULL,
-    Id_Fornecedor int,
     Id_Estado int,
     Id_Cidade int,
-    CONSTRAINT fk_endereco_fornecedor FOREIGN KEY(Id_Fornecedor) REFERENCES Fornecedor(Id),
     CONSTRAINT fk_endereco_estado FOREIGN KEY(Id_Estado) REFERENCES Estado(Id),
     CONSTRAINT fk_endereco_cidade FOREIGN KEY(Id_Cidade) REFERENCES Cidade(Id),
     CHECK(LENGTH(Logradouro) > 2 AND LENGTH(Bairro) > 2)
+);
+CREATE TABLE Fornecedor (
+    Id SERIAL PRIMARY KEY,
+    Nome varchar(50) NOT NULL,
+    Email varchar(100) UNIQUE NOT NULL,
+    Telefone numeric(11) NOT NULL,
+    CNPJ numeric(14) UNIQUE NOT NULL,
+    Situacao varchar(7) NOT NULL,
+    Numero_Logradouro int NOT NULL,
+    CEP char(8),
+    CONSTRAINT fk_fornecedor_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP)
 );
 CREATE TABLE Fabricante(
     Id SERIAL PRIMARY KEY,

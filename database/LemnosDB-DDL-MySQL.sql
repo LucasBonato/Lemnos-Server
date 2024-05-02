@@ -29,15 +29,6 @@ CREATE TABLE Funcionario (
     foreign key(Id_Cadastro) references Cadastro(Id),
     constraint check(CHAR_LENGTH(Nome) > 2)
 );
-CREATE TABLE Fornecedor (
-	Id int primary key auto_increment,
-    Nome varChar(50) NOT NULL,
-    Email varChar(100) NOT NULL UNIQUE,
-	Telefone numeric(11) NOT NULL,
-	CNPJ numeric(14) UNIQUE NOT NULL,
-	Situacao varchar(7) NOT NULL,
-	Numero_Logradouro int NOT NULL
-);
 CREATE TABLE Pedido (
 	Id int primary key auto_increment,
 	Valor_Pedido decimal(10,2) NOT NULL,
@@ -131,13 +122,22 @@ CREATE TABLE Endereco (
 	CEP char(8) primary key,
 	Logradouro varchar(50) NOT NULL,
 	Bairro varchar(30) NOT NULL,
-	Id_Fornecedor int,
     Id_Estado int,
     Id_Cidade int,
-	foreign key(Id_Fornecedor) references Fornecedor (Id),
     foreign key(Id_Estado) references Estado (Id),
     foreign key(Id_Cidade) references Cidade (Id),
     constraint check(CHAR_LENGTH(Logradouro) > 2 AND CHAR_LENGTH(Bairro) > 2)
+);
+CREATE TABLE Fornecedor (
+	Id int primary key auto_increment,
+    Nome varChar(50) NOT NULL,
+    Email varChar(100) NOT NULL UNIQUE,
+	Telefone numeric(11) NOT NULL,
+	CNPJ numeric(14) UNIQUE NOT NULL,
+	Situacao varchar(7) NOT NULL,
+	Numero_Logradouro int NOT NULL,
+	CEP char(8),
+	foreign key(CEP) references Endereco(CEP)
 );
 CREATE TABLE Fabricante(
 	Id int primary key auto_increment,
