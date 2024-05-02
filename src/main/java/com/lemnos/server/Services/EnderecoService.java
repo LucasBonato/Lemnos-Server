@@ -2,6 +2,7 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Endereco.EnderecoNotValidException;
 import com.lemnos.server.Exceptions.Endereco.EstadoNotFoundException;
+import com.lemnos.server.Exceptions.Fornecedor.FornecedorAlreadyHasEnderecoException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.Endereco.Cidade;
@@ -10,14 +11,15 @@ import com.lemnos.server.Models.Endereco.Estado;
 import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Codigo;
+import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.*;
 import com.lemnos.server.Utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,11 +28,15 @@ public class EnderecoService extends Util{
     @Autowired private EnderecoRepository enderecoRepository;
     @Autowired private CidadeRepository cidadeRepository;
     @Autowired private EstadoRepository estadoRepository;
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
-    @Autowired private FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
+
     @Autowired private ClienteService clienteService;
+    @Autowired private ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
+
     @Autowired private FuncionarioService funcionarioService;
+    @Autowired private FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
+
+    @Autowired private FornecedorService fornecedorService;
+    @Autowired private FornecedorRepository fornecedorRepository;
 
     public ResponseEntity createEnderecoCliente(Integer id, EnderecoDTO enderecoDTO) {
         Cliente cliente = clienteService.getOneById(id).getBody();
@@ -41,7 +47,7 @@ public class EnderecoService extends Util{
         ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro());
         clientePossuiEnderecoRepository.save(clientePossuiEndereco);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     public ResponseEntity createEnderecoFuncionario(Integer id, EnderecoDTO enderecoDTO) {
@@ -53,11 +59,21 @@ public class EnderecoService extends Util{
         FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoDTO.getNumeroLogradouro());
         funcionarioPossuiEnderecoRepository.save(funcionarioPossuiEndereco);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     public ResponseEntity createEnderecoFornecedor(Integer id, EnderecoDTO enderecoDTO) {
-        return ResponseEntity.ok().build();
+        Fornecedor fornecedor = fornecedorService.getOneById(id).getBody();
+        assert fornecedor != null;
+
+        Endereco endereco = getEndereco(enderecoDTO);
+
+        if(fornecedor.getEndereco() != null) throw new FornecedorAlreadyHasEnderecoException();
+
+        fornecedor.setEndereco(endereco);
+        fornecedorRepository.save(fornecedor);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     private Endereco getEndereco(EnderecoDTO enderecoDTO) {

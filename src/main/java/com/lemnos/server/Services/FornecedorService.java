@@ -87,7 +87,7 @@ public class FornecedorService extends Util {
         fornecedor.setCnpj(cpnj);
         fornecedor.setEmail(fornecedorEncontrado.getEmail());
         fornecedor.setNumeroLogradouro(fornecedorEncontrado.getNumeroLogradouro());
-        fornecedor.setEnderecos(fornecedorEncontrado.getEnderecos());
+        fornecedor.setEndereco(fornecedorEncontrado.getEndereco());
 
         return fornecedor;
     }
