@@ -1,5 +1,6 @@
 package com.lemnos.server.Models.Cadastro;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import jakarta.persistence.*;
@@ -17,6 +18,7 @@ public class Cadastro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
+    @JsonIgnore
     private Integer id;
 
     @Column(name = "Email")

@@ -2,10 +2,7 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
-import com.lemnos.server.Exceptions.Global.CpfNotValidException;
-import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
-import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Funcionario;
@@ -57,7 +54,6 @@ public class FuncionarioService extends Util {
     }
 
     private Funcionario insertData(Integer id, FuncionarioDTO funcionarioEnviado) {
-        Long CPF, Telefone;
         Funcionario funcionarioEncontrado = getOneById(id).getBody();
         assert funcionarioEncontrado != null;
 
@@ -73,11 +69,7 @@ public class FuncionarioService extends Util {
         if(funcionarioEnviado.getCpf() == null || funcionarioEnviado.getCpf().isBlank()){
             funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf().toString());
         }
-        try{
-            CPF = Long.parseLong(funcionarioEnviado.getCpf());
-        } catch (NumberFormatException e) {
-            throw new CpfNotValidException("CPF inválido: utilize só números");
-        }
+        Long cpf = convertStringToLong(funcionarioEnviado.getCpf(), CPF);
         if(StringUtils.isBlank(funcionarioEnviado.getDataNascimento())){
             dataNasc = funcionarioEncontrado.getDataNascimento();
         } else {
@@ -91,22 +83,18 @@ public class FuncionarioService extends Util {
         if(funcionarioEnviado.getTelefone() == null || funcionarioEnviado.getTelefone().isBlank()){
             funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone().toString());
         }
-        try {
-            Telefone = Long.parseLong(funcionarioEnviado.getTelefone());
-        } catch (NumberFormatException e) {
-            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
-        }
+        Long telefone = convertStringToLong(funcionarioEnviado.getTelefone(), TELEFONE);
 
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(CPF);
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(cpf);
         if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Funcionario updatedFuncionario = new Funcionario();
         updatedFuncionario.setId(id);
         updatedFuncionario.setNome(funcionarioEnviado.getNome());
-        updatedFuncionario.setCpf(CPF);
+        updatedFuncionario.setCpf(cpf);
         updatedFuncionario.setDataNascimento(dataNasc);
         updatedFuncionario.setDataAdmissao(dataAdmi);
-        updatedFuncionario.setTelefone(Telefone);
+        updatedFuncionario.setTelefone(telefone);
         updatedFuncionario.setCadastro(funcionarioEncontrado.getCadastro());
         updatedFuncionario.setEnderecos(funcionarioEncontrado.getEnderecos());
 

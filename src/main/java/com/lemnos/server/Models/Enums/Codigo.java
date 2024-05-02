@@ -10,7 +10,12 @@ public enum Codigo {
     DATAADMI(6),
     CPF(7),
     CNPJ(8),
-    CEP(9);
+    CEP(9),
+    LOGRADOURO(10),
+    CIDADE(11),
+    BAIRRO(12),
+    UF(13),
+    NUMERO_LOGRADOURO(14);
 
     Codigo(Integer i){}
 }

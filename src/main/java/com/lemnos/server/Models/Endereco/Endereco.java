@@ -3,15 +3,19 @@ package com.lemnos.server.Models.Endereco;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.Annotations.CEP;
 import com.lemnos.server.Models.Cliente;
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
+import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Funcionario;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "Endereco")
 @Data
+@NoArgsConstructor
 public class Endereco {
     @Id
     @Column(name = "CEP")
@@ -37,10 +41,18 @@ public class Endereco {
     private Integer id_Fornecedor;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "enderecos")
-    private List<Cliente> clientes;
+    @OneToMany(mappedBy = "endereco")
+    private List<ClientePossuiEndereco> clientes;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "enderecos")
     private List<Funcionario> funcionarios;
+
+    public Endereco(String cep, Cidade cidade, Estado estado, EnderecoDTO enderecoDTO){
+        this.cep = cep;
+        this.logradouro = enderecoDTO.getLogradouro();
+        this.bairro = enderecoDTO.getBairro();
+        this.cidade = cidade;
+        this.estado = estado;
+    }
 }

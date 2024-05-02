@@ -3,13 +3,13 @@ package com.lemnos.server.Services;
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
-import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Repositories.ClienteRepository;
+import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class ClienteService {
+public class ClienteService extends Util {
 
     @Autowired private ClienteRepository clienteRepository;
 
@@ -55,7 +55,6 @@ public class ClienteService {
     }
 
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
-        Long CPF;
         Cliente clienteEncontrado = getOneById(id).getBody();
         assert clienteEncontrado != null;
 
@@ -71,19 +70,15 @@ public class ClienteService {
         if(clienteEnviado.getCpf() == null){
             clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
-        try{
-            CPF = Long.parseLong(clienteEnviado.getCpf());
-        } catch (NumberFormatException e) {
-            throw new CpfNotValidException("CPF inválido: utilize só números");
-        }
+        Long cpf = convertStringToLong(clienteEnviado.getCpf(), CPF);
 
-        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(CPF);
+        Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Cliente updatedCliente = new Cliente();
         updatedCliente.setId(id);
         updatedCliente.setNome(clienteEnviado.getNome());
-        updatedCliente.setCpf(CPF);
+        updatedCliente.setCpf(cpf);
         updatedCliente.setCadastro(clienteEncontrado.getCadastro());
         updatedCliente.setEnderecos(clienteEncontrado.getEnderecos());
 

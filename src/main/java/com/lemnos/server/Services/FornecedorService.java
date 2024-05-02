@@ -3,16 +3,13 @@ package com.lemnos.server.Services;
 import com.lemnos.server.Exceptions.Cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
-import com.lemnos.server.Exceptions.Global.CnpjNotValidException;
-import com.lemnos.server.Exceptions.Global.CpfNotValidException;
-import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
-import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Repositories.FornecedorRepository;
+import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class FornecedorService {
+public class FornecedorService extends Util {
 
     @Autowired private FornecedorRepository fornecedorRepository;
 
@@ -57,7 +54,6 @@ public class FornecedorService {
     }
 
     private Fornecedor insertData(Integer id, FornecedorDTO fornecedorEnviado){
-        Long CNPJ, Telefone;
         Fornecedor fornecedorEncontrado = getOneById(id).getBody();
         assert fornecedorEncontrado != null;
         if(StringUtils.isBlank(fornecedorEnviado.getNome()) && (fornecedorEnviado.getTelefone() == null || fornecedorEnviado.getTelefone().isBlank()) && (fornecedorEnviado.getCnpj() == null || fornecedorEnviado.getCnpj().isBlank())){
@@ -75,28 +71,20 @@ public class FornecedorService {
         if(fornecedorEnviado.getTelefone() == null || fornecedorEnviado.getTelefone().isBlank()){
             fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone().toString());
         }
-        try {
-            Telefone = Long.parseLong(fornecedorEnviado.getTelefone());
-        } catch (NumberFormatException e) {
-            throw new TelefoneNotValidException("Telefone inválido: utilize só números");
-        }
+        Long telefone = convertStringToLong(fornecedorEnviado.getTelefone(), TELEFONE);
         if(fornecedorEnviado.getCnpj() == null){
             fornecedorEnviado.setCnpj(fornecedorEncontrado.getCnpj().toString());
         }
-        try {
-            CNPJ = Long.parseLong(fornecedorEnviado.getCnpj());
-        } catch (NumberFormatException e) {
-            throw new CnpjNotValidException("CNPJ inválido: utilize só números");
-        }
+        Long cpnj = Long.parseLong(fornecedorEnviado.getCnpj());
 
-        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(CNPJ);
+        Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(cpnj);
         if(cnpj.isPresent() && !Objects.equals(cnpj.get().getId(), id)) throw new CadastroCnpjAlreadyInUseException();
 
         Fornecedor fornecedor = new Fornecedor();
         fornecedor.setId(id);
         fornecedor.setNome(fornecedorEnviado.getNome());
-        fornecedor.setTelefone(Telefone);
-        fornecedor.setCnpj(CNPJ);
+        fornecedor.setTelefone(telefone);
+        fornecedor.setCnpj(cpnj);
         fornecedor.setEmail(fornecedorEncontrado.getEmail());
         fornecedor.setNumeroLogradouro(fornecedorEncontrado.getNumeroLogradouro());
         fornecedor.setEnderecos(fornecedorEncontrado.getEnderecos());
