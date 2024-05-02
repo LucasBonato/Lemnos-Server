@@ -5,6 +5,7 @@ import com.lemnos.server.Annotations.CEP;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
+import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Funcionario;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -45,8 +46,8 @@ public class Endereco {
     private List<ClientePossuiEndereco> clientes;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "enderecos")
-    private List<Funcionario> funcionarios;
+    @OneToMany(mappedBy = "endereco")
+    private List<FuncionarioPossuiEndereco> funcionarios;
 
     public Endereco(String cep, Cidade cidade, Estado estado, EnderecoDTO enderecoDTO){
         this.cep = cep;

@@ -4,6 +4,7 @@ import com.lemnos.server.Annotations.CPF;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
+import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Situacao;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -38,21 +39,16 @@ public class Funcionario {
     @Column(name = "Telefone")
     private Long telefone;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "Funcionario_Possui_Endereco",
-            joinColumns = @JoinColumn(name = "Id_Funcionario"),
-            inverseJoinColumns = @JoinColumn(name = "CEP")
-    )
-    private List<Endereco> enderecos;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "Situacao")
-    private Situacao situacao = Situacao.ATIVO;
+    @OneToMany(mappedBy = "funcionario")
+    private List<FuncionarioPossuiEndereco> enderecos;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Situacao")
+    private Situacao situacao = Situacao.ATIVO;
 
     public Funcionario(FuncionarioDTO funcionarioDTO, Date dataNascimento, Date dataAdmissao){
         this.nome = funcionarioDTO.getNome();
