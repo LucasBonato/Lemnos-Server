@@ -20,6 +20,7 @@ CREATE TABLE Cliente (
     Nome varchar(40) NOT NULL,
     CPF char(11) UNIQUE NOT NULL,
     Numero_Logradouro int,
+    Situacao varchar(7) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_cliente_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -32,6 +33,7 @@ CREATE TABLE Funcionario (
     Data_Admissao date NOT NULL,
     Numero_Logradouro int NOT NULL,
     Telefone char(11),
+    Situacao varchar(7) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_funcionario_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -43,7 +45,8 @@ CREATE TABLE Fornecedor (
     Telefone char(11) NOT NULL,
     CNPJ char(14) UNIQUE NOT NULL,
     CEP char(8),
-    Numero_Logradouro int NOT NULL
+    Numero_Logradouro int NOT NULL,
+    Situacao varchar(7) NOT NULL
 );
 CREATE TABLE Pedido (
     Id SERIAL PRIMARY KEY,
