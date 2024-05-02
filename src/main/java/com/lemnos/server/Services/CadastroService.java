@@ -1,7 +1,6 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.*;
-import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;

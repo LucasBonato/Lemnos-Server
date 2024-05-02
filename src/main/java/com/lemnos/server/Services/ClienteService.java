@@ -6,12 +6,16 @@ import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
+import com.lemnos.server.Models.Endereco.Endereco;
+import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Repositories.ClienteRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,18 @@ public class ClienteService extends Util {
             return ResponseEntity.ok(clienteOptional.get());
         }
         throw new ClienteNotFoundException();
+    }
+
+    public ResponseEntity<Void> createEndereco(Integer id, EnderecoDTO enderecoDTO) {
+        Cliente cliente = getOneById(id).getBody();
+        assert cliente != null;
+
+        Endereco endereco = getEndereco(enderecoDTO);
+
+        ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro());
+        clientePossuiEnderecoRepository.save(clientePossuiEndereco);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     public ResponseEntity<Void> updateCliente(Integer id, ClienteDTO clienteDTO){

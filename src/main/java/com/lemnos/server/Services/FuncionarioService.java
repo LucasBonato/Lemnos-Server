@@ -3,13 +3,17 @@ package com.lemnos.server.Services;
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
+import com.lemnos.server.Models.Endereco.Endereco;
+import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.FuncionarioRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +39,26 @@ public class FuncionarioService extends Util {
         throw new FuncionarioNotFoundException();
     }
 
-    public ResponseEntity<Funcionario> updateFuncionario(Integer id, FuncionarioDTO funcionarioDTO){
+    public ResponseEntity<Void> createEndereco(Integer id, EnderecoDTO enderecoDTO) {
+        Funcionario funcionario = getOneById(id).getBody();
+        assert funcionario != null;
+
+        Endereco endereco = getEndereco(enderecoDTO);
+
+        FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoDTO.getNumeroLogradouro());
+        funcionarioPossuiEnderecoRepository.save(funcionarioPossuiEndereco);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> updateFuncionario(Integer id, FuncionarioDTO funcionarioDTO){
         Funcionario updatedFuncionario = insertData(id, funcionarioDTO);
         funcionarioRepository.save(updatedFuncionario);
 
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Funcionario> deleteById(Integer id){
+    public ResponseEntity<Void> deleteById(Integer id){
         Funcionario funcionarioDeletado = getOneById(id).getBody();
 
         assert funcionarioDeletado != null;
@@ -101,4 +117,3 @@ public class FuncionarioService extends Util {
         return updatedFuncionario;
     }
 }
-

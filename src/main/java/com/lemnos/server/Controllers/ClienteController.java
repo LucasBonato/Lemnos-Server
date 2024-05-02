@@ -2,6 +2,7 @@ package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,9 @@ public class ClienteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id){ return clienteService.deleteById(id);}
+
+    @PostMapping("/endereco")
+    public ResponseEntity<Void> createEndereco(@RequestParam(required = true, value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
+        return clienteService.createEndereco(id, enderecoDTO);
+    }
 }
