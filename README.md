@@ -23,6 +23,7 @@
   - [Cliente](#Cliente)
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
+  - [Endereço](#Endereco)
 
 
 # Como utilizar a API
@@ -45,13 +46,13 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |
-|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |
-| /cliente      | /{id}                                     | [cliente](#Cliente)                                                                              | [cliente](#body-put-cliente)                                                                   |
-| /funcionario  | /{id}                                     | [funcionario](#Funcionário)                                                                      | [funcionario](#body-put-funcionário)                                                           |
-| /fornecedor   | /{id}                                     | [fornecedor](#Fornecedor)                                                                        | [fornecedor](#body-put-fornecedor)                                                             |
-
+| **EndPoints** | **Sub Endpoints**                           | **Exemplos**                                                                                                 | **Body**                                                                                       |                                                             Descrição                                                             |
+|---------------|---------------------------------------------|--------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor   | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)             | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                                       Permite realizar o cadastro das entidades do sistema                                        |
+| /cliente      | /{id}                                       | [cliente](#Cliente)                                                                                          | [Cliente](#body-put-cliente)                                                                   |                                Possui a forma de conseguir procurar clientes, alterar ou desativar                                |
+| /funcionario  | /{id}                                       | [funcionario](#Funcionário)                                                                                  | [Funcionário](#body-put-funcionário)                                                           |                              Possui a forma de conseguir procurar funcionários, alterar ou desativar                              |
+| /fornecedor   | /{id}                                       | [fornecedor](#Fornecedor)                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |                               Possui a forma de conseguir procurar Fornecedor, alterar ou desativar                               |
+| /endereco     | /cliente <br/>/funcionario <br/>/fornecedor | [cliente](#endereco-cliente)<br/>[funcionario](#endereco-funcionario)<br/>[fornecedor](#endereco-fornecedor) | [Endereço](#body-endereco)                                                                     | Permite o cadastro de novos endereços ou alteração de endereços já existentes e relacionar os endereços com entidades especificas |
 ---
 
 # Erros
@@ -67,18 +68,23 @@ O que é o Id? Bem, é um identificador para saber sobre qual campo o erro se tr
 "universais" na API, ou seja, se o id for igual a 1 representa que deu algum problema no campo de Email. 
 Segue a tabela de valores: 
 
-| Id |  Campo que representa   |
-|----|:-----------------------:|
-| 0  | Não implementado/Global |
-| 1  |          Email          |
-| 2  |          Senha          |
-| 3  |          Nome           |
-| 4  |        Telefone         |
-| 5  |     dataNascimento      |
-| 6  |      dataAdmissão       |
-| 7  |           CPF           |
-| 8  |          CNPJ           |
-| 9  |           CEP           |
+| Id |        Campo representado         |
+|----|:---------------------------------:|
+| 0  | Não implementado/Mais de um campo |
+| 1  |               Email               |
+| 2  |               Senha               |
+| 3  |               Nome                |
+| 4  |             Telefone              |
+| 5  |          dataNascimento           |
+| 6  |           dataAdmissão            |
+| 7  |                CPF                |
+| 8  |               CNPJ                |
+| 9  |                CEP                |
+| 10 |            Logradouro             |
+| 11 |              Cidade               |
+| 12 |              Bairro               |
+| 13 |                UF                 |
+| 14 |       Número do Logradouro        |
 
 # Exemplos
 
