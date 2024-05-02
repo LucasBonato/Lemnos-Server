@@ -132,10 +132,11 @@ CREATE TABLE Estado(
 );
 CREATE TABLE Cidade(
     Id SERIAL PRIMARY KEY,
-    Cidade varchar(30) UNIQUE NOT NULL
+    Cidade varchar(30) UNIQUE NOT NULL,
+    CHECK(LENGTH(Cidade) > 2)
 );
 CREATE TABLE Endereco (
-    CEP numeric(8) PRIMARY KEY,
+    CEP char(8) PRIMARY KEY,
     Logradouro varchar(50) NOT NULL,
     Bairro varchar(30) NOT NULL,
     Id_Fornecedor int,
@@ -177,15 +178,17 @@ CREATE TABLE Entrega (
     CONSTRAINT fk_entrega_pedido FOREIGN KEY(Id_Pedido) REFERENCES Pedido(Id)
 );
 CREATE TABLE Cliente_Possui_Endereco (
-    CEP numeric(8),
+    CEP char(8),
     Id_Cliente int,
+    Numero_Logradouro int NOT NULL,
     PRIMARY KEY(CEP, Id_Cliente),
     CONSTRAINT fk_cliente_possui_endereco_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP),
     CONSTRAINT fk_cliente_possui_endereco_cliente FOREIGN KEY(Id_Cliente) REFERENCES Cliente(Id)
 );
 CREATE TABLE Funcionario_Possui_Endereco (
-    CEP numeric(8),
+    CEP char(8),
     Id_Funcionario int,
+    Numero_Logradouro int NOT NULL,
     PRIMARY KEY(CEP, Id_Funcionario),
     CONSTRAINT fk_funcionario_possui_endereco_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP),
     CONSTRAINT fk_funcionario_possui_endereco_funcionario FOREIGN KEY(Id_Funcionario) REFERENCES Funcionario(Id)

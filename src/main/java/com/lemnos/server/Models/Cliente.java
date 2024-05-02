@@ -3,8 +3,8 @@ package com.lemnos.server.Models;
 import com.lemnos.server.Annotations.CPF;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Enums.Situacao;
-import com.lemnos.server.Models.Endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,13 +30,8 @@ public class Cliente {
     @CPF(message = "CPF preenchido incorretamente!")
     private Long cpf;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "Cliente_Possui_Endereco",
-            joinColumns = @JoinColumn(name = "Id_Cliente"),
-            inverseJoinColumns = @JoinColumn(name = "CEP")
-    )
-    private List<Endereco> enderecos;
+    @OneToMany(mappedBy = "cliente")
+    private List<ClientePossuiEndereco> enderecos;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Cadastro")

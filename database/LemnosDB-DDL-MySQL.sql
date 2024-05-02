@@ -128,7 +128,7 @@ CREATE TABLE Cidade(
     Cidade varChar(30) UNIQUE NOT NULL
 );
 CREATE TABLE Endereco (
-	CEP numeric(8) primary key,
+	CEP char(8) primary key,
 	Logradouro varchar(50) NOT NULL,
 	Bairro varchar(30) NOT NULL,
 	Id_Fornecedor int,
@@ -170,7 +170,7 @@ CREATE TABLE Entrega (
 	Foreign key(Id_Pedido) references Pedido (Id)
 );
 CREATE TABLE Cliente_Possui_Endereco (
-	CEP numeric(8),
+	CEP char(8),
 	Id_Cliente int,
     Numero_Logradouro int NOT NULL,
 	primary key(CEP, Id_Cliente),
@@ -178,7 +178,7 @@ CREATE TABLE Cliente_Possui_Endereco (
 	foreign key(Id_Cliente) references Cliente (Id)
 );
 CREATE TABLE Funcionario_Possui_Endereco (
-	CEP numeric(8),
+	CEP char(8),
 	Id_Funcionario int,
     Numero_Logradouro int NOT NULL,
 	primary key(CEP, Id_Funcionario),

@@ -4,17 +4,17 @@ import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CEPValidator implements ConstraintValidator<CEP, Long> {
+public class CEPValidator implements ConstraintValidator<CEP, String> {
     @Override
     public void initialize(CEP constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override
-    public boolean isValid(Long cep, ConstraintValidatorContext context) {
+    public boolean isValid(String cep, ConstraintValidatorContext context) {
         if(cep == null) return false;
 
-        String message = isValidCEP(cep.toString());
+        String message = isValidCEP(cep);
         if(!message.equals("CEP válido")){
             context.disableDefaultConstraintViolation();
             throw new CpfNotValidException("CEP inválido: " + message);
