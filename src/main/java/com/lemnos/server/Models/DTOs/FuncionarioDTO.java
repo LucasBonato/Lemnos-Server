@@ -17,4 +17,5 @@ public class FuncionarioDTO {
     private String email;
     private String senha;
     private Integer numeroLogradouro;
+    private String situacao;
 }
