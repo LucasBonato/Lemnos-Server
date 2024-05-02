@@ -3,6 +3,7 @@ package com.lemnos.server.Models;
 import com.lemnos.server.Annotations.CNPJValidation;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Endereco.Endereco;
+import com.lemnos.server.Models.Enums.Situacao;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -36,6 +37,10 @@ public class Fornecedor {
     @Column(name = "Email")
     @Email(message = "Insira um Email válido!")
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Situacao")
+    private Situacao situacao = Situacao.ATIVO;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "Id_Fornecedor")
