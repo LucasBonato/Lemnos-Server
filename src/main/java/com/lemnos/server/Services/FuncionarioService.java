@@ -5,7 +5,9 @@ import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
+import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
+import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Repositories.FuncionarioRepository;
 import com.lemnos.server.Utils.Util;
@@ -44,7 +46,13 @@ public class FuncionarioService extends Util {
     }
 
     public ResponseEntity<Funcionario> deleteById(Integer id){
-        funcionarioRepository.deleteById(id);
+        Funcionario funcionarioDeletado = getOneById(id).getBody();
+
+        assert funcionarioDeletado != null;
+        if(funcionarioDeletado.getSituacao() == Situacao.ATIVO) {
+            funcionarioDeletado.setSituacao(Situacao.INATIVO);
+            funcionarioRepository.save(funcionarioDeletado);
+        }
         return ResponseEntity.noContent().build();
     }
 
