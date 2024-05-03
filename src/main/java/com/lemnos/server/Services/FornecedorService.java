@@ -62,9 +62,11 @@ public class FornecedorService extends Util {
 
         Endereco endereco = getEndereco(enderecoDTO);
 
-        if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor");
+        if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
 
         fornecedor.setEndereco(endereco);
+        fornecedor.setComplemento(enderecoDTO.getComplemento());
+        fornecedor.setNumeroLogradouro(enderecoDTO.getNumeroLogradouro());
         fornecedorRepository.save(fornecedor);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -30,10 +30,14 @@ public class FuncionarioPossuiEndereco {
     @Column(name = "numero_logradouro")
     private Integer numeroLogradouro;
 
-    public FuncionarioPossuiEndereco(Funcionario funcionario, Endereco endereco, Integer numeroLogradouro) {
+    @Column(name = "Complemento")
+    private String complemento;
+
+    public FuncionarioPossuiEndereco(Funcionario funcionario, Endereco endereco, Integer numeroLogradouro, String complemento) {
         this.id = new FuncionarioPossuiEnderecoId(funcionario.getId(), endereco.getCep());
         this.funcionario = funcionario;
         this.endereco = endereco;
         this.numeroLogradouro = numeroLogradouro;
+        this.complemento = complemento;
     }
 }

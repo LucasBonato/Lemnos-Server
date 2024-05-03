@@ -1,10 +1,12 @@
 package com.lemnos.server.Exceptions;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class BaseException extends RuntimeException {
     private HttpStatus status;

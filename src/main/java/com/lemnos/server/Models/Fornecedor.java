@@ -9,8 +9,6 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Table(name = "Fornecedor")
 @Data
@@ -34,6 +32,9 @@ public class Fornecedor {
     @Column(name = "Numero_Logradouro")
     private Integer numeroLogradouro;
 
+    @Column(name = "Complemento")
+    private String complemento;
+
     @Column(name = "Email")
     @Email(message = "Insira um Email válido!")
     private String email;
@@ -51,6 +52,7 @@ public class Fornecedor {
         this.nome = fornecedorDTO.getNome();
         this.telefone = Long.parseLong(fornecedorDTO.getTelefone());
         this.numeroLogradouro = fornecedorDTO.getNumeroLogradouro();
+        this.complemento = fornecedorDTO.getComplemento();
         this.email = fornecedorDTO.getEmail();
     }
 }

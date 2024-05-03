@@ -135,7 +135,7 @@ CREATE TABLE Fornecedor (
 	Telefone numeric(11) NOT NULL,
 	CNPJ numeric(14) UNIQUE NOT NULL,
 	Situacao varchar(7) NOT NULL,
-	Numero_Logradouro int NOT NULL,
+	Numero_Logradouro int,
 	Complemento varChar(20),
 	CEP char(8),
 	foreign key(CEP) references Endereco(CEP)

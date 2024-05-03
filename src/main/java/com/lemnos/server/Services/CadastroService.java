@@ -29,21 +29,21 @@ public class CadastroService extends Util {
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private CadastroRepository cadastroRepository;
 
-    public ResponseEntity cadastrarCliente(ClienteDTO clienteDTO) {
+    public ResponseEntity<Void> cadastrarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = verificarRegraDeNegocio(clienteDTO);
 
         clienteRepository.save(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
+    public ResponseEntity<Void> cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
         Funcionario funcionario = verificarRegraDeNegocio(funcionarioDTO);
 
         funcionarioRepository.save(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity cadastrarFornecedor(FornecedorDTO fornecedorDTO) {
+    public ResponseEntity<Void> cadastrarFornecedor(FornecedorDTO fornecedorDTO) {
         Fornecedor fornecedor = verificarRegraDeNegocio(fornecedorDTO);
         fornecedorRepository.save(fornecedor);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -151,12 +151,6 @@ public class CadastroService extends Util {
 
         convertStringToLong(fornecedorDTO.getTelefone(), TELEFONE);
 
-        if(fornecedorDTO.getNumeroLogradouro() == null){
-            throw new CadastroNotValidException(Codigo.GLOBAL.ordinal(), "O Número do Logradouro é obrigatório!");
-        }
-        if(fornecedorDTO.getNumeroLogradouro() < 1 || fornecedorDTO.getNumeroLogradouro() > 9999) {
-            throw new CadastroNotValidException(Codigo.GLOBAL.ordinal(), "Número do logradouro muito alto ou muito baixo! (1, 9999)");
-        }
         if(StringUtils.isBlank(fornecedorDTO.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
         }

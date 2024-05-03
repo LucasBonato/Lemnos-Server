@@ -34,7 +34,7 @@ public class ClienteController {
     public ResponseEntity<Void> deleteById(@PathVariable Integer id){ return clienteService.deleteById(id);}
 
     @PostMapping("/endereco")
-    public ResponseEntity<Void> createEndereco(@RequestParam(required = true, value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
+    public ResponseEntity<Void> createEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
         return clienteService.createEndereco(id, enderecoDTO);
     }
 }
