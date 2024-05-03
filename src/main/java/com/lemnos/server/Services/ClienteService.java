@@ -72,22 +72,6 @@ public class ClienteService extends Util {
         return ResponseEntity.ok().build();
     }
 
-    private static List<EnderecoRecord> getEnderecoRecords(Cliente cliente) {
-        List<EnderecoRecord> enderecoRecords = new ArrayList<>();
-        for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
-            EnderecoRecord enderecoRecord = new EnderecoRecord(
-                    cpe.getEndereco().getCep(),
-                    cpe.getEndereco().getLogradouro(),
-                    cpe.getNumeroLogradouro(),
-                    cpe.getEndereco().getBairro(),
-                    cpe.getEndereco().getCidade().getCidade(),
-                    cpe.getEndereco().getEstado().getUf()
-            );
-            enderecoRecords.add(enderecoRecord);
-        }
-        return enderecoRecords;
-    }
-
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
         Cliente clienteEncontrado = getOneById(id).getBody();
         assert clienteEncontrado != null;
