@@ -2,7 +2,6 @@ package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
-import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Models.Records.FuncionarioRecord;
 import com.lemnos.server.Services.FuncionarioService;
 import jakarta.validation.Valid;
@@ -24,7 +23,7 @@ class FuncionarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Funcionario> getOneById(@PathVariable Integer id){
+    public ResponseEntity<FuncionarioRecord> getOneById(@PathVariable Integer id){
         return funcionarioService.getOneById(id);
     }
 

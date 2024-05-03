@@ -1,7 +1,6 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
-import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
@@ -43,17 +42,23 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<Funcionario> getOneById(Integer id) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
-        if(funcionarioOptional.isPresent()){
-            return ResponseEntity.ok(funcionarioOptional.get());
-        }
-        throw new FuncionarioNotFoundException();
+    public ResponseEntity<FuncionarioRecord> getOneById(Integer id) {
+        Funcionario funcionario = getOneFuncionarioById(id);
+        FuncionarioRecord record = new FuncionarioRecord(
+                funcionario.getNome(),
+                funcionario.getCpf(),
+                funcionario.getDataNascimento(),
+                funcionario.getDataAdmissao(),
+                funcionario.getTelefone(),
+                funcionario.getCadastro().getEmail(),
+                funcionario.getCadastro().getSenha(),
+                getEnderecoRecords(funcionario)
+        );
+        return ResponseEntity.ok(record);
     }
 
     public ResponseEntity<Void> createEndereco(Integer id, EnderecoDTO enderecoDTO) {
-        Funcionario funcionario = getOneById(id).getBody();
-        assert funcionario != null;
+        Funcionario funcionario = getOneFuncionarioById(id);
 
         Endereco endereco = getEndereco(enderecoDTO);
 
@@ -71,9 +76,8 @@ public class FuncionarioService extends Util {
     }
 
     public ResponseEntity<Void> deleteById(Integer id){
-        Funcionario funcionarioDeletado = getOneById(id).getBody();
+        Funcionario funcionarioDeletado = getOneFuncionarioById(id);
 
-        assert funcionarioDeletado != null;
         if(funcionarioDeletado.getSituacao() == Situacao.ATIVO) {
             funcionarioDeletado.setSituacao(Situacao.INATIVO);
             funcionarioRepository.save(funcionarioDeletado);
@@ -82,8 +86,7 @@ public class FuncionarioService extends Util {
     }
 
     private Funcionario insertData(Integer id, FuncionarioDTO funcionarioEnviado) {
-        Funcionario funcionarioEncontrado = getOneById(id).getBody();
-        assert funcionarioEncontrado != null;
+        Funcionario funcionarioEncontrado = getOneFuncionarioById(id);
 
         Date dataNasc;
         Date dataAdmi;
