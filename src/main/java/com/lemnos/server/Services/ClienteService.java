@@ -2,6 +2,7 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
+import com.lemnos.server.Exceptions.Endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
@@ -61,6 +62,11 @@ public class ClienteService extends Util {
         Cliente cliente = getOneClienteById(id);
 
         Endereco endereco = getEndereco(enderecoDTO);
+
+        Optional<ClientePossuiEndereco> optionalCpe = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(optionalCpe.isPresent()){
+            throw new EntityAlreadyHasEnderecoException("Cliente");
+        }
 
         ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro());
         clientePossuiEnderecoRepository.save(clientePossuiEndereco);

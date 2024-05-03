@@ -2,7 +2,7 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
-import com.lemnos.server.Exceptions.Fornecedor.FornecedorAlreadyHasEnderecoException;
+import com.lemnos.server.Exceptions.Endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
@@ -62,7 +62,7 @@ public class FornecedorService extends Util {
 
         Endereco endereco = getEndereco(enderecoDTO);
 
-        if(fornecedor.getEndereco() != null) throw new FornecedorAlreadyHasEnderecoException();
+        if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor");
 
         fornecedor.setEndereco(endereco);
         fornecedorRepository.save(fornecedor);
