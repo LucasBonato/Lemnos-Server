@@ -1,6 +1,7 @@
 package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
+import com.lemnos.server.Exceptions.Endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
@@ -61,6 +62,11 @@ public class FuncionarioService extends Util {
         Funcionario funcionario = getOneFuncionarioById(id);
 
         Endereco endereco = getEndereco(enderecoDTO);
+
+        Optional<FuncionarioPossuiEndereco> optionalFpe = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(optionalFpe.isPresent()){
+            throw new EntityAlreadyHasEnderecoException("Funcionário");
+        }
 
         FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoDTO.getNumeroLogradouro());
         funcionarioPossuiEnderecoRepository.save(funcionarioPossuiEndereco);
