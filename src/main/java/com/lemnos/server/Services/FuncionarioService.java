@@ -9,6 +9,8 @@ import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Funcionario;
+import com.lemnos.server.Models.Records.EnderecoRecord;
+import com.lemnos.server.Models.Records.FuncionarioRecord;
 import com.lemnos.server.Repositories.FuncionarioRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
@@ -17,18 +19,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FuncionarioService extends Util {
 
     @Autowired private FuncionarioRepository funcionarioRepository;
 
-    public ResponseEntity<List<Funcionario>> getAll() {
-        return ResponseEntity.ok(funcionarioRepository.findAll());
+    public ResponseEntity<List<FuncionarioRecord>> getAll() {
+        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+        List<FuncionarioRecord> dto = new ArrayList<>();
+        for(Funcionario funcionario : funcionarios){
+            List<EnderecoRecord> enderecoRecords = getEnderecoRecords(funcionario);
+            FuncionarioRecord record = new FuncionarioRecord(
+                    funcionario.getNome(),
+                    funcionario.getCpf(),
+                    funcionario.getDataNascimento(),
+                    funcionario.getDataAdmissao(),
+                    funcionario.getTelefone(),
+                    funcionario.getCadastro().getEmail(),
+                    funcionario.getCadastro().getSenha(),
+                    enderecoRecords
+            );
+            dto.add(record);
+        }
+        return ResponseEntity.ok(dto);
     }
 
     public ResponseEntity<Funcionario> getOneById(Integer id) {
@@ -117,3 +132,4 @@ public class FuncionarioService extends Util {
         return updatedFuncionario;
     }
 }
+

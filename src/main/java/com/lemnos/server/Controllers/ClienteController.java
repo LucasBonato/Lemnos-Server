@@ -2,6 +2,7 @@ package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
+import com.lemnos.server.Models.Records.ClienteRecord;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ClienteController {
     @Autowired private ClienteService clienteService;
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> getAll(){
+    public ResponseEntity<List<ClienteRecord>> getAll(){
         return clienteService.getAll();
     }
 
