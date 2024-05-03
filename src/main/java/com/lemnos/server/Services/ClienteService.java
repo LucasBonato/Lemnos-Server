@@ -12,7 +12,6 @@ import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Records.ClienteRecord;
-import com.lemnos.server.Models.Records.EnderecoRecord;
 import com.lemnos.server.Repositories.ClienteRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
@@ -35,15 +34,13 @@ public class ClienteService extends Util {
         List<Cliente> clientes = clienteRepository.findAll();
         List<ClienteRecord> dto = new ArrayList<>();
         for(Cliente cliente : clientes){
-            List<EnderecoRecord> enderecoRecords = getEnderecoRecords(cliente);
-            ClienteRecord record = new ClienteRecord(
+            dto.add(new ClienteRecord(
                     cliente.getNome(),
                     cliente.getCpf(),
                     cliente.getCadastro().getEmail(),
                     cliente.getCadastro().getSenha(),
-                    enderecoRecords
-            );
-            dto.add(record);
+                    getEnderecoRecords(cliente)
+            ));
         }
 
         return ResponseEntity.ok(dto);
