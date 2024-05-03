@@ -136,6 +136,7 @@ CREATE TABLE Fornecedor (
 	CNPJ numeric(14) UNIQUE NOT NULL,
 	Situacao varchar(7) NOT NULL,
 	Numero_Logradouro int NOT NULL,
+	Complemento varChar(20),
 	CEP char(8),
 	foreign key(CEP) references Endereco(CEP)
 );
@@ -173,6 +174,7 @@ CREATE TABLE Cliente_Possui_Endereco (
 	CEP char(8),
 	Id_Cliente int,
     Numero_Logradouro int NOT NULL,
+    Complemento varChar(20),
 	primary key(CEP, Id_Cliente),
 	foreign key(CEP) references Endereco (CEP),
 	foreign key(Id_Cliente) references Cliente (Id)
@@ -181,6 +183,7 @@ CREATE TABLE Funcionario_Possui_Endereco (
 	CEP char(8),
 	Id_Funcionario int,
     Numero_Logradouro int NOT NULL,
+    Complemento varChar(20),
 	primary key(CEP, Id_Funcionario),
 	foreign key(CEP) references Endereco (CEP),
     foreign key(Id_Funcionario) references Funcionario (Id)
