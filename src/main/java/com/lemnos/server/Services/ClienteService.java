@@ -2,7 +2,6 @@ package com.lemnos.server.Services;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
-import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
@@ -46,17 +45,20 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<Cliente> getOneById(Integer id) {
-        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-        if(clienteOptional.isPresent()){
-            return ResponseEntity.ok(clienteOptional.get());
-        }
-        throw new ClienteNotFoundException();
+    public ResponseEntity<ClienteRecord> getOneById(Integer id) {
+        Cliente cliente = getOneClienteById(id);
+        ClienteRecord record = new ClienteRecord(
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getCadastro().getEmail(),
+                cliente.getCadastro().getSenha(),
+                getEnderecoRecords(cliente)
+        );
+        return ResponseEntity.ok(record);
     }
 
     public ResponseEntity<Void> createEndereco(Integer id, EnderecoDTO enderecoDTO) {
-        Cliente cliente = getOneById(id).getBody();
-        assert cliente != null;
+        Cliente cliente = getOneClienteById(id);
 
         Endereco endereco = getEndereco(enderecoDTO);
 
@@ -74,9 +76,8 @@ public class ClienteService extends Util {
     }
 
     public ResponseEntity<Void> deleteById(Integer id){
-        Cliente clienteDeletado = getOneById(id).getBody();
+        Cliente clienteDeletado = getOneClienteById(id);
 
-        assert clienteDeletado != null;
         if(clienteDeletado.getSituacao() == Situacao.ATIVO) {
             clienteDeletado.setSituacao(Situacao.INATIVO);
             clienteRepository.save(clienteDeletado);
@@ -85,8 +86,7 @@ public class ClienteService extends Util {
     }
 
     private Cliente insertData(Integer id, ClienteDTO clienteEnviado) {
-        Cliente clienteEncontrado = getOneById(id).getBody();
-        assert clienteEncontrado != null;
+        Cliente clienteEncontrado = getOneClienteById(id);
 
         if(StringUtils.isBlank(clienteEnviado.getNome()) && (clienteEnviado.getCpf() == null || clienteEnviado.getCpf().isBlank())){
             throw new UpdateNotValidException("Cliente");

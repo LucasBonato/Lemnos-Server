@@ -1,6 +1,5 @@
 package com.lemnos.server.Controllers;
 
-import com.lemnos.server.Models.Cliente;
 import com.lemnos.server.Models.DTOs.ClienteDTO;
 import com.lemnos.server.Models.Records.ClienteRecord;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
@@ -22,7 +21,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> getOneById(@PathVariable Integer id){
+    public ResponseEntity<ClienteRecord> getOneById(@PathVariable Integer id){
         return clienteService.getOneById(id);
     }
 
