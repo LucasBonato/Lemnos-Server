@@ -52,6 +52,7 @@ gerenciamento de carrinho.
 | /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
 | /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
 | /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |  Possui a forma de conseguir procurar Fornecedor, alterar ou desativar  |
+| /endereco     |                                           | [endereço](#Alterar-um-Endereço)                                                                 | [Endereço](#body-put-endereço)                                                                 |      Permite a manipulação de endereços pré existentes no sistema.      |
 ---
 
 # Erros
