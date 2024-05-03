@@ -1,9 +1,12 @@
 package com.lemnos.server.Utils;
 
 import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
+import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Endereco.CepNotValidException;
 import com.lemnos.server.Exceptions.Endereco.EnderecoNotValidException;
 import com.lemnos.server.Exceptions.Endereco.EstadoNotFoundException;
+import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
+import com.lemnos.server.Exceptions.Funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.Exceptions.Global.CnpjNotValidException;
 import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
@@ -19,7 +22,9 @@ import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Models.Records.EnderecoRecord;
 import com.lemnos.server.Repositories.*;
+import com.lemnos.server.Services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,6 +37,9 @@ public class Util {
     @Autowired private EnderecoRepository enderecoRepository;
     @Autowired private CidadeRepository cidadeRepository;
     @Autowired private EstadoRepository estadoRepository;
+    @Autowired private ClienteRepository clienteRepository;
+    @Autowired private FuncionarioRepository funcionarioRepository;
+    @Autowired private FornecedorRepository fornecedorRepository;
 
     @Autowired protected ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
     @Autowired protected FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
@@ -54,7 +62,6 @@ public class Util {
         }
         return endereco;
     }
-
     protected static List<EnderecoRecord> getEnderecoRecords(Cliente cliente) {
         List<EnderecoRecord> enderecoRecords = new ArrayList<>();
         for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
@@ -95,7 +102,6 @@ public class Util {
                 fornecedor.getEndereco().getEstado().getUf()
         );
     }
-
     private void verificarCamposEndereco(EnderecoDTO enderecoDTO) {
         if(enderecoDTO.getLogradouro().isBlank() || enderecoDTO.getBairro().isBlank() || enderecoDTO.getCidade().isBlank() || enderecoDTO.getUf().isBlank() || enderecoDTO.getNumeroLogradouro() == null){
             throw new EnderecoNotValidException(Codigo.GLOBAL.ordinal(), "Todos os campos de endereço são obrigatórios!");
@@ -146,7 +152,6 @@ public class Util {
         }
         return dataFormatada;
     }
-
     protected Long convertStringToLong(String obj, String tipo) {
         switch (tipo){
             case CEP:
@@ -176,5 +181,27 @@ public class Util {
             default:
                 return 0L;
         }
+    }
+
+    protected Fornecedor getOneFornecedorById(Integer id) {
+        Optional<Fornecedor> fornecedorOptional = fornecedorRepository.findById(id);
+        if(fornecedorOptional.isPresent()){
+            return fornecedorOptional.get();
+        }
+        throw new FornecedorNotFoundException();
+    }
+    protected Funcionario getOneFuncionarioById(Integer id) {
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
+        if(funcionarioOptional.isPresent()){
+            return funcionarioOptional.get();
+        }
+        throw new FuncionarioNotFoundException();
+    }
+    protected Cliente getOneClienteById(Integer id) {
+        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+        if(clienteOptional.isPresent()){
+            return clienteOptional.get();
+        }
+        throw new ClienteNotFoundException();
     }
 }
