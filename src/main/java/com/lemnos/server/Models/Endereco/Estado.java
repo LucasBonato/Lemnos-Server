@@ -19,8 +19,4 @@ public class Estado {
 
     @Column(name = "UF")
     private String uf;
-
-    public Estado(EnderecoDTO enderecoDTO){
-        this.uf = enderecoDTO.getUf();
-    }
 }

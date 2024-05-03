@@ -12,6 +12,7 @@ public class FornecedorDTO {
     private String cnpj;
     private String telefone;
     private Integer numeroLogradouro;
+    private String complemento;
     private String email;
     private String situacao;
 }

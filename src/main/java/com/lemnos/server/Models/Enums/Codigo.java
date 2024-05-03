@@ -15,7 +15,8 @@ public enum Codigo {
     CIDADE(11),
     BAIRRO(12),
     UF(13),
-    NUMERO_LOGRADOURO(14);
+    NUMERO_LOGRADOURO(14),
+    COMPLEMENTO(15);
 
     Codigo(Integer i){}
 }

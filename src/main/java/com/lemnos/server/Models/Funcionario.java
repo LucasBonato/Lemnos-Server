@@ -3,7 +3,6 @@ package com.lemnos.server.Models;
 import com.lemnos.server.Annotations.CPF;
 import com.lemnos.server.Models.Cadastro.Cadastro;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
-import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Situacao;
 import jakarta.persistence.*;

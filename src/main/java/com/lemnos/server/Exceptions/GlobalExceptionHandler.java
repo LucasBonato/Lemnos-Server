@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
                 .stream()
                 .findFirst()
                 .map(ConstraintViolation::getMessage)
-                .get();
+                .orElseThrow(RuntimeException::new);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse(0, error));

@@ -68,7 +68,7 @@ public class ClienteService extends Util {
             throw new EntityAlreadyHasEnderecoException("Cliente");
         }
 
-        ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro());
+        ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoDTO.getNumeroLogradouro(), enderecoDTO.getComplemento());
         clientePossuiEnderecoRepository.save(clientePossuiEndereco);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();

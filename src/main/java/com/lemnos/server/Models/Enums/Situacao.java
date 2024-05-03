@@ -9,5 +9,5 @@ public enum Situacao {
     ATIVO("ativo"),
     INATIVO("inativo");
 
-    private String situacao;
+    private final String situacao;
 }

@@ -68,7 +68,7 @@ public class FuncionarioService extends Util {
             throw new EntityAlreadyHasEnderecoException("Funcionário");
         }
 
-        FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoDTO.getNumeroLogradouro());
+        FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoDTO.getNumeroLogradouro(), enderecoDTO.getComplemento());
         funcionarioPossuiEnderecoRepository.save(funcionarioPossuiEndereco);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();

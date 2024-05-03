@@ -37,7 +37,7 @@ public class FornecedorController {
     }
 
     @PostMapping("/endereco")
-    public ResponseEntity<Void> createEndereco(@RequestParam(required = true, value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
+    public ResponseEntity<Void> createEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoDTO enderecoDTO){
         return fornecedorService.createEndereco(id, enderecoDTO);
     }
 }

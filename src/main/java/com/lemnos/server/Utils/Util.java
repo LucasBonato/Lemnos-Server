@@ -1,5 +1,6 @@
 package com.lemnos.server.Utils;
 
+import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroWrongDataFormatException;
 import com.lemnos.server.Exceptions.Cliente.ClienteNotFoundException;
 import com.lemnos.server.Exceptions.Endereco.CepNotValidException;
@@ -22,9 +23,7 @@ import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Models.Funcionario;
 import com.lemnos.server.Models.Records.EnderecoRecord;
 import com.lemnos.server.Repositories.*;
-import com.lemnos.server.Services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,6 +68,7 @@ public class Util {
                     cpe.getEndereco().getCep(),
                     cpe.getEndereco().getLogradouro(),
                     cpe.getNumeroLogradouro(),
+                    cpe.getComplemento(),
                     cpe.getEndereco().getBairro(),
                     cpe.getEndereco().getCidade().getCidade(),
                     cpe.getEndereco().getEstado().getUf()
@@ -84,6 +84,7 @@ public class Util {
                     fpe.getEndereco().getCep(),
                     fpe.getEndereco().getLogradouro(),
                     fpe.getNumeroLogradouro(),
+                    fpe.getComplemento(),
                     fpe.getEndereco().getBairro(),
                     fpe.getEndereco().getCidade().getCidade(),
                     fpe.getEndereco().getEstado().getUf()
@@ -93,10 +94,12 @@ public class Util {
         return enderecoRecords;
     }
     protected static EnderecoRecord getEnderecoRecords(Fornecedor fornecedor) {
+        if(fornecedor.getEndereco() == null) return null;
         return new EnderecoRecord(
                 fornecedor.getEndereco().getCep(),
                 fornecedor.getEndereco().getLogradouro(),
                 fornecedor.getNumeroLogradouro(),
+                fornecedor.getComplemento(),
                 fornecedor.getEndereco().getBairro(),
                 fornecedor.getEndereco().getCidade().getCidade(),
                 fornecedor.getEndereco().getEstado().getUf()
@@ -108,6 +111,9 @@ public class Util {
         }
         if(enderecoDTO.getLogradouro().length() < 2 || enderecoDTO.getLogradouro().length() > 50){
             throw new EnderecoNotValidException(Codigo.LOGRADOURO.ordinal(), "Logradouro precisa estar entre 2 e 50 caracteres!");
+        }
+        if(enderecoDTO.getComplemento().length() > 20){
+            throw new EnderecoNotValidException(Codigo.COMPLEMENTO.ordinal(), "Complemento só pode possui até 20 caracteres!");
         }
         if(enderecoDTO.getCidade().length() < 2 || enderecoDTO.getCidade().length() > 30){
             throw new EnderecoNotValidException(Codigo.CIDADE.ordinal(), "Cidade precisa estar entre 2 e 30 caracteres!");
