@@ -2,7 +2,6 @@ package com.lemnos.server.Controllers;
 
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
-import com.lemnos.server.Models.Fornecedor;
 import com.lemnos.server.Models.Records.FornecedorRecord;
 import com.lemnos.server.Services.FornecedorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class FornecedorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Fornecedor> getOneById(@PathVariable Integer id){
+    public ResponseEntity<FornecedorRecord> getOneById(@PathVariable Integer id){
         return fornecedorService.getOneById(id);
     }
 

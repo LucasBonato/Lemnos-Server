@@ -3,7 +3,6 @@ package com.lemnos.server.Services;
 import com.lemnos.server.Exceptions.Cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.Exceptions.Cadastro.CadastroNotValidException;
 import com.lemnos.server.Exceptions.Fornecedor.FornecedorAlreadyHasEnderecoException;
-import com.lemnos.server.Exceptions.Fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.Exceptions.Global.UpdateNotValidException;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
@@ -46,17 +45,20 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<Fornecedor> getOneById(Integer id) {
-        Optional<Fornecedor> fornecedorOptional = fornecedorRepository.findById(id);
-        if(fornecedorOptional.isPresent()){
-            return ResponseEntity.ok(fornecedorOptional.get());
-        }
-        throw new FornecedorNotFoundException();
+    public ResponseEntity<FornecedorRecord> getOneById(Integer id) {
+        Fornecedor fornecedor = getOneFornecedorById(id);
+        FornecedorRecord record = new FornecedorRecord(
+                fornecedor.getNome(),
+                fornecedor.getCnpj(),
+                fornecedor.getTelefone(),
+                fornecedor.getEmail(),
+                getEnderecoRecords(fornecedor)
+        );
+        return ResponseEntity.ok(record);
     }
 
     public ResponseEntity<Void> createEndereco(Integer id, EnderecoDTO enderecoDTO) {
-        Fornecedor fornecedor = getOneById(id).getBody();
-        assert fornecedor != null;
+        Fornecedor fornecedor = getOneFornecedorById(id);
 
         Endereco endereco = getEndereco(enderecoDTO);
 
@@ -75,9 +77,8 @@ public class FornecedorService extends Util {
     }
 
     public ResponseEntity<Void> deleteById(Integer id) {
-        Fornecedor fornecedorDeletado = getOneById(id).getBody();
+        Fornecedor fornecedorDeletado = getOneFornecedorById(id);
 
-        assert fornecedorDeletado != null;
         if(fornecedorDeletado.getSituacao() == Situacao.ATIVO) {
             fornecedorDeletado.setSituacao(Situacao.INATIVO);
             fornecedorRepository.save(fornecedorDeletado);
@@ -86,8 +87,8 @@ public class FornecedorService extends Util {
     }
 
     private Fornecedor insertData(Integer id, FornecedorDTO fornecedorEnviado){
-        Fornecedor fornecedorEncontrado = getOneById(id).getBody();
-        assert fornecedorEncontrado != null;
+        Fornecedor fornecedorEncontrado = getOneFornecedorById(id);
+
         if(StringUtils.isBlank(fornecedorEnviado.getNome()) && (fornecedorEnviado.getTelefone() == null || fornecedorEnviado.getTelefone().isBlank()) && (fornecedorEnviado.getCnpj() == null || fornecedorEnviado.getCnpj().isBlank())){
             throw new UpdateNotValidException("Fornecedor");
         }
