@@ -23,7 +23,7 @@
   - [Cliente](#Cliente)
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
-  - [Endereço](#Endereco)
+  - [Endereço](#Endereço)
 
 
 # Como utilizar a API
@@ -46,13 +46,12 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                           | **Exemplos**                                                                                                 | **Body**                                                                                       |                                                             Descrição                                                             |
-|---------------|---------------------------------------------|--------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------:|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor   | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)             | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                                       Permite realizar o cadastro das entidades do sistema                                        |
-| /cliente      | /{id}                                       | [cliente](#Cliente)                                                                                          | [Cliente](#body-put-cliente)                                                                   |                                Possui a forma de conseguir procurar clientes, alterar ou desativar                                |
-| /funcionario  | /{id}                                       | [funcionario](#Funcionário)                                                                                  | [Funcionário](#body-put-funcionário)                                                           |                              Possui a forma de conseguir procurar funcionários, alterar ou desativar                              |
-| /fornecedor   | /{id}                                       | [fornecedor](#Fornecedor)                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |                               Possui a forma de conseguir procurar Fornecedor, alterar ou desativar                               |
-| /endereco     | /cliente <br/>/funcionario <br/>/fornecedor | [cliente](#endereco-cliente)<br/>[funcionario](#endereco-funcionario)<br/>[fornecedor](#endereco-fornecedor) | [Endereço](#body-endereco)                                                                     | Permite o cadastro de novos endereços ou alteração de endereços já existentes e relacionar os endereços com entidades especificas |
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |                                Descrição                                |
+|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |          Permite realizar o cadastro das entidades do sistema           |
+| /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
+| /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
+| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |  Possui a forma de conseguir procurar Fornecedor, alterar ou desativar  |
 ---
 
 # Erros
@@ -177,9 +176,9 @@ Class Api{
 #### Responses:
 | Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -255,11 +254,11 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
+| Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                   
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -331,11 +330,11 @@ Class Api{
 ---
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
+| Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                      
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -993,6 +992,107 @@ Class Api{
 |-------------|:---------:|:-------------------------------------:|
 | 200         |    OK     |           Retornou o valor            |
 | 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Endereço
+
+Permite o cadastro de novos endereços ou alteração de endereços já existentes, o método mostrado a seguir funciona 
+com as entidade, Cliente, Funcionário e Fornecedor, Cliente e Funcionário podem possuir mais de um endereço, 
+o Fornecedor só pode possui um endereço.
+
+### Body Endereço:
+``` JSON
+"cep": "11111222",
+"logradouro": "Rua X de Y",
+"cidade": "São Paulo",
+"bairro": "Bairro",
+"uf": "SP",
+"numeroLogradouro": 0001
+```
+### Parâmetros:
+| Key | Tipo | Descrição                                              |
+|-----|------|--------------------------------------------------------|
+| id  | int  | Id da entidade que se deseja adicionar o Endereço novo |
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/cliente/endereco?id=`
+
+> `{{baseUri}}/funcionario/endereco?id=`
+
+> `{{baseUri}}/fornecedor/endereco?id=`
+
+JavaScript
+~~~ javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function cadastrarEndereco(idEntidade, endereco) {
+    
+    endereco = tratarDados(endereco);
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/entidade/endereco",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
+        cep: endereco.cep,
+        logradouro: endereco.logradouro,
+        cidade: endereco.cidade,
+        bairro: endereco.bairro,
+        uf: endereco.uf,
+        numeroLogradouro: endereco.numLogradouro
+      },
+      params: {
+        id: idEntidade
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarEndereco(int idEntidade, Endereco endereco) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/entidade/cliente?id=$idEntidade"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                cep: endereco.cep,
+                logradouro: endereco.logradouro,
+                cidade: endereco.cidade,
+                bairro: endereco.bairro,
+                uf: endereco.uf,
+                numeroLogradouro: endereco.numLogradouro
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 201         |   CREATED   |         Cadastrou com sucesso         |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada  |               
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
