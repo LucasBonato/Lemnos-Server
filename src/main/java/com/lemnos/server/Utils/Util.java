@@ -7,17 +7,25 @@ import com.lemnos.server.Exceptions.Endereco.EstadoNotFoundException;
 import com.lemnos.server.Exceptions.Global.CnpjNotValidException;
 import com.lemnos.server.Exceptions.Global.CpfNotValidException;
 import com.lemnos.server.Exceptions.Global.TelefoneNotValidException;
+import com.lemnos.server.Models.Cliente;
+import com.lemnos.server.Models.Endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.Endereco.Cidade;
 import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Endereco.Estado;
+import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Codigo;
+import com.lemnos.server.Models.Fornecedor;
+import com.lemnos.server.Models.Funcionario;
+import com.lemnos.server.Models.Records.EnderecoRecord;
 import com.lemnos.server.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class Util {
@@ -129,5 +137,46 @@ public class Util {
 
         Endereco endereco = new Endereco(cep, cidade, estado, enderecoDTO);
         return enderecoRepository.save(endereco);
+    }
+
+    protected static List<EnderecoRecord> getEnderecoRecords(Cliente cliente) {
+        List<EnderecoRecord> enderecoRecords = new ArrayList<>();
+        for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
+            EnderecoRecord enderecoRecord = new EnderecoRecord(
+                    cpe.getEndereco().getCep(),
+                    cpe.getEndereco().getLogradouro(),
+                    cpe.getNumeroLogradouro(),
+                    cpe.getEndereco().getBairro(),
+                    cpe.getEndereco().getCidade().getCidade(),
+                    cpe.getEndereco().getEstado().getUf()
+            );
+            enderecoRecords.add(enderecoRecord);
+        }
+        return enderecoRecords;
+    }
+    protected static List<EnderecoRecord> getEnderecoRecords(Funcionario funcionario) {
+        List<EnderecoRecord> enderecoRecords = new ArrayList<>();
+        for(FuncionarioPossuiEndereco fpe : funcionario.getEnderecos()){
+            EnderecoRecord enderecoRecord = new EnderecoRecord(
+                    fpe.getEndereco().getCep(),
+                    fpe.getEndereco().getLogradouro(),
+                    fpe.getNumeroLogradouro(),
+                    fpe.getEndereco().getBairro(),
+                    fpe.getEndereco().getCidade().getCidade(),
+                    fpe.getEndereco().getEstado().getUf()
+            );
+            enderecoRecords.add(enderecoRecord);
+        }
+        return enderecoRecords;
+    }
+    protected static EnderecoRecord getEnderecoRecords(Fornecedor fornecedor) {
+        return new EnderecoRecord(
+                fornecedor.getEndereco().getCep(),
+                fornecedor.getEndereco().getLogradouro(),
+                fornecedor.getNumeroLogradouro(),
+                fornecedor.getEndereco().getBairro(),
+                fornecedor.getEndereco().getCidade().getCidade(),
+                fornecedor.getEndereco().getEstado().getUf()
+        );
     }
 }
