@@ -9,7 +9,6 @@ import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Funcionario;
-import com.lemnos.server.Models.Records.EnderecoRecord;
 import com.lemnos.server.Models.Records.FuncionarioRecord;
 import com.lemnos.server.Repositories.FuncionarioRepository;
 import com.lemnos.server.Utils.Util;
@@ -30,8 +29,7 @@ public class FuncionarioService extends Util {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         List<FuncionarioRecord> dto = new ArrayList<>();
         for(Funcionario funcionario : funcionarios){
-            List<EnderecoRecord> enderecoRecords = getEnderecoRecords(funcionario);
-            FuncionarioRecord record = new FuncionarioRecord(
+            dto.add(new FuncionarioRecord(
                     funcionario.getNome(),
                     funcionario.getCpf(),
                     funcionario.getDataNascimento(),
@@ -39,9 +37,8 @@ public class FuncionarioService extends Util {
                     funcionario.getTelefone(),
                     funcionario.getCadastro().getEmail(),
                     funcionario.getCadastro().getSenha(),
-                    enderecoRecords
-            );
-            dto.add(record);
+                    getEnderecoRecords(funcionario)
+            ));
         }
         return ResponseEntity.ok(dto);
     }

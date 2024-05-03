@@ -3,6 +3,7 @@ package com.lemnos.server.Controllers;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FuncionarioDTO;
 import com.lemnos.server.Models.Funcionario;
+import com.lemnos.server.Models.Records.FuncionarioRecord;
 import com.lemnos.server.Services.FuncionarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ class FuncionarioController {
     @Autowired private FuncionarioService funcionarioService;
 
     @GetMapping
-    public ResponseEntity<List<Funcionario>> getAll(){
+    public ResponseEntity<List<FuncionarioRecord>> getAll(){
         return funcionarioService.getAll();
     }
 

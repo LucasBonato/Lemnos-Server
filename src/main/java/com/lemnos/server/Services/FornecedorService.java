@@ -11,6 +11,7 @@ import com.lemnos.server.Models.Endereco.Endereco;
 import com.lemnos.server.Models.Enums.Codigo;
 import com.lemnos.server.Models.Enums.Situacao;
 import com.lemnos.server.Models.Fornecedor;
+import com.lemnos.server.Models.Records.FornecedorRecord;
 import com.lemnos.server.Repositories.FornecedorRepository;
 import com.lemnos.server.Utils.Util;
 import io.micrometer.common.util.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,8 +30,20 @@ public class FornecedorService extends Util {
 
     @Autowired private FornecedorRepository fornecedorRepository;
 
-    public ResponseEntity<List<Fornecedor>> getAll() {
-        return ResponseEntity.ok(fornecedorRepository.findAll());
+    public ResponseEntity<List<FornecedorRecord>> getAll() {
+        List<Fornecedor> fornecedores = fornecedorRepository.findAll();
+        List<FornecedorRecord> dto = new ArrayList<>();
+        for(Fornecedor fornecedor : fornecedores){
+            dto.add(new FornecedorRecord(
+                    fornecedor.getNome(),
+                    fornecedor.getCnpj(),
+                    fornecedor.getTelefone(),
+                    fornecedor.getEmail(),
+                    getEnderecoRecords(fornecedor)
+            ));
+        }
+
+        return ResponseEntity.ok(dto);
     }
 
     public ResponseEntity<Fornecedor> getOneById(Integer id) {

@@ -3,6 +3,7 @@ package com.lemnos.server.Controllers;
 import com.lemnos.server.Models.DTOs.EnderecoDTO;
 import com.lemnos.server.Models.DTOs.FornecedorDTO;
 import com.lemnos.server.Models.Fornecedor;
+import com.lemnos.server.Models.Records.FornecedorRecord;
 import com.lemnos.server.Services.FornecedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class FornecedorController {
     @Autowired private FornecedorService fornecedorService;
 
     @GetMapping
-    public ResponseEntity<List<Fornecedor>> getAll(){
+    public ResponseEntity<List<FornecedorRecord>> getAll(){
         return fornecedorService.getAll();
     }
 
