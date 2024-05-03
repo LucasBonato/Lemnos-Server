@@ -1070,7 +1070,7 @@ Class Api{
     
     Future<dynamic> cadastrarEndereco(int idEntidade, Endereco endereco) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/entidade/cliente?id=$idEntidade"),
+            Uri.parse(baseUri + "/entidade/endereco?id=$idEntidade"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             },
@@ -1091,6 +1091,91 @@ Class Api{
 | Status Code | Significado |               Por quê?                |
 |-------------|:-----------:|:-------------------------------------:|
 | 201         |   CREATED   |         Cadastrou com sucesso         |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada  |               
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Alterar um Endereço
+
+O campo cep tem que ser de um endereço já existente
+
+### Body Put Endereço:
+``` JSON
+"cep": "11111222",
+"logradouro": "Rua X de Y",
+"cidade": "São Paulo",
+"bairro": "Bairro",
+"uf": "SP"
+```
+
+#### Exemplos:
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
+> `{{baseUri}}/endereco`
+
+JavaScript
+~~~ javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function updateEndereco(endereco) {
+    
+    endereco = tratarDados(endereco);
+    
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: "/endereco",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
+        cep: endereco.cep,
+        logradouro: endereco.logradouro,
+        cidade: endereco.cidade,
+        bairro: endereco.bairro,
+        uf: endereco.uf
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> updateEndereco(Endereco endereco) async{
+        var response = await client.put(
+            Uri.parse("$baseUri/endereco"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                cep: endereco.cep,
+                logradouro: endereco.logradouro,
+                cidade: endereco.cidade,
+                bairro: endereco.bairro,
+                uf: endereco.uf
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |        Atualizado com sucesso         |                 
 | 400         | BAD REQUEST | Alguma informação foi enviada errada  |               
 | 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
 
