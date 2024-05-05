@@ -14,11 +14,6 @@ public class EnderecoService extends Util {
 
     public ResponseEntity<Void> update(EnderecoRequest enderecoRequest) {
         Endereco endereco = getEndereco(enderecoRequest);
-        endereco.setLogradouro(enderecoRequest.logradouro());
-        endereco.getCidade().setCidade(enderecoRequest.cidade());
-        endereco.setBairro(enderecoRequest.bairro());
-        endereco.getEstado().setUf(enderecoRequest.uf());
-
         enderecoRepository.save(endereco);
 
         return ResponseEntity.ok().build();

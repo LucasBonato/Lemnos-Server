@@ -3,6 +3,7 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
+import com.lemnos.server.exceptions.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
@@ -59,7 +60,6 @@ public class FornecedorService extends Util {
 
     public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
         Fornecedor fornecedor = getOneFornecedorById(id);
-
         Endereco endereco = getEndereco(enderecoRequest);
 
         if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
@@ -88,6 +88,9 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    private Fornecedor getOneFornecedorById(Integer id) {
+        return fornecedorRepository.findById(id).orElseThrow(FornecedorNotFoundException::new);
+    }
     private Fornecedor insertData(Integer id, FornecedorRequest fornecedorEnviado){
         Fornecedor fornecedorEncontrado = getOneFornecedorById(id);
 

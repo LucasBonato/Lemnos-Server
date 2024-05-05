@@ -2,6 +2,7 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
+import com.lemnos.server.exceptions.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.Cliente;
@@ -63,13 +64,10 @@ public class ClienteService extends Util {
 
         Endereco endereco = getEndereco(enderecoRequest);
 
-        Optional<ClientePossuiEndereco> optionalCpe = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(optionalCpe.isPresent()){
-            throw new EntityAlreadyHasEnderecoException("Cliente");
-        }
+        Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
 
-        ClientePossuiEndereco clientePossuiEndereco = new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento());
-        clientePossuiEnderecoRepository.save(clientePossuiEndereco);
+        clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -89,6 +87,10 @@ public class ClienteService extends Util {
             clienteRepository.save(clienteDeletado);
         }
         return ResponseEntity.ok().build();
+    }
+
+    private Cliente getOneClienteById(Integer id) {
+        return clienteRepository.findById(id).orElseThrow(ClienteNotFoundException::new);
     }
 
     private Cliente insertData(Integer id, ClienteRequest clienteEnviado) {

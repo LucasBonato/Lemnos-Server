@@ -1,5 +1,6 @@
 package com.lemnos.server.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lemnos.server.exceptions.cadastro.CadastroWrongDataFormatException;
 import com.lemnos.server.exceptions.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.endereco.CepNotValidException;
@@ -10,6 +11,7 @@ import com.lemnos.server.exceptions.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.cliente.CnpjNotValidException;
 import com.lemnos.server.exceptions.cliente.CpfNotValidException;
 import com.lemnos.server.exceptions.global.TelefoneNotValidException;
+import com.lemnos.server.exceptions.viacep.ViaCepServerDownException;
 import com.lemnos.server.models.Cliente;
 import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
@@ -21,8 +23,12 @@ import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.Fornecedor;
 import com.lemnos.server.models.Funcionario;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
+import com.lemnos.server.models.viacep.ViaCep;
+import com.lemnos.server.models.viacep.ViaCepDTO;
 import com.lemnos.server.repositories.*;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,19 +53,6 @@ public class Util {
     protected final String TELEFONE = "TELEFONE";
     protected final String CNPJ = "CNPJ";
 
-    protected Endereco getEndereco(EnderecoRequest enderecoRequest) {
-        String cep = enderecoRequest.cep();
-        Endereco endereco;
-
-        Optional<Endereco> optionalEndereco = enderecoRepository.findById(cep);
-        if(optionalEndereco.isEmpty()){
-            verificarCamposEndereco(enderecoRequest);
-            endereco = cadastrarNovoEndereco(cep, enderecoRequest);
-        } else {
-            endereco = optionalEndereco.get();
-        }
-        return endereco;
-    }
     protected static List<EnderecoResponse> getEnderecoRecords(Cliente cliente) {
         List<EnderecoResponse> enderecoResponses = new ArrayList<>();
         for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
@@ -68,8 +61,8 @@ public class Util {
                     cpe.getEndereco().getLogradouro(),
                     cpe.getNumeroLogradouro(),
                     cpe.getComplemento(),
-                    cpe.getEndereco().getBairro(),
                     cpe.getEndereco().getCidade().getCidade(),
+                    cpe.getEndereco().getBairro(),
                     cpe.getEndereco().getEstado().getUf()
             );
             enderecoResponses.add(enderecoResponse);
@@ -84,8 +77,8 @@ public class Util {
                     fpe.getEndereco().getLogradouro(),
                     fpe.getNumeroLogradouro(),
                     fpe.getComplemento(),
-                    fpe.getEndereco().getBairro(),
                     fpe.getEndereco().getCidade().getCidade(),
+                    fpe.getEndereco().getBairro(),
                     fpe.getEndereco().getEstado().getUf()
             );
             enderecoResponses.add(enderecoResponse);
@@ -99,52 +92,43 @@ public class Util {
                 fornecedor.getEndereco().getLogradouro(),
                 fornecedor.getNumeroLogradouro(),
                 fornecedor.getComplemento(),
-                fornecedor.getEndereco().getBairro(),
                 fornecedor.getEndereco().getCidade().getCidade(),
+                fornecedor.getEndereco().getBairro(),
                 fornecedor.getEndereco().getEstado().getUf()
         );
     }
+
+    protected Endereco getEndereco(EnderecoRequest enderecoRequest) {
+        String cep = enderecoRequest.cep();
+        Optional<Endereco> optionalEndereco = enderecoRepository.findById(cep);
+        if(optionalEndereco.isPresent()) {
+            return optionalEndereco.get();
+        }
+
+        ViaCepDTO via = getViaCepObject(cep);
+        if(via != null) {
+            return optionalEndereco.orElseGet(() -> cadastrarNovoEndereco(via, enderecoRequest));
+        }
+        throw new EnderecoNotValidException(Codigo.CEP.ordinal() ,"Cep não existe!");
+    }
+    private Endereco cadastrarNovoEndereco(ViaCepDTO viaCep, EnderecoRequest enderecoRequest) {
+        verificarCamposEndereco(enderecoRequest);
+
+        Optional<Cidade> cidadeOptional = cidadeRepository.findByCidade(viaCep.cidade());
+        Cidade cidade = cidadeOptional.orElseGet(() -> cidadeRepository.save(new Cidade(viaCep.cidade())));
+
+        Estado estado = estadoRepository.findByUf(viaCep.uf()).orElseThrow(EstadoNotFoundException::new);
+
+        Endereco endereco = new Endereco(viaCep, cidade, estado);
+        return enderecoRepository.save(endereco);
+    }
     private void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
-        if(enderecoRequest.logradouro().isBlank() || enderecoRequest.bairro().isBlank() || enderecoRequest.cidade().isBlank() || enderecoRequest.uf().isBlank() || enderecoRequest.numeroLogradouro() == null){
+        if(enderecoRequest.numeroLogradouro() == null || StringUtils.isBlank(enderecoRequest.complemento())){
             throw new EnderecoNotValidException(Codigo.GLOBAL.ordinal(), "Todos os campos de endereço são obrigatórios!");
-        }
-        if(enderecoRequest.logradouro().length() < 2 || enderecoRequest.logradouro().length() > 50){
-            throw new EnderecoNotValidException(Codigo.LOGRADOURO.ordinal(), "Logradouro precisa estar entre 2 e 50 caracteres!");
-        }
-        if(enderecoRequest.complemento().length() > 20){
-            throw new EnderecoNotValidException(Codigo.COMPLEMENTO.ordinal(), "Complemento só pode possui até 20 caracteres!");
-        }
-        if(enderecoRequest.cidade().length() < 2 || enderecoRequest.cidade().length() > 30){
-            throw new EnderecoNotValidException(Codigo.CIDADE.ordinal(), "Cidade precisa estar entre 2 e 30 caracteres!");
-        }
-        if(enderecoRequest.bairro().length() < 2 || enderecoRequest.bairro().length() > 30){
-            throw new EnderecoNotValidException(Codigo.BAIRRO.ordinal(), "Bairro precisa estar entre 2 e 30 caracteres!");
-        }
-        if(enderecoRequest.uf().length() != 2){
-            throw new EnderecoNotValidException(Codigo.UF.ordinal(), "O UF precisa ter 2 caracteres!");
         }
         if(enderecoRequest.numeroLogradouro() < 0 || enderecoRequest.numeroLogradouro() > 9999){
             throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO.ordinal(), "O número de Logradouro não pode ser negativo ou maior que 9999");
         }
-    }
-    private Endereco cadastrarNovoEndereco(String cep, EnderecoRequest enderecoRequest) {
-        Cidade cidade;
-
-        enderecoRequest = enderecoRequest.setBairro(enderecoRequest.bairro().toLowerCase());
-        enderecoRequest = enderecoRequest.setCidade(enderecoRequest.cidade().toLowerCase());
-        enderecoRequest = enderecoRequest.setUf(enderecoRequest.uf().toUpperCase());
-
-        Optional<Cidade> cidadeOptional = cidadeRepository.findByCidade(enderecoRequest.cidade());
-        if(cidadeOptional.isEmpty()){
-            Cidade novaCidade = new Cidade(enderecoRequest.cidade());
-            cidade = cidadeRepository.save(novaCidade);
-        } else {
-            cidade = cidadeOptional.get();
-        }
-        Estado estado = estadoRepository.findByUf(enderecoRequest.uf()).orElseThrow(EstadoNotFoundException::new);
-
-        Endereco endereco = new Endereco(cep, cidade, estado, enderecoRequest);
-        return enderecoRepository.save(endereco);
     }
 
     protected Date convertData(String data) {
@@ -188,25 +172,15 @@ public class Util {
         }
     }
 
-    protected Fornecedor getOneFornecedorById(Integer id) {
-        Optional<Fornecedor> fornecedorOptional = fornecedorRepository.findById(id);
-        if(fornecedorOptional.isPresent()){
-            return fornecedorOptional.get();
+    @Autowired private RestTemplate restTemplate;
+
+    protected ViaCepDTO getViaCepObject(String cep){
+        try {
+            ViaCep viaCep = restTemplate.getForObject("https://viacep.com.br/ws/{cep}/json", ViaCep.class, cep);
+            if(viaCep == null) return null;
+            return new ViaCepDTO(viaCep.getCep().replace("-", ""), viaCep.getLogradouro(), viaCep.getLocalidade(), viaCep.getBairro(), viaCep.getUf());
+        } catch (Exception e) {
+            throw new EnderecoNotValidException(Codigo.CEP.ordinal() ,"Cep não existe!");
         }
-        throw new FornecedorNotFoundException();
-    }
-    protected Funcionario getOneFuncionarioById(Integer id) {
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findById(id);
-        if(funcionarioOptional.isPresent()){
-            return funcionarioOptional.get();
-        }
-        throw new FuncionarioNotFoundException();
-    }
-    protected Cliente getOneClienteById(Integer id) {
-        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
-        if(clienteOptional.isPresent()){
-            return clienteOptional.get();
-        }
-        throw new ClienteNotFoundException();
     }
 }
