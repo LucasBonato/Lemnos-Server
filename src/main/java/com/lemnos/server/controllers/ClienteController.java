@@ -31,10 +31,17 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Integer id){ return clienteService.deleteById(id);}
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
+        return clienteService.deleteById(id);
+    }
 
     @PostMapping("/endereco")
     public ResponseEntity<Void> createEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
         return clienteService.createEndereco(id, enderecoRequest);
+    }
+
+    @PutMapping("/endereco")
+    public ResponseEntity<Void> updateEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
+        return clienteService.updateEndereco(id, enderecoRequest);
     }
 }

@@ -61,7 +61,7 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
 
-        Long cpf = convertStringToLong(clienteRequest.cpf(), CPF);
+        Long cpf = convertStringToLong(clienteRequest.cpf(), Codigo.CPF);
 
         if(StringUtils.isBlank(clienteRequest.email())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
@@ -94,7 +94,7 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
         }
 
-        Long cpf = convertStringToLong(funcionarioRequest.cpf(), CPF);
+        Long cpf = convertStringToLong(funcionarioRequest.cpf(), Codigo.CPF);
 
         if(StringUtils.isBlank(funcionarioRequest.dataNascimento())){
             throw new CadastroNotValidException(Codigo.DATANASC.ordinal(), "A Data de Nascimento é obrigatória!");
@@ -106,7 +106,7 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone é obrigatório");
         }
 
-        convertStringToLong(funcionarioRequest.telefone(), TELEFONE);
+        convertStringToLong(funcionarioRequest.telefone(), Codigo.TELEFONE);
 
         if(StringUtils.isBlank(funcionarioRequest.email())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
@@ -143,13 +143,13 @@ public class CadastroService extends Util {
             throw new CadastroNotValidException(Codigo.CNPJ.ordinal(), "O CNPJ é obrigatório!");
         }
 
-        Long cnpj = convertStringToLong(fornecedorRequest.cnpj(), CNPJ);
+        Long cnpj = convertStringToLong(fornecedorRequest.cnpj(), Codigo.CNPJ);
 
         if(fornecedorRequest.telefone() == null || fornecedorRequest.telefone().isBlank()){
             throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "O Telefone é obrigatório!");
         }
 
-        convertStringToLong(fornecedorRequest.telefone(), TELEFONE);
+        convertStringToLong(fornecedorRequest.telefone(), Codigo.TELEFONE);
 
         if(StringUtils.isBlank(fornecedorRequest.email())){
             throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
