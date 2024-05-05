@@ -102,6 +102,13 @@ public class ClienteService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> removeEndereco(Integer id, String cep) {
+        getOneClienteById(id);
+        ClientePossuiEndereco cpe = clientePossuiEnderecoRepository.findByCepAndId_Cliente(cep, id).orElseThrow(() -> new EnderecoNotFoundException("Cliente"));
+        clientePossuiEnderecoRepository.delete(cpe);
+        return ResponseEntity.ok().build();
+    }
+
     private Cliente getOneClienteById(Integer id) {
         return clienteRepository.findById(id).orElseThrow(ClienteNotFoundException::new);
     }
