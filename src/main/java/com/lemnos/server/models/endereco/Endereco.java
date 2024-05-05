@@ -5,6 +5,7 @@ import com.lemnos.server.annotations.CEP;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.viacep.ViaCepDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,10 +44,10 @@ public class Endereco {
     @OneToMany(mappedBy = "endereco")
     private List<FuncionarioPossuiEndereco> funcionarios;
 
-    public Endereco(String cep, Cidade cidade, Estado estado, EnderecoRequest enderecoRequest){
-        this.cep = cep;
-        this.logradouro = enderecoRequest.logradouro();
-        this.bairro = enderecoRequest.bairro();
+    public Endereco(ViaCepDTO viaCepDTO, Cidade cidade, Estado estado) {
+        this.cep = viaCepDTO.cep();
+        this.logradouro = viaCepDTO.logradouro();
+        this.bairro = viaCepDTO.bairro();
         this.cidade = cidade;
         this.estado = estado;
     }
