@@ -1,4 +1,4 @@
-package com.lemnos.server.repositories;
+package com.lemnos.server.repositories.endereco;
 
 import com.lemnos.server.models.endereco.Estado;
 import org.springframework.data.jpa.repository.JpaRepository;
