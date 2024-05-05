@@ -22,6 +22,7 @@ import com.lemnos.server.models.Fornecedor;
 import com.lemnos.server.models.Funcionario;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.repositories.*;
+import com.lemnos.server.repositories.endereco.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
