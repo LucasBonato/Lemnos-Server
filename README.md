@@ -1179,6 +1179,81 @@ Class Api{
 
 ---
 
+## Remover um Endereço
+
+Possíbilita remover o endereço de uma entidade
+
+### Parâmetros:
+|  Key  |  Tipo  |                     Descrição                     |
+|:-----:|:------:|:-------------------------------------------------:|
+|  id   |  int   |  Id da entidade que se deseja remover o Endereço  |
+|  cep  | String |          Cep do endereço a ser removido           |
+
+#### Exemplos:
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/cliente/endereco?id=&cep=`
+
+> `{{baseUri}}/funcionario/endereco?id=&cep=`
+
+> `{{baseUri}}/fornecedor/endereco?id=&cep=`
+
+JavaScript
+~~~ javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function updateEndereco(idEntidade, endereco) {
+    
+    endereco = tratarDados(endereco);
+    
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/entidade/endereco",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      params: {
+        id: idEntidade,
+        cep: endereco.cep
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco) async{
+        var response = await client.delete(
+            Uri.parse("$baseUri/entidade/endereco?id=$idEntidade&cep=${endereco.cep}"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |        Atualizado com sucesso         |            
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
 Nada de importante
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
