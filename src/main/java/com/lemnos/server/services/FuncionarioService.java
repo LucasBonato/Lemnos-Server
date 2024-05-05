@@ -2,7 +2,10 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
+import com.lemnos.server.exceptions.fornecedor.FornecedorNotFoundException;
+import com.lemnos.server.exceptions.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
+import com.lemnos.server.models.Fornecedor;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.endereco.Endereco;
@@ -60,16 +63,12 @@ public class FuncionarioService extends Util {
 
     public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
         Funcionario funcionario = getOneFuncionarioById(id);
-
         Endereco endereco = getEndereco(enderecoRequest);
 
-        Optional<FuncionarioPossuiEndereco> optionalFpe = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(optionalFpe.isPresent()){
-            throw new EntityAlreadyHasEnderecoException("Funcionário");
-        }
+        Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
 
-        FuncionarioPossuiEndereco funcionarioPossuiEndereco = new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento());
-        funcionarioPossuiEnderecoRepository.save(funcionarioPossuiEndereco);
+        funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -91,6 +90,9 @@ public class FuncionarioService extends Util {
         return ResponseEntity.noContent().build();
     }
 
+    private Funcionario getOneFuncionarioById(Integer id) {
+        return funcionarioRepository.findById(id).orElseThrow(FuncionarioNotFoundException::new);
+    }
     private Funcionario insertData(Integer id, FuncionarioRequest funcionarioEnviado) {
         Funcionario funcionarioEncontrado = getOneFuncionarioById(id);
 
