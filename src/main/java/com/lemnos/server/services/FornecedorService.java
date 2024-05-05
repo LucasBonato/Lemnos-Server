@@ -2,11 +2,13 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
+import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
+import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
@@ -58,20 +60,6 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Fornecedor fornecedor = getOneFornecedorById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
-
-        fornecedor.setEndereco(endereco);
-        fornecedor.setComplemento(enderecoRequest.complemento());
-        fornecedor.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
-        fornecedorRepository.save(fornecedor);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     public ResponseEntity<Void> updateFornecedor(Integer id, FornecedorRequest fornecedorRequest) {
         Fornecedor updatedFornecedor = insertData(id, fornecedorRequest);
         fornecedorRepository.save(updatedFornecedor);
@@ -88,8 +76,48 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
+        Fornecedor fornecedor = getOneFornecedorById(id);
+        Endereco endereco = getEndereco(enderecoRequest);
+
+        if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
+
+        fornecedor.setEndereco(endereco);
+        fornecedor.setComplemento(enderecoRequest.complemento());
+        fornecedor.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
+        fornecedorRepository.save(fornecedor);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> updateEndereco(Integer id, EnderecoRequest enderecoRequest) {
+        Fornecedor fornecedor = getOneFornecedorById(id);
+        Endereco endereco = getEndereco(enderecoRequest);
+
+        if(fornecedor.getEndereco() == null) throw new EnderecoNotFoundException("Fornecedor");
+
+        fornecedor.setEndereco(endereco);
+        fornecedor.setComplemento(enderecoRequest.complemento());
+        fornecedor.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
+        fornecedorRepository.save(fornecedor);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     private Fornecedor getOneFornecedorById(Integer id) {
         return fornecedorRepository.findById(id).orElseThrow(FornecedorNotFoundException::new);
+    }
+    private static EnderecoResponse getEnderecoRecords(Fornecedor fornecedor) {
+        if(fornecedor.getEndereco() == null) return null;
+        return new EnderecoResponse(
+                fornecedor.getEndereco().getCep(),
+                fornecedor.getEndereco().getLogradouro(),
+                fornecedor.getNumeroLogradouro(),
+                fornecedor.getComplemento(),
+                fornecedor.getEndereco().getCidade().getCidade(),
+                fornecedor.getEndereco().getBairro(),
+                fornecedor.getEndereco().getEstado().getUf()
+        );
     }
     private Fornecedor insertData(Integer id, FornecedorRequest fornecedorEnviado){
         Fornecedor fornecedorEncontrado = getOneFornecedorById(id);
@@ -109,7 +137,7 @@ public class FornecedorService extends Util {
         if(fornecedorEnviado.telefone() == null || fornecedorEnviado.telefone().isBlank()){
             fornecedorEnviado = fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone().toString());
         }
-        Long telefone = convertStringToLong(fornecedorEnviado.telefone(), TELEFONE);
+        Long telefone = convertStringToLong(fornecedorEnviado.telefone(), Codigo.TELEFONE);
         if(fornecedorEnviado.cnpj() == null){
             fornecedorEnviado = fornecedorEnviado.setCnpj(fornecedorEncontrado.getCnpj().toString());
         }

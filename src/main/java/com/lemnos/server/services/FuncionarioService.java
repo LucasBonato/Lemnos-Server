@@ -1,15 +1,20 @@
 package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
+import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
+import com.lemnos.server.models.Cliente;
 import com.lemnos.server.models.Fornecedor;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
+import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.endereco.Endereco;
+import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.Funcionario;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
@@ -61,18 +66,6 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Funcionario funcionario = getOneFuncionarioById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
-
-        funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     public ResponseEntity<Void> updateFuncionario(Integer id, FuncionarioRequest funcionarioRequest){
         Funcionario updatedFuncionario = insertData(id, funcionarioRequest);
         funcionarioRepository.save(updatedFuncionario);
@@ -90,8 +83,47 @@ public class FuncionarioService extends Util {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
+        Funcionario funcionario = getOneFuncionarioById(id);
+        Endereco endereco = getEndereco(enderecoRequest);
+
+        Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
+
+        funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> updateEndereco(Integer id, EnderecoRequest enderecoRequest) {
+        Funcionario funcionario = getOneFuncionarioById(id);
+        Endereco endereco = getEndereco(enderecoRequest);
+
+        Optional<FuncionarioPossuiEndereco> cpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(cpeOptional.isEmpty()) throw new EnderecoNotFoundException("Cliente");
+
+        funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
+
+        return ResponseEntity.ok().build();
+    }
+
     private Funcionario getOneFuncionarioById(Integer id) {
         return funcionarioRepository.findById(id).orElseThrow(FuncionarioNotFoundException::new);
+    }
+    private static List<EnderecoResponse> getEnderecoRecords(Funcionario funcionario) {
+        List<EnderecoResponse> enderecoResponses = new ArrayList<>();
+        for(FuncionarioPossuiEndereco fpe : funcionario.getEnderecos()){
+            enderecoResponses.add(new EnderecoResponse(
+                    fpe.getEndereco().getCep(),
+                    fpe.getEndereco().getLogradouro(),
+                    fpe.getNumeroLogradouro(),
+                    fpe.getComplemento(),
+                    fpe.getEndereco().getCidade().getCidade(),
+                    fpe.getEndereco().getBairro(),
+                    fpe.getEndereco().getEstado().getUf()
+            ));
+        }
+        return enderecoResponses;
     }
     private Funcionario insertData(Integer id, FuncionarioRequest funcionarioEnviado) {
         Funcionario funcionarioEncontrado = getOneFuncionarioById(id);
@@ -108,7 +140,7 @@ public class FuncionarioService extends Util {
         if(StringUtils.isBlank(funcionarioEnviado.cpf())){
             funcionarioEnviado = funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf().toString());
         }
-        Long cpf = convertStringToLong(funcionarioEnviado.cpf(), CPF);
+        Long cpf = convertStringToLong(funcionarioEnviado.cpf(), Codigo.CPF);
         if(StringUtils.isBlank(funcionarioEnviado.dataNascimento())){
             dataNasc = funcionarioEncontrado.getDataNascimento();
         } else {
@@ -122,7 +154,7 @@ public class FuncionarioService extends Util {
         if(StringUtils.isBlank(funcionarioEnviado.telefone())){
             funcionarioEnviado = funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone().toString());
         }
-        Long telefone = convertStringToLong(funcionarioEnviado.telefone(), TELEFONE);
+        Long telefone = convertStringToLong(funcionarioEnviado.telefone(), Codigo.TELEFONE);
 
         Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(cpf);
         if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
@@ -140,4 +172,3 @@ public class FuncionarioService extends Util {
         return updatedFuncionario;
     }
 }
-

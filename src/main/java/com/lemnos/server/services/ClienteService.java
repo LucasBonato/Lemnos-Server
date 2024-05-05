@@ -3,11 +3,13 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.cliente.ClienteNotFoundException;
+import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
+import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.models.enums.Codigo;
@@ -59,19 +61,6 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Cliente cliente = getOneClienteById(id);
-
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
-
-        clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     public ResponseEntity<Void> updateCliente(Integer id, ClienteRequest clienteDTO){
         Cliente updatedCliente = insertData(id, clienteDTO);
         clienteRepository.save(updatedCliente);
@@ -89,10 +78,48 @@ public class ClienteService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
+        Cliente cliente = getOneClienteById(id);
+        Endereco endereco = getEndereco(enderecoRequest);
+
+        Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
+
+        clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> updateEndereco(Integer id, EnderecoRequest enderecoRequest) {
+        Cliente cliente = getOneClienteById(id);
+        Endereco endereco = getEndereco(enderecoRequest);
+
+        Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
+        if(cpeOptional.isEmpty()) throw new EnderecoNotFoundException("Cliente");
+
+        clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
+
+        return ResponseEntity.ok().build();
+    }
+
     private Cliente getOneClienteById(Integer id) {
         return clienteRepository.findById(id).orElseThrow(ClienteNotFoundException::new);
     }
-
+    private static List<EnderecoResponse> getEnderecoRecords(Cliente cliente) {
+        List<EnderecoResponse> enderecoResponses = new ArrayList<>();
+        for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
+            enderecoResponses.add(new EnderecoResponse(
+                    cpe.getEndereco().getCep(),
+                    cpe.getEndereco().getLogradouro(),
+                    cpe.getNumeroLogradouro(),
+                    cpe.getComplemento(),
+                    cpe.getEndereco().getCidade().getCidade(),
+                    cpe.getEndereco().getBairro(),
+                    cpe.getEndereco().getEstado().getUf()
+            ));
+        }
+        return enderecoResponses;
+    }
     private Cliente insertData(Integer id, ClienteRequest clienteEnviado) {
         Cliente clienteEncontrado = getOneClienteById(id);
 
@@ -108,7 +135,7 @@ public class ClienteService extends Util {
         if(clienteEnviado.cpf() == null){
             clienteEnviado = clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
-        Long cpf = convertStringToLong(clienteEnviado.cpf(), CPF);
+        Long cpf = convertStringToLong(clienteEnviado.cpf(), Codigo.CPF);
 
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
