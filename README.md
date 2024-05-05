@@ -52,7 +52,6 @@ gerenciamento de carrinho.
 | /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
 | /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
 | /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |  Possui a forma de conseguir procurar Fornecedor, alterar ou desativar  |
-| /endereco     |                                           | [endereço](#Alterar-um-Endereço)                                                                 | [Endereço](#body-put-endereço)                                                                 |      Permite a manipulação de endereços pré existentes no sistema.      |
 ---
 
 # Erros
@@ -1002,16 +1001,13 @@ Class Api{
 
 Permite o cadastro de novos endereços ou alteração de endereços já existentes, o método mostrado a seguir funciona 
 com as entidade, Cliente, Funcionário e Fornecedor, Cliente e Funcionário podem possuir mais de um endereço, 
-o Fornecedor só pode possui um endereço.
+o Fornecedor só pode possui um endereço. Utilizando uma API externa para consulta de cep: [ViaCep](https://viacep.com.br/)
 
 ### Body Endereço:
 ``` JSON
 "cep": "11111222",
-"logradouro": "Rua X de Y",
-"cidade": "São Paulo",
-"bairro": "Bairro",
-"uf": "SP",
-"numeroLogradouro": 0001
+"numeroLogradouro": 0001,
+"complemento": "Apto x bloco y/ casa x"
 ```
 ### Parâmetros:
 | Key | Tipo | Descrição                                              |
@@ -1045,11 +1041,8 @@ function cadastrarEndereco(idEntidade, endereco) {
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         cep: endereco.cep,
-        logradouro: endereco.logradouro,
-        cidade: endereco.cidade,
-        bairro: endereco.bairro,
-        uf: endereco.uf,
-        numeroLogradouro: endereco.numLogradouro
+        numeroLogradouro: endereco.numLogradouro,
+        complemento: endereco.complemento
       },
       params: {
         id: idEntidade
@@ -1077,11 +1070,8 @@ Class Api{
             },
             body: jsonEncode({
                 cep: endereco.cep,
-                logradouro: endereco.logradouro,
-                cidade: endereco.cidade,
-                bairro: endereco.bairro,
-                uf: endereco.uf,
-                numeroLogradouro: endereco.numLogradouro
+                numeroLogradouro: endereco.numLogradouro,
+                complemento: endereco.complemento
             })
         );
     }
@@ -1101,21 +1091,27 @@ Class Api{
 
 ## Alterar um Endereço
 
-O campo cep tem que ser de um endereço já existente
+O campo cep tem que ser de um endereço já existente, só sendo possível alterar os campos complemento e numero de Logradouro
 
 ### Body Put Endereço:
 ``` JSON
 "cep": "11111222",
-"logradouro": "Rua X de Y",
-"cidade": "São Paulo",
-"bairro": "Bairro",
-"uf": "SP"
+"numeroLogradouro": 0001,
+"complemento": "Apto x bloco y/ casa x"
 ```
+### Parâmetros:
+| Key | Tipo | Descrição                                         |
+|-----|------|---------------------------------------------------|
+| id  | int  | Id da entidade que se deseja atualizar o Endereço |
 
 #### Exemplos:
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/endereco`
+> `{{baseUri}}/cliente/endereco?id=`
+
+> `{{baseUri}}/funcionario/endereco?id=`
+
+> `{{baseUri}}/fornecedor/endereco?id=`
 
 JavaScript
 ~~~ javascript
@@ -1124,21 +1120,22 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function updateEndereco(endereco) {
+function updateEndereco(idEntidade, endereco) {
     
     endereco = tratarDados(endereco);
     
     axios({
       baseURL: baseUri,
       method: "PUT",
-      url: "/endereco",
+      url: "/entidade/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         cep: endereco.cep,
-        logradouro: endereco.logradouro,
-        cidade: endereco.cidade,
-        bairro: endereco.bairro,
-        uf: endereco.uf
+        numeroLogradouro: endereco.numLogradouro,
+        complemento: endereco.complemento
+      },
+      params: {
+        id: idEntidade
       }
     })
       .then((response) => console.log(response.data))
@@ -1155,18 +1152,16 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> updateEndereco(Endereco endereco) async{
+    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco) async{
         var response = await client.put(
-            Uri.parse("$baseUri/endereco"),
+            Uri.parse("$baseUri/entidade/endereco?id=$idEntidade"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             },
             body: jsonEncode({
-                cep: endereco.cep,
-                logradouro: endereco.logradouro,
-                cidade: endereco.cidade,
-                bairro: endereco.bairro,
-                uf: endereco.uf
+              cep: endereco.cep,
+              numeroLogradouro: endereco.numLogradouro,
+              complemento: endereco.complemento
             })
         );
     }
