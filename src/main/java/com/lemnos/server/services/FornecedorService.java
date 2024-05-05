@@ -104,6 +104,16 @@ public class FornecedorService extends Util {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    public ResponseEntity<Void> removeEndereco(Integer id, String cep) {
+        Fornecedor fornecedor = getOneFornecedorById(id);
+
+        if(!fornecedor.getEndereco().getCep().equals(cep)) throw new EnderecoNotFoundException("Fornecedor");
+
+        fornecedor.setEndereco(null);
+        fornecedorRepository.save(fornecedor);
+        return ResponseEntity.ok().build();
+    }
+
     private Fornecedor getOneFornecedorById(Integer id) {
         return fornecedorRepository.findById(id).orElseThrow(FornecedorNotFoundException::new);
     }

@@ -107,6 +107,13 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> removeEndereco(Integer id, String cep) {
+        getOneFuncionarioById(id);
+        FuncionarioPossuiEndereco fpe = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(cep, id).orElseThrow(() -> new EnderecoNotFoundException("Funcionário"));
+        funcionarioPossuiEnderecoRepository.delete(fpe);
+        return ResponseEntity.ok().build();
+    }
+
     private Funcionario getOneFuncionarioById(Integer id) {
         return funcionarioRepository.findById(id).orElseThrow(FuncionarioNotFoundException::new);
     }

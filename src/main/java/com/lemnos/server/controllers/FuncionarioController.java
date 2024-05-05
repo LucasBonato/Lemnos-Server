@@ -46,4 +46,9 @@ class FuncionarioController {
     public ResponseEntity<Void> updateEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
         return funcionarioService.updateEndereco(id, enderecoRequest);
     }
+
+    @DeleteMapping("/endereco/{cep}")
+    public ResponseEntity<Void> removeEndereco(@RequestParam(value = "id") Integer id, @PathVariable String cep){
+        return funcionarioService.removeEndereco(id, cep);
+    }
 }
