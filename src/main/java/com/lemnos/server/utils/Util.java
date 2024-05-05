@@ -123,11 +123,14 @@ public class Util {
         return enderecoRepository.save(endereco);
     }
     private void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
-        if(enderecoRequest.numeroLogradouro() == null || StringUtils.isBlank(enderecoRequest.complemento())){
-            throw new EnderecoNotValidException(Codigo.GLOBAL.ordinal(), "Todos os campos de endereço são obrigatórios!");
+        if(enderecoRequest.numeroLogradouro() == null){
+            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO.ordinal(), "O campo de número logradouro é obrigatório!");
         }
         if(enderecoRequest.numeroLogradouro() < 0 || enderecoRequest.numeroLogradouro() > 9999){
             throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO.ordinal(), "O número de Logradouro não pode ser negativo ou maior que 9999");
+        }
+        if(StringUtils.isNotBlank(enderecoRequest.complemento()) && enderecoRequest.complemento().length() > 20) {
+            throw new EnderecoNotValidException(Codigo.COMPLEMENTO.ordinal(), "O complemento só pode possuir até 20 caracteres!");
         }
     }
 
