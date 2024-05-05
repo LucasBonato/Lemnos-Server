@@ -1,0 +1,12 @@
+package com.lemnos.server.exceptions.cliente;
+
+import com.lemnos.server.exceptions.BaseException;
+import com.lemnos.server.exceptions.ExceptionResponse;
+import com.lemnos.server.models.enums.Codigo;
+import org.springframework.http.HttpStatus;
+
+public class ClienteNotFoundException extends BaseException {
+    public ClienteNotFoundException() {
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL.ordinal(), "Cliente não encontrado!"));
+    }
+}

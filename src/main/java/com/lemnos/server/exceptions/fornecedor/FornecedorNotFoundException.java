@@ -1,0 +1,12 @@
+package com.lemnos.server.exceptions.fornecedor;
+
+import com.lemnos.server.exceptions.BaseException;
+import com.lemnos.server.exceptions.ExceptionResponse;
+import com.lemnos.server.models.enums.Codigo;
+import org.springframework.http.HttpStatus;
+
+public class FornecedorNotFoundException extends BaseException {
+    public FornecedorNotFoundException() {
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL.ordinal(), "Fornecedor não encontrado!"));
+    }
+}
