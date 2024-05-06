@@ -22,12 +22,4 @@ public class Produto {
 
     @Column(name = "Valor")
     private Double valor;
-
-    @Column(name = "Id_Imagem")
-    @OneToOne(cascade = CascadeType.ALL)
-    private Integer idImagem;
-
-    @Column(name = "Id_Sub_Sub_Categoria")
-    @OneToOne(cascade = CascadeType.ALL)
-    private Integer idSubSubCategoria;
 }
