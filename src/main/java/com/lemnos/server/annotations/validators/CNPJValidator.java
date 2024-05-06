@@ -5,7 +5,7 @@ import com.lemnos.server.exceptions.cliente.CnpjNotValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class CPNJValidator implements ConstraintValidator<CNPJ, Long> {
+public class CNPJValidator implements ConstraintValidator<CNPJ, Long> {
     @Override
     public void initialize(CNPJ constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
