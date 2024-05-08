@@ -3,6 +3,7 @@ package com.lemnos.server.controllers;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
+import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.services.CadastroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,10 @@ public class CadastroController {
     @PostMapping("/fornecedor")
     public ResponseEntity<Void> cadastrarFornecedor(@RequestBody FornecedorRequest fornecedorRequest){
         return cadastroService.cadastrarFornecedor(fornecedorRequest);
+    }
+
+    @PostMapping("/produto")
+    public ResponseEntity<Void> cadastrarProduto(@RequestBody ProdutoRequest produtoRequest){
+        return cadastroService.cadastrarProduto(produtoRequest);
     }
 }

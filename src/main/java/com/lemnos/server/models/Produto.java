@@ -1,5 +1,6 @@
 package com.lemnos.server.models;
 
+import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,10 @@ public class Produto {
 
     @Column(name = "Valor")
     private Double valor;
+
+    public Produto(ProdutoRequest produtoRequest){
+        this.descricao = produtoRequest.descricao();
+        this.cor = produtoRequest.descricao();
+        this.valor = produtoRequest.valor();
+    }
 }
