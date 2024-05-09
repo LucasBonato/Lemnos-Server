@@ -1,4 +1,4 @@
-package com.lemnos.server.exceptions.fornecedor;
+package com.lemnos.server.exceptions.entidades.fornecedor;
 
 import com.lemnos.server.exceptions.BaseException;
 import com.lemnos.server.exceptions.ExceptionResponse;
