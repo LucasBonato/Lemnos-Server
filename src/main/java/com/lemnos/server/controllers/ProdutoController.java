@@ -16,10 +16,14 @@ public class ProdutoController {
     @Autowired private ProdutoService produtoService;
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponse>> getAll(){ return produtoService.getAll(); }
+    public ResponseEntity<List<ProdutoResponse>> getAll(){
+        return produtoService.getAll();
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> getOneById(@PathVariable String id){ return produtoService.getOneById(id); }
+    public ResponseEntity<ProdutoResponse> getOneById(@PathVariable String id){
+        return produtoService.getOneById(id);
+    }
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@RequestBody ProdutoRequest produtoRequest){

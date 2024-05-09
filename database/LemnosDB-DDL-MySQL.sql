@@ -29,6 +29,14 @@ CREATE TABLE Funcionario (
     foreign key(Id_Cadastro) references Cadastro(Id),
     constraint check(CHAR_LENGTH(Nome) > 2)
 );
+CREATE TABLE Carrinho (
+	Id int primary key auto_increment,
+	Valor decimal(10,2) NOT NULL,
+	Quantidade_Produtos int NOT NULL,
+	Id_Cadastro int,
+	foreign key(Id_Cadastro) references Cadastro (Id),
+    constraint check(Valor > 0 AND Quantidade_Produtos > -1)
+);
 CREATE TABLE Pedido (
 	Id int primary key auto_increment,
 	Valor_Pedido decimal(10,2) NOT NULL,
@@ -38,15 +46,9 @@ CREATE TABLE Pedido (
 	Quantidade_Produtos int NOT NULL,
 	Data_Pagamento date NOT NULL,
     Descricao varChar(255) NOT NULL,
+    Id_Carrinho int,
+    foreign key(Id_Carrinho) references Carrinho(Id),
     constraint check(Valor_Pedido > 0 AND Valor_Pagamento > 0 AND Quantidade_Produtos > -1)
-);
-CREATE TABLE Carrinho (
-	Id int primary key auto_increment,
-	Valor decimal(10,2) NOT NULL,
-	Quantidade_Produtos int NOT NULL,
-	Id_Cadastro int,
-	foreign key(Id_Cadastro) references Cadastro (Id),
-    constraint check(Valor > 0 AND Quantidade_Produtos > -1)
 );
 CREATE TABLE Imagem (
 	Id int primary key auto_increment,
@@ -97,11 +99,10 @@ CREATE TABLE Produto (
 );
 CREATE TABLE Itens_Carrinho (
 	Id int primary key auto_increment,
+	Quantidade int,
 	Id_Carrinho int,
-	Id_Pedido int,
     Id_Produto int,    
 	foreign key(Id_Carrinho) references Carrinho (Id),
-    foreign key(Id_Pedido) references Pedido (Id),
     foreign key(Id_Produto) references Produto (Id)
 );
 CREATE TABLE Avaliacao (
@@ -168,6 +169,7 @@ CREATE TABLE Data_Fornece (
 CREATE TABLE Entrega (
 	Id int primary key auto_increment,
 	Data_Entrega date NOT NULL,
+    Status_Entrega varchar(20) NOT NULL,
 	Id_Pedido int,
 	Foreign key(Id_Pedido) references Pedido (Id)
 );
@@ -188,6 +190,12 @@ CREATE TABLE Funcionario_Possui_Endereco (
 	primary key(CEP, Id_Funcionario),
 	foreign key(CEP) references Endereco (CEP),
     foreign key(Id_Funcionario) references Funcionario (Id)
+);
+CREATE TABLE Produtos_Favoritos(
+	Id_Produto int,
+    Id_Cliente int,
+    foreign key(Id_Produto) references Produto (Id),
+    foreign key(Id_Cliente) references Cliente (Id)
 );
 
 INSERT INTO Estado(UF) VALUES

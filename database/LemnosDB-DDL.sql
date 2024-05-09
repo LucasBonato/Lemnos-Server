@@ -36,6 +36,14 @@ CREATE TABLE Funcionario (
     CONSTRAINT fk_funcionario_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
 );
+CREATE TABLE Carrinho (
+    Id SERIAL PRIMARY KEY,
+    Valor numeric(10, 2) NOT NULL,
+    Quantidade_Produtos int NOT NULL,
+    Id_Cadastro int,
+    CONSTRAINT fk_carrinho_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
+    CHECK(Valor > 0 AND Quantidade_Produtos > -1)
+);
 CREATE TABLE Pedido (
     Id SERIAL PRIMARY KEY,
     Valor_Pedido numeric(10, 2) NOT NULL,
@@ -45,22 +53,9 @@ CREATE TABLE Pedido (
     Quantidade_Produtos int NOT NULL,
     Data_Pagamento date NOT NULL,
     Descricao varchar(255) NOT NULL,
-    CHECK(Valor_Pedido > 0 AND Valor_Pagamento > 0 AND Quantidade_Produtos > -1)
-);
-CREATE TABLE Carrinho (
-    Id SERIAL PRIMARY KEY,
-    Valor numeric(10, 2) NOT NULL,
-    Quantidade_Produtos int NOT NULL,
-    Id_Cadastro int,
-    CONSTRAINT fk_carrinho_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
-    CHECK(Valor > 0 AND Quantidade_Produtos > -1)
-);
-CREATE TABLE Itens_Carrinho (
-    Id SERIAL PRIMARY KEY,
     Id_Carrinho int,
-    Id_Pedido int,
-    CONSTRAINT fk_itens_carrinho_carrinho FOREIGN KEY(Id_Carrinho) REFERENCES Carrinho(Id),
-    CONSTRAINT fk_itens_carrinho_pedido FOREIGN KEY(Id_Pedido) REFERENCES Pedido(Id)
+    CONSTRAINT fk_pedido_carrinho FOREIGN KEY(Id_Carrinho) REFERENCES Carrinho(Id),
+    CHECK(Valor_Pedido > 0 AND Valor_Pagamento > 0 AND Quantidade_Produtos > -1)
 );
 CREATE TABLE Imagem (
     Id SERIAL PRIMARY KEY,
@@ -103,13 +98,19 @@ CREATE TABLE Produto (
     Descricao varchar(200) NOT NULL,
     Cor varchar(30),
     Valor numeric(10,2) NOT NULL,
-    Id_Itens_Carrinho int,
     Id_Imagem int,
     Id_Sub_Sub_Categoria int,
-    CONSTRAINT fk_produto_itens_carrinho FOREIGN KEY(Id_Itens_Carrinho) REFERENCES Itens_Carrinho(Id),
     CONSTRAINT fk_produto_imagem FOREIGN KEY(Id_Imagem) REFERENCES Imagem(Id),
     CONSTRAINT fk_produto_sub_sub_categoria FOREIGN KEY(Id_Sub_Sub_Categoria) REFERENCES Sub_Sub_Categoria(Id),
     CHECK(Valor > 0)
+);
+CREATE TABLE Itens_Carrinho (
+    Id SERIAL PRIMARY KEY,
+    Quantidade int,
+    Id_Produto int,
+    Id_Carrinho int,
+    CONSTRAINT fk_itens_carrinho_carrinho FOREIGN KEY(Id_Carrinho) REFERENCES Carrinho(Id),
+    CONSTRAINT fk_itens_carrinho_produto FOREIGN KEY(Id_Produto) REFERENCES Produto(Id)
 );
 CREATE TABLE Avaliacao (
     Id SERIAL PRIMARY KEY,
@@ -177,6 +178,7 @@ CREATE TABLE Data_Fornece (
 CREATE TABLE Entrega (
     Id SERIAL PRIMARY KEY,
     Data_Entrega date NOT NULL,
+    Status_Entrega varchar(20) NOT NULL,
     Id_Pedido int,
     CONSTRAINT fk_entrega_pedido FOREIGN KEY(Id_Pedido) REFERENCES Pedido(Id)
 );
@@ -197,4 +199,10 @@ CREATE TABLE Funcionario_Possui_Endereco (
     PRIMARY KEY(CEP, Id_Funcionario),
     CONSTRAINT fk_funcionario_possui_endereco_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP),
     CONSTRAINT fk_funcionario_possui_endereco_funcionario FOREIGN KEY(Id_Funcionario) REFERENCES Funcionario(Id)
+);
+CREATE TABLE Produtos_Favoritos(
+	Id_Produto int,
+    Id_Cliente int,
+    CONSTRAINT fk_produtos_favoritos_produtos FOREIGN KEY(Id_Produto) references Produto (Id),
+    CONSTRAINT fk_produtos_favoritos_cliente FOREIGN KEY(Id_Cliente) references Cliente (Id)
 );
