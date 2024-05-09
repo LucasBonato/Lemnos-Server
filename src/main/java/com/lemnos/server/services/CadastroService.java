@@ -1,18 +1,17 @@
 package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.*;
+import com.lemnos.server.models.Produto;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
+import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.Fornecedor;
 import com.lemnos.server.models.Funcionario;
-import com.lemnos.server.repositories.CadastroRepository;
-import com.lemnos.server.repositories.ClienteRepository;
-import com.lemnos.server.repositories.FornecedorRepository;
-import com.lemnos.server.repositories.FuncionarioRepository;
+import com.lemnos.server.repositories.*;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ public class CadastroService extends Util {
     @Autowired private FuncionarioRepository funcionarioRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private CadastroRepository cadastroRepository;
+    @Autowired private ProdutoRepository produtoRepository;
 
     public ResponseEntity<Void> cadastrarCliente(ClienteRequest clienteRequest) {
         Cliente cliente = verificarRegraDeNegocio(clienteRequest);
@@ -45,7 +45,15 @@ public class CadastroService extends Util {
 
     public ResponseEntity<Void> cadastrarFornecedor(FornecedorRequest fornecedorRequest) {
         Fornecedor fornecedor = verificarRegraDeNegocio(fornecedorRequest);
+
         fornecedorRepository.save(fornecedor);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> cadastrarProduto(ProdutoRequest produtoRequest){
+        Produto produto = verificarRegraDeNegocio(produtoRequest);
+
+        produtoRepository.save(produto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -161,5 +169,24 @@ public class CadastroService extends Util {
         if(OptionalCnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
         return new Fornecedor(fornecedorRequest);
+    }
+
+    private Produto verificarRegraDeNegocio(ProdutoRequest produtoRequest){
+        if(StringUtils.isBlank(produtoRequest.descricao())){
+            throw new CadastroNotValidException(Codigo.DESCRICAO.ordinal(), "O campo Descrição é obrigatório!");
+        }
+        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 200){
+            throw new CadastroNotValidException(Codigo.DESCRICAO.ordinal(), "A descrição deve conter entre 5 e 200 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.cor())){
+            throw new CadastroNotValidException(Codigo.COR.ordinal(), "O campo Cor é obrigatória!");
+        }
+        if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
+            throw new CadastroNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
+        }
+        if(produtoRequest.valor() <= 0.00 || produtoRequest.valor() >= 99999999.99){
+            throw new CadastroNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
+        }
+        return new Produto(produtoRequest);
     }
 }
