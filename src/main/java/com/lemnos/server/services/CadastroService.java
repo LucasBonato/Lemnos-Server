@@ -10,6 +10,7 @@ import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.repositories.*;
+import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
