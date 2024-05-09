@@ -29,15 +29,35 @@ public class Produto {
     @Column(name = "Valor")
     private Double valor;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Id")
-    private Especificacao especificacao;
+    @Column(name = "Modelo")
+    private String modelo;
 
-    public Produto(ProdutoRequest produtoRequest, Especificacao especificacao){
+    @Column(name = "Peso")
+    private Double peso;
+
+    @Column(name = "Altura")
+    private Double altura;
+
+    @Column(name = "Comprimento")
+    private Double comprimento;
+
+    @Column(name = "Largura")
+    private Double largura;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Id_Fabricante")
+    private Fabricante fabricante;
+
+    public Produto(ProdutoRequest produtoRequest, Fabricante fabricante){
         this.nome = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
         this.valor = produtoRequest.valor();
-        this.especificacao = especificacao;
+        this.modelo = produtoRequest.modelo();
+        this.peso = produtoRequest.peso();
+        this.altura = produtoRequest.altura();
+        this.comprimento = produtoRequest.comprimento();
+        this.largura = produtoRequest.largura();
+        this.fabricante = fabricante;
     }
 }
