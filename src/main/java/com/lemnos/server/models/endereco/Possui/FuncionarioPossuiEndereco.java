@@ -2,7 +2,7 @@ package com.lemnos.server.models.endereco.Possui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.models.endereco.Endereco;
-import com.lemnos.server.models.Funcionario;
+import com.lemnos.server.models.entidades.Funcionario;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

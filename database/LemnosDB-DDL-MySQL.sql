@@ -85,6 +85,7 @@ CREATE TABLE Descontos (
 );
 CREATE TABLE Produto (
 	Id int primary key auto_increment,
+	Nome varChar(50) NOT NULL,
 	Descricao varchar(200) NOT NULL,
 	Cor varchar(30),
 	Valor decimal(10,2) NOT NULL,

@@ -2,7 +2,7 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
-import com.lemnos.server.models.Produto;
+import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProdutoService {
@@ -27,6 +28,7 @@ public class ProdutoService {
 
         for(Produto produto: produtos){
             dto.add(new ProdutoResponse(
+                    produto.getId().toString(),
                     produto.getDescricao(),
                     produto.getCor(),
                     produto.getValor()
@@ -36,10 +38,12 @@ public class ProdutoService {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<ProdutoResponse> getOneById(Integer id){
+    public ResponseEntity<ProdutoResponse> getOneById(String id){
+        System.out.println(id);
         Produto produto = getProdutoById(id);
 
         ProdutoResponse response = new ProdutoResponse(
+                produto.getId().toString(),
                 produto.getDescricao(),
                 produto.getCor(),
                 produto.getValor()
@@ -54,11 +58,17 @@ public class ProdutoService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    private Produto getProdutoById(Integer id){
-        return produtoRepository.findById(id).orElseThrow(ProdutoNotFoundException::new);
+    private Produto getProdutoById(String id){
+        return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
 
     private Produto verificarRegraDeNegocio(ProdutoRequest produtoRequest){
+        if(StringUtils.isBlank(produtoRequest.nome())){
+            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O campo Nome é obrigatório!");
+        }
+        if(produtoRequest.nome().length() < 5 || produtoRequest.nome().length() > 50){
+            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
+        }
         if(StringUtils.isBlank(produtoRequest.descricao())){
             throw new CadastroNotValidException(Codigo.DESCRICAO.ordinal(), "O campo Descrição é obrigatório!");
         }
