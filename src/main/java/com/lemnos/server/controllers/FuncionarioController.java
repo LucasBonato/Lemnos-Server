@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/funcionario")
 class FuncionarioController {
-
     @Autowired private FuncionarioService funcionarioService;
 
     @GetMapping

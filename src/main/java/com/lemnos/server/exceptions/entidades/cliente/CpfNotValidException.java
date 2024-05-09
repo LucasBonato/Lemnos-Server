@@ -1,4 +1,4 @@
-package com.lemnos.server.exceptions.cliente;
+package com.lemnos.server.exceptions.entidades.cliente;
 
 import com.lemnos.server.exceptions.BaseException;
 import com.lemnos.server.exceptions.ExceptionResponse;

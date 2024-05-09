@@ -1,7 +1,7 @@
 package com.lemnos.server.annotations.validators;
 
 import com.lemnos.server.annotations.CNPJ;
-import com.lemnos.server.exceptions.cliente.CnpjNotValidException;
+import com.lemnos.server.exceptions.entidades.cliente.CnpjNotValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

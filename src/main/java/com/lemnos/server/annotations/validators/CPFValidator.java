@@ -1,7 +1,7 @@
 package com.lemnos.server.annotations.validators;
 
 import com.lemnos.server.annotations.CPF;
-import com.lemnos.server.exceptions.cliente.CpfNotValidException;
+import com.lemnos.server.exceptions.entidades.cliente.CpfNotValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

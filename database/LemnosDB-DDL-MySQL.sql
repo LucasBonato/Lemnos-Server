@@ -84,7 +84,7 @@ CREATE TABLE Descontos (
 	foreign key(Id_Categoria) references Categoria (Id)
 );
 CREATE TABLE Produto (
-	Id_Produto int primary key auto_increment,
+	Id int primary key auto_increment,
 	Descricao varchar(200) NOT NULL,
 	Cor varchar(30),
 	Valor decimal(10,2) NOT NULL,
@@ -101,14 +101,14 @@ CREATE TABLE Itens_Carrinho (
     Id_Produto int,    
 	foreign key(Id_Carrinho) references Carrinho (Id),
     foreign key(Id_Pedido) references Pedido (Id),
-    foreign key(Id_Produto) references Produto (Id_Produto)
+    foreign key(Id_Produto) references Produto (Id)
 );
 CREATE TABLE Avaliacao (
 	Id int primary key auto_increment,
 	Data_Avaliacao date,
 	Avaliacao decimal(2,1),
 	Id_Produto int,
-    foreign key(Id_Produto) references Produto (Id_produto)
+    foreign key(Id_Produto) references Produto (Id)
 );
 CREATE TABLE Estado(
 	Id int primary key auto_increment,
@@ -153,7 +153,7 @@ CREATE TABLE Especificacao (
 	Largura decimal(5,2) NOT NULL,
 	Id_Produto int,
     Id_Fabricante int,
-	foreign key(Id_Produto) references Produto (Id_produto),
+	foreign key(Id_Produto) references Produto (Id),
     foreign key(Id_Fabricante) references Fabricante (Id),
     constraint check(Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
@@ -162,7 +162,7 @@ CREATE TABLE Data_Fornece (
 	Id_Fornecedor int,
 	Id_Produto int,
 	foreign key(Id_Fornecedor) references Fornecedor (Id),
-	foreign key(Id_Produto) references Produto (Id_produto)
+	foreign key(Id_Produto) references Produto (Id)
 );
 CREATE TABLE Entrega (
 	Id int primary key auto_increment,

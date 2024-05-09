@@ -4,7 +4,7 @@ import com.lemnos.server.exceptions.cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
-import com.lemnos.server.exceptions.fornecedor.FornecedorNotFoundException;
+import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;

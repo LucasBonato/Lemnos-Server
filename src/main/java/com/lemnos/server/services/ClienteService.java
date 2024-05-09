@@ -2,7 +2,7 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
-import com.lemnos.server.exceptions.cliente.ClienteNotFoundException;
+import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
