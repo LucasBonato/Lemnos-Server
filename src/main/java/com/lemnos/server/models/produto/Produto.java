@@ -29,10 +29,15 @@ public class Produto {
     @Column(name = "Valor")
     private Double valor;
 
-    public Produto(ProdutoRequest produtoRequest){
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Id")
+    private Especificacao especificacao;
+
+    public Produto(ProdutoRequest produtoRequest, Especificacao especificacao){
         this.nome = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
         this.valor = produtoRequest.valor();
+        this.especificacao = especificacao;
     }
 }

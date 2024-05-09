@@ -1,4 +1,4 @@
-package com.lemnos.server.repositories;
+package com.lemnos.server.repositories.produto;
 
 import com.lemnos.server.models.produto.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;

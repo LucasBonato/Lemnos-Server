@@ -19,7 +19,13 @@ public enum Codigo {
     COMPLEMENTO(15),
     DESCRICAO(16),
     COR(17),
-    VALOR(18);
+    VALOR(18),
+    MODELO(19),
+    PESO(20),
+    ALTURA(21),
+    COMPRIMENTO(22),
+    LARGURA(23),
+    FABRICANTE(24);
 
     Codigo(Integer i){}
 }
