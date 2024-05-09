@@ -1,4 +1,4 @@
-package com.lemnos.server.models;
+package com.lemnos.server.models.entidades;
 
 import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;

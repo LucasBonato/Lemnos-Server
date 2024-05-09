@@ -12,7 +12,7 @@ import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
-import com.lemnos.server.models.Funcionario;
+import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
 import com.lemnos.server.repositories.FuncionarioRepository;
 import com.lemnos.server.utils.Util;

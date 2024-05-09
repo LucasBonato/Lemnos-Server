@@ -6,7 +6,7 @@ import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
-import com.lemnos.server.models.Cliente;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;

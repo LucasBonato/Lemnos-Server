@@ -1,6 +1,6 @@
 package com.lemnos.server.repositories;
 
-import com.lemnos.server.models.Funcionario;
+import com.lemnos.server.models.entidades.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

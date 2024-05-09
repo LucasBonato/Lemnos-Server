@@ -98,7 +98,8 @@ CREATE TABLE Descontos (
     CONSTRAINT fk_descontos_categoria FOREIGN KEY(Id_Categoria) REFERENCES Categoria(Id)
 );
 CREATE TABLE Produto (
-    Id SERIAL PRIMARY KEY,
+    Id UUID PRIMARY KEY,
+    Nome varChar(50) NOT NULL,
     Descricao varchar(200) NOT NULL,
     Cor varchar(30),
     Valor numeric(10,2) NOT NULL,
@@ -114,7 +115,7 @@ CREATE TABLE Avaliacao (
     Id SERIAL PRIMARY KEY,
     Data_Avaliacao date,
     Avaliacao numeric(2,1),
-    Id_Produto int,
+    Id_Produto UUID,
     CONSTRAINT fk_avaliacao_produto FOREIGN KEY(Id_Produto) REFERENCES Produto(Id)
 );
 CREATE TABLE Estado(
@@ -154,12 +155,13 @@ CREATE TABLE Fabricante(
 );
 CREATE TABLE Especificacao (
     Id SERIAL PRIMARY KEY,
+    Nome varChar(50) NOT NULL,
     Modelo varchar(30) NOT NULL,
     Peso numeric(5,2) NOT NULL,
     Altura numeric(5,2) NOT NULL,
     Comprimento numeric(5,2) NOT NULL,
     Largura numeric(5,2) NOT NULL,
-    Id_Produto int,
+    Id_Produto UUID,
     Id_Fabricante int,
     CONSTRAINT fk_especificacao_produto FOREIGN KEY(Id_Produto) REFERENCES Produto(Id),
     CONSTRAINT fk_especificacao_fabricante FOREIGN KEY(Id_Fabricante) REFERENCES Fabricante(Id),
@@ -168,7 +170,7 @@ CREATE TABLE Especificacao (
 CREATE TABLE Data_Fornece (
     Data_Fornecimento date NOT NULL,
     Id_Fornecedor int,
-    Id_Produto int,
+    Id_Produto UUID,
     CONSTRAINT fk_data_fornece_fornecedor FOREIGN KEY(Id_Fornecedor) REFERENCES Fornecedor(Id),
     CONSTRAINT fk_data_fornece_produto FOREIGN KEY(Id_Produto) REFERENCES Produto(Id)
 );

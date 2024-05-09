@@ -1,7 +1,7 @@
 package com.lemnos.server.models.endereco.Possui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lemnos.server.models.Cliente;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.endereco.Endereco;
 import jakarta.persistence.*;
 import lombok.Data;

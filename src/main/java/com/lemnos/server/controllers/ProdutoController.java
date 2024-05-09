@@ -1,6 +1,5 @@
 package com.lemnos.server.controllers;
 
-import com.lemnos.server.models.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.services.ProdutoService;
@@ -20,7 +19,7 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoResponse>> getAll(){ return produtoService.getAll(); }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> getOneById(Integer id){ return produtoService.getOneById(id); }
+    public ResponseEntity<ProdutoResponse> getOneById(@PathVariable String id){ return produtoService.getOneById(id); }
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@RequestBody ProdutoRequest produtoRequest){

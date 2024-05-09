@@ -1,16 +1,14 @@
 package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.*;
-import com.lemnos.server.models.Produto;
 import com.lemnos.server.models.cadastro.Cadastro;
-import com.lemnos.server.models.Cliente;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
-import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.enums.Codigo;
-import com.lemnos.server.models.Fornecedor;
-import com.lemnos.server.models.Funcionario;
+import com.lemnos.server.models.entidades.Fornecedor;
+import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.repositories.*;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;

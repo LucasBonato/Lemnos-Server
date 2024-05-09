@@ -12,7 +12,7 @@ import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
-import com.lemnos.server.models.Fornecedor;
+import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.dtos.responses.FornecedorResponse;
 import com.lemnos.server.repositories.FornecedorRepository;
 import com.lemnos.server.utils.Util;

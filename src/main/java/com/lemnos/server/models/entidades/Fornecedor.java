@@ -1,4 +1,4 @@
-package com.lemnos.server.models;
+package com.lemnos.server.models.entidades;
 
 import com.lemnos.server.annotations.CNPJ;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
