@@ -2,9 +2,11 @@ package com.lemnos.server.models.produto;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "Fabricante")
 public class Fabricante {
     @Id

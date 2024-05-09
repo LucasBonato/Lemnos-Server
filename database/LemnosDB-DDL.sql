@@ -98,16 +98,23 @@ CREATE TABLE Produto (
     Descricao varchar(200) NOT NULL,
     Cor varchar(30),
     Valor numeric(10,2) NOT NULL,
+    Modelo varchar(30) NOT NULL,
+    Peso numeric(5,2) NOT NULL,
+    Altura numeric(5,2) NOT NULL,
+    Comprimento numeric(5,2) NOT NULL,
+    Largura numeric(5,2) NOT NULL,
+    Id_Fabricante int,
     Id_Imagem int,
     Id_Sub_Sub_Categoria int,
     CONSTRAINT fk_produto_imagem FOREIGN KEY(Id_Imagem) REFERENCES Imagem(Id),
     CONSTRAINT fk_produto_sub_sub_categoria FOREIGN KEY(Id_Sub_Sub_Categoria) REFERENCES Sub_Sub_Categoria(Id),
-    CHECK(Valor > 0)
+    CONSTRAINT fk_especificacao_fabricante FOREIGN KEY(Id_Fabricante) REFERENCES Fabricante(Id),
+    CHECK(Valor > 0 AND Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
 CREATE TABLE Itens_Carrinho (
     Id SERIAL PRIMARY KEY,
     Quantidade int,
-    Id_Produto int,
+    Id_Produto UUID,
     Id_Carrinho int,
     CONSTRAINT fk_itens_carrinho_carrinho FOREIGN KEY(Id_Carrinho) REFERENCES Carrinho(Id),
     CONSTRAINT fk_itens_carrinho_produto FOREIGN KEY(Id_Produto) REFERENCES Produto(Id)
@@ -154,20 +161,6 @@ CREATE TABLE Fabricante(
     Id SERIAL PRIMARY KEY,
     Fabricante varchar(50) UNIQUE NOT NULL
 );
-CREATE TABLE Especificacao (
-    Id SERIAL PRIMARY KEY,
-    Nome varChar(50) NOT NULL,
-    Modelo varchar(30) NOT NULL,
-    Peso numeric(5,2) NOT NULL,
-    Altura numeric(5,2) NOT NULL,
-    Comprimento numeric(5,2) NOT NULL,
-    Largura numeric(5,2) NOT NULL,
-    Id_Produto UUID,
-    Id_Fabricante int,
-    CONSTRAINT fk_especificacao_produto FOREIGN KEY(Id_Produto) REFERENCES Produto(Id),
-    CONSTRAINT fk_especificacao_fabricante FOREIGN KEY(Id_Fabricante) REFERENCES Fabricante(Id),
-    CHECK(Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
-);
 CREATE TABLE Data_Fornece (
     Data_Fornecimento date NOT NULL,
     Id_Fornecedor int,
@@ -201,7 +194,7 @@ CREATE TABLE Funcionario_Possui_Endereco (
     CONSTRAINT fk_funcionario_possui_endereco_funcionario FOREIGN KEY(Id_Funcionario) REFERENCES Funcionario(Id)
 );
 CREATE TABLE Produtos_Favoritos(
-	Id_Produto int,
+	Id_Produto UUID,
     Id_Cliente int,
     CONSTRAINT fk_produtos_favoritos_produtos FOREIGN KEY(Id_Produto) references Produto (Id),
     CONSTRAINT fk_produtos_favoritos_cliente FOREIGN KEY(Id_Cliente) references Cliente (Id)

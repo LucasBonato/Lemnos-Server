@@ -2,7 +2,6 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
-import com.lemnos.server.models.produto.Especificacao;
 import com.lemnos.server.models.produto.Fabricante;
 import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,7 +34,13 @@ public class ProdutoService {
                     produto.getId().toString(),
                     produto.getDescricao(),
                     produto.getCor(),
-                    produto.getValor()
+                    produto.getValor(),
+                    produto.getModelo(),
+                    produto.getPeso(),
+                    produto.getAltura(),
+                    produto.getComprimento(),
+                    produto.getLargura(),
+                    produto.getFabricante().getFabricante()
             ));
         }
 
@@ -47,19 +51,27 @@ public class ProdutoService {
         System.out.println(id);
         Produto produto = getProdutoById(id);
 
-        ProdutoResponse response = new ProdutoResponse(
+
+        return ResponseEntity.ok(new ProdutoResponse(
                 produto.getId().toString(),
                 produto.getDescricao(),
                 produto.getCor(),
-                produto.getValor()
-        );
-        return ResponseEntity.ok(response);
+                produto.getValor(),
+                produto.getModelo(),
+                produto.getPeso(),
+                produto.getAltura(),
+                produto.getComprimento(),
+                produto.getLargura(),
+                produto.getFabricante().getFabricante()
+        ));
     }
 
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
-        Produto produto = verificarRegraDeNegocio(produtoRequest);
+        verificarRegraDeNegocio(produtoRequest);
+        Fabricante fabricante = verificarEspecificacao(produtoRequest);
 
-        produtoRepository.save(produto);
+        Produto produto = produtoRepository.save(new Produto(produtoRequest, fabricante));
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -67,7 +79,7 @@ public class ProdutoService {
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
 
-    private Produto verificarRegraDeNegocio(ProdutoRequest produtoRequest){
+    private void verificarRegraDeNegocio(ProdutoRequest produtoRequest){
         if(StringUtils.isBlank(produtoRequest.nome())){
             throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O campo Nome é obrigatório!");
         }
@@ -89,11 +101,9 @@ public class ProdutoService {
         if(produtoRequest.valor() <= 0.00 || produtoRequest.valor() >= 99999999.99){
             throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
         }
-
-        return new Produto(produtoRequest, verificarEspecificacao(produtoRequest));
     }
 
-    private Especificacao verificarEspecificacao(ProdutoRequest produtoRequest) {
+    private Fabricante verificarEspecificacao(ProdutoRequest produtoRequest) {
         if(StringUtils.isBlank(produtoRequest.modelo())) {
             throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo é obrigatório!");
         }
@@ -124,18 +134,13 @@ public class ProdutoService {
         if(produtoRequest.largura() < 0 || produtoRequest.largura() > 500) {
             throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura deve ser positivo e menor que 500cm!");
         }
-
-        return new Especificacao(produtoRequest, verificarFabricante(produtoRequest.fabricante()));
-    }
-
-    private Fabricante verificarFabricante(String fabricante) {
-        if(StringUtils.isBlank(fabricante)) {
+        if(StringUtils.isBlank(produtoRequest.fabricante())) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante é obrigatório!");
         }
-        if(fabricante.length() < 2 || fabricante.length() > 50) {
+        if(produtoRequest.fabricante().length() < 2 || produtoRequest.fabricante().length() > 50) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
         }
-        Optional<Fabricante> fabricanteOptional = fabricanteRepository.findByFabricante(fabricante);
-        return fabricanteOptional.orElseGet(() -> fabricanteRepository.save(new Fabricante(fabricante)));
+
+        return fabricanteRepository.save(new Fabricante(produtoRequest.fabricante()));
     }
 }
