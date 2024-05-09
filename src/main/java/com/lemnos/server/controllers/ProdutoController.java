@@ -1,14 +1,12 @@
 package com.lemnos.server.controllers;
 
 import com.lemnos.server.models.Produto;
+import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,4 +21,9 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponse> getOneById(Integer id){ return produtoService.getOneById(id); }
+
+    @PostMapping
+    public ResponseEntity<Void> cadastrar(@RequestBody ProdutoRequest produtoRequest){
+        return produtoService.cadastrar(produtoRequest);
+    }
 }
