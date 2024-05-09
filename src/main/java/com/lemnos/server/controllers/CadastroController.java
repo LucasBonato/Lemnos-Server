@@ -32,9 +32,4 @@ public class CadastroController {
     public ResponseEntity<Void> cadastrarFornecedor(@RequestBody FornecedorRequest fornecedorRequest){
         return cadastroService.cadastrarFornecedor(fornecedorRequest);
     }
-
-    @PostMapping("/produto")
-    public ResponseEntity<Void> cadastrarProduto(@RequestBody ProdutoRequest produtoRequest){
-        return cadastroService.cadastrarProduto(produtoRequest);
-    }
 }

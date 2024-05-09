@@ -1,10 +1,15 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.models.Produto;
+import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
+import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.repositories.ProdutoRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +47,33 @@ public class ProdutoService {
         return ResponseEntity.ok(response);
     }
 
+    public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
+        Produto produto = verificarRegraDeNegocio(produtoRequest);
+
+        produtoRepository.save(produto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     private Produto getProdutoById(Integer id){
         return produtoRepository.findById(id).orElseThrow(ProdutoNotFoundException::new);
+    }
+
+    private Produto verificarRegraDeNegocio(ProdutoRequest produtoRequest){
+        if(StringUtils.isBlank(produtoRequest.descricao())){
+            throw new CadastroNotValidException(Codigo.DESCRICAO.ordinal(), "O campo Descrição é obrigatório!");
+        }
+        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 200){
+            throw new CadastroNotValidException(Codigo.DESCRICAO.ordinal(), "A descrição deve conter entre 5 e 200 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.cor())){
+            throw new CadastroNotValidException(Codigo.COR.ordinal(), "O campo Cor é obrigatório!");
+        }
+        if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
+            throw new CadastroNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
+        }
+        if(produtoRequest.valor() <= 0.00 || produtoRequest.valor() >= 99999999.99){
+            throw new CadastroNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
+        }
+        return new Produto(produtoRequest);
     }
 }
