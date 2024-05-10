@@ -60,4 +60,17 @@ public class Produto {
         this.largura = produtoRequest.largura();
         this.fabricante = fabricante;
     }
+
+    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante) {
+        this.nome = produtoRequest.nome();
+        this.descricao = produtoRequest.descricao();
+        this.cor = produtoRequest.cor();
+        this.valor = produtoRequest.valor();
+        this.modelo = produtoRequest.modelo();
+        this.peso = produtoRequest.peso();
+        this.altura = produtoRequest.altura();
+        this.comprimento = produtoRequest.comprimento();
+        this.largura = produtoRequest.largura();
+        this.fabricante = fabricante;
+    }
 }
