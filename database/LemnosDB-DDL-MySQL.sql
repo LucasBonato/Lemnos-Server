@@ -72,13 +72,6 @@ CREATE TABLE Sub_Categoria (
     foreign key(Id_Categoria) references Categoria(Id),
     constraint check(Nome > 2)
 );
-CREATE TABLE Sub_Sub_Categoria (
-	Id int primary key auto_increment,
-	Nome varchar(30),
-    Id_Sub_Categoria int,
-    foreign key(Id_Sub_Categoria) references Sub_Categoria(Id),
-    constraint check(Nome > 2)
-);
 CREATE TABLE Descontos (
 	Id int primary key auto_increment,
 	Valor_Porcentagem varchar(2) NOT NULL,
@@ -102,9 +95,9 @@ CREATE TABLE Produto (
     Largura decimal(5,2) NOT NULL,
     Id_Fabricante int,
 	Id_Imagem int,
-    Id_Sub_Sub_Categoria int,
+    Id_Sub_Categoria int,
     foreign key(Id_Imagem) references Imagem(Id),
-    foreign key(Id_Sub_Sub_Categoria) references Sub_Sub_Categoria(Id),
+    foreign key(Id_Sub_Categoria) references Sub_Categoria(Id),
     foreign key(Id_Fabricante) references Fabricante (Id),
     constraint check(Valor > 0 AND Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
