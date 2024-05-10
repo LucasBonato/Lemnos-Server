@@ -79,18 +79,15 @@ CREATE TABLE Sub_Categoria (
     CONSTRAINT fk_sub_categoria_categoria FOREIGN KEY(Id_Categoria) REFERENCES Categoria(Id),
     CHECK(LENGTH(Nome) > 2)
 );
-CREATE TABLE Sub_Sub_Categoria (
-    Id SERIAL PRIMARY KEY,
-    Nome varchar(30),
-    Id_Sub_Categoria int,
-    CONSTRAINT fk_sub_sub_categoria_sub_categoria FOREIGN KEY(Id_Sub_Categoria) REFERENCES Sub_Categoria(Id),
-    CHECK(LENGTH(Nome) > 2)
-);
 CREATE TABLE Descontos (
     Id SERIAL PRIMARY KEY,
     Valor_Porcentagem varchar(2) NOT NULL,
     Id_Categoria int,
     CONSTRAINT fk_descontos_categoria FOREIGN KEY(Id_Categoria) REFERENCES Categoria(Id)
+);
+CREATE TABLE Fabricante(
+    Id SERIAL PRIMARY KEY,
+    Fabricante varchar(50) UNIQUE NOT NULL
 );
 CREATE TABLE Produto (
     Id UUID PRIMARY KEY,
@@ -105,9 +102,9 @@ CREATE TABLE Produto (
     Largura numeric(5,2) NOT NULL,
     Id_Fabricante int,
     Id_Imagem int,
-    Id_Sub_Sub_Categoria int,
+    Id_Sub_Categoria int,
     CONSTRAINT fk_produto_imagem FOREIGN KEY(Id_Imagem) REFERENCES Imagem(Id),
-    CONSTRAINT fk_produto_sub_sub_categoria FOREIGN KEY(Id_Sub_Sub_Categoria) REFERENCES Sub_Sub_Categoria(Id),
+    CONSTRAINT fk_produto_sub_categoria FOREIGN KEY(Id_Sub_Categoria) REFERENCES Sub_Categoria(Id),
     CONSTRAINT fk_especificacao_fabricante FOREIGN KEY(Id_Fabricante) REFERENCES Fabricante(Id),
     CHECK(Valor > 0 AND Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
@@ -156,10 +153,6 @@ CREATE TABLE Fornecedor (
     Complemento varChar(20),
     CEP char(8),
     CONSTRAINT fk_fornecedor_endereco FOREIGN KEY(CEP) REFERENCES Endereco(CEP)
-);
-CREATE TABLE Fabricante(
-    Id SERIAL PRIMARY KEY,
-    Fabricante varchar(50) UNIQUE NOT NULL
 );
 CREATE TABLE Data_Fornece (
     Data_Fornecimento date NOT NULL,
