@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -129,6 +130,10 @@ public class ProdutoService {
         }
         if(StringUtils.isBlank(produtoRequest.fabricante())) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante é obrigatório!");
+        }
+        Optional<Fabricante> fabricanteOptional = fabricanteRepository.findByFabricante(produtoRequest.fabricante());
+        if(fabricanteOptional.isPresent()) {
+            return fabricanteOptional.get();
         }
         if(produtoRequest.fabricante().length() < 2 || produtoRequest.fabricante().length() > 50) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
