@@ -1,12 +1,17 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
+import com.lemnos.server.models.entidades.Fornecedor;
+import com.lemnos.server.models.produto.DataFornece;
 import com.lemnos.server.models.produto.Fabricante;
 import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
+import com.lemnos.server.repositories.DataForneceRepository;
+import com.lemnos.server.repositories.FornecedorRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.repositories.produto.FabricanteRepository;
 import io.micrometer.common.util.StringUtils;
@@ -25,6 +30,8 @@ public class ProdutoService {
 
     @Autowired private ProdutoRepository produtoRepository;
     @Autowired private FabricanteRepository fabricanteRepository;
+    @Autowired private DataForneceRepository dataForneceRepository;
+    @Autowired private FornecedorRepository fornecedorRepository;
 
     public ResponseEntity<List<ProdutoResponse>> getAll(){
         List<Produto> produtos = produtoRepository.findAll();
@@ -46,7 +53,9 @@ public class ProdutoService {
 
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
         Fabricante fabricante = verificarRegraDeNegocio(produtoRequest);
-        produtoRepository.save(new Produto(produtoRequest, fabricante));
+        Produto produto = produtoRepository.save(new Produto(produtoRequest, fabricante));
+        Fornecedor fornecedor = fornecedorRepository.findByNome(produtoRequest.fornecedor()).orElseThrow(FornecedorNotFoundException::new);
+        dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -146,6 +155,9 @@ public class ProdutoService {
         }
         if(produtoRequest.fabricante().length() < 2 || produtoRequest.fabricante().length() > 50) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.fornecedor())) {
+            throw new ProdutoNotValidException(Codigo.GLOBAL.ordinal(), "O campo Fabricante é obrigatório!");
         }
 
         return fabricanteRepository.save(new Fabricante(produtoRequest.fabricante()));
