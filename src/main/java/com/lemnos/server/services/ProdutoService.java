@@ -51,7 +51,6 @@ public class ProdutoService {
         System.out.println(id);
         Produto produto = getProdutoById(id);
 
-
         return ResponseEntity.ok(new ProdutoResponse(
                 produto.getId().toString(),
                 produto.getDescricao(),
@@ -67,10 +66,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
-        verificarRegraDeNegocio(produtoRequest);
-        Fabricante fabricante = verificarEspecificacao(produtoRequest);
-
-        Produto produto = produtoRepository.save(new Produto(produtoRequest, fabricante));
+        produtoRepository.save(new Produto(produtoRequest, verificarRegraDeNegocio(produtoRequest)));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -79,7 +75,7 @@ public class ProdutoService {
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
 
-    private void verificarRegraDeNegocio(ProdutoRequest produtoRequest){
+    private Fabricante verificarRegraDeNegocio(ProdutoRequest produtoRequest) {
         if(StringUtils.isBlank(produtoRequest.nome())){
             throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O campo Nome é obrigatório!");
         }
@@ -101,9 +97,6 @@ public class ProdutoService {
         if(produtoRequest.valor() <= 0.00 || produtoRequest.valor() >= 99999999.99){
             throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
         }
-    }
-
-    private Fabricante verificarEspecificacao(ProdutoRequest produtoRequest) {
         if(StringUtils.isBlank(produtoRequest.modelo())) {
             throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo é obrigatório!");
         }
