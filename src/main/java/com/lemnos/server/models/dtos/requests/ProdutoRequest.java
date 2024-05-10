@@ -10,5 +10,6 @@ public record ProdutoRequest(
         Double altura,
         Double comprimento,
         Double largura,
-        String fabricante
+        String fabricante,
+        String fornecedor
 ) { }
