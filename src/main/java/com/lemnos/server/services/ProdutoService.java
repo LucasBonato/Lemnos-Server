@@ -31,18 +31,7 @@ public class ProdutoService {
         List<ProdutoResponse> dto = new ArrayList<>();
 
         for(Produto produto: produtos){
-            dto.add(new ProdutoResponse(
-                    produto.getId().toString(),
-                    produto.getDescricao(),
-                    produto.getCor(),
-                    produto.getValor(),
-                    produto.getModelo(),
-                    produto.getPeso(),
-                    produto.getAltura(),
-                    produto.getComprimento(),
-                    produto.getLargura(),
-                    produto.getFabricante().getFabricante()
-            ));
+            dto.add(getProdutoResponse(produto));
         }
 
         return ResponseEntity.ok(dto);
@@ -52,8 +41,38 @@ public class ProdutoService {
         System.out.println(id);
         Produto produto = getProdutoById(id);
 
-        return ResponseEntity.ok(new ProdutoResponse(
+        return ResponseEntity.ok(getProdutoResponse(produto));
+    }
+
+    public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
+        Fabricante fabricante = verificarRegraDeNegocio(produtoRequest);
+        produtoRepository.save(new Produto(produtoRequest, fabricante));
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
+        Produto produto = getProdutoById(id);
+        Fabricante fabricante = verificarRegraDeNegocio(produtoRequest);
+        produto.setAll(produtoRequest, fabricante);
+        produtoRepository.save(produto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> delete(String id) {
+        produtoRepository.delete(getProdutoById(id));
+        return ResponseEntity.ok().build();
+    }
+
+    private Produto getProdutoById(String id){
+        return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
+    }
+
+    private static ProdutoResponse getProdutoResponse(Produto produto) {
+        return new ProdutoResponse(
                 produto.getId().toString(),
+                produto.getNome(),
                 produto.getDescricao(),
                 produto.getCor(),
                 produto.getValor(),
@@ -63,17 +82,7 @@ public class ProdutoService {
                 produto.getComprimento(),
                 produto.getLargura(),
                 produto.getFabricante().getFabricante()
-        ));
-    }
-
-    public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
-        produtoRepository.save(new Produto(produtoRequest, verificarRegraDeNegocio(produtoRequest)));
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    private Produto getProdutoById(String id){
-        return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
+        );
     }
 
     private Fabricante verificarRegraDeNegocio(ProdutoRequest produtoRequest) {

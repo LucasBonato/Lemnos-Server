@@ -29,4 +29,14 @@ public class ProdutoController {
     public ResponseEntity<Void> cadastrar(@RequestBody ProdutoRequest produtoRequest){
         return produtoService.cadastrar(produtoRequest);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody ProdutoRequest produtoRequest) {
+        return produtoService.update(id, produtoRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        return produtoService.delete(id);
+    }
 }
