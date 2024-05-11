@@ -1,4 +1,4 @@
-package com.lemnos.server.repositories;
+package com.lemnos.server.repositories.entidades;
 
 import com.lemnos.server.models.produto.DataFornece;
 import com.lemnos.server.models.produto.DataForneceId;

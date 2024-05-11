@@ -1,4 +1,4 @@
-package com.lemnos.server.repositories;
+package com.lemnos.server.repositories.entidades;
 
 import com.lemnos.server.models.entidades.Fornecedor;
 import org.springframework.data.jpa.repository.JpaRepository;

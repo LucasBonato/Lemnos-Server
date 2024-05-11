@@ -14,6 +14,8 @@ import com.lemnos.server.models.endereco.Estado;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.viacep.ViaCep;
 import com.lemnos.server.models.viacep.ViaCepDTO;
+import com.lemnos.server.repositories.endereco.possui.ClientePossuiEnderecoRepository;
+import com.lemnos.server.repositories.endereco.possui.FuncionarioPossuiEnderecoRepository;
 import io.micrometer.common.util.StringUtils;
 import com.lemnos.server.repositories.endereco.*;
 import org.springframework.beans.factory.annotation.Autowired;
