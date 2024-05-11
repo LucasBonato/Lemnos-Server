@@ -14,7 +14,7 @@ import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.dtos.responses.FornecedorResponse;
-import com.lemnos.server.repositories.FornecedorRepository;
+import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

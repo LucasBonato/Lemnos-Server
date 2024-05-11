@@ -1,4 +1,4 @@
-package com.lemnos.server.repositories.endereco;
+package com.lemnos.server.repositories.endereco.possui;
 
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEnderecoId;
