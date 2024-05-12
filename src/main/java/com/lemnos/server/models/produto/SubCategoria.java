@@ -17,12 +17,11 @@ public class SubCategoria {
     private Integer id;
 
     @Column(name = "Nome")
-    private String nome;
+    private String subCategoria;
 
-    @OneToMany(mappedBy = "subCategoria")
-    private List<Produto> produtos;
-    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Categoria")
     private Categoria categoria;
+
+    public SubCategoria(String subCategoria){ this.subCategoria = subCategoria; }
 }

@@ -25,7 +25,8 @@ public enum Codigo {
     ALTURA(21),
     COMPRIMENTO(22),
     LARGURA(23),
-    FABRICANTE(24);
+    FABRICANTE(24),
+    SUBCATEGORIA(25);
 
     Codigo(Integer i){}
 }
