@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Categoria")
 @NoArgsConstructor
@@ -17,4 +19,7 @@ public class Categoria {
 
     @Column(name = "Nome")
     private String nome;
+
+   /* @OneToMany(mappedBy = "categoria")
+    private List<SubCategoria> subCategoria;*/
 }

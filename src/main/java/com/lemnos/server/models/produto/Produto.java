@@ -48,7 +48,11 @@ public class Produto {
     @JoinColumn(name = "Id_Fabricante")
     private Fabricante fabricante;
 
-    public Produto(ProdutoRequest produtoRequest, Fabricante fabricante){
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Id_Sub_Categoria")
+    private SubCategoria subCategoria;
+
+    public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria){
         this.nome = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
@@ -59,9 +63,10 @@ public class Produto {
         this.comprimento = produtoRequest.comprimento();
         this.largura = produtoRequest.largura();
         this.fabricante = fabricante;
+        this.subCategoria = subCategoria;
     }
 
-    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante) {
+    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria) {
         this.nome = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
@@ -72,5 +77,6 @@ public class Produto {
         this.comprimento = produtoRequest.comprimento();
         this.largura = produtoRequest.largura();
         this.fabricante = fabricante;
+        this.subCategoria = subCategoria;
     }
 }

@@ -10,10 +10,12 @@ import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
+import com.lemnos.server.models.produto.SubCategoria;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.repositories.entidades.FabricanteRepository;
+import com.lemnos.server.repositories.produto.SubCategoriaRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,7 @@ public class ProdutoService {
     @Autowired private FabricanteRepository fabricanteRepository;
     @Autowired private DataForneceRepository dataForneceRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
+    @Autowired private SubCategoriaRepository subCategoriaRepository;
 
     public ResponseEntity<List<ProdutoResponse>> getAll(){
         List<Produto> produtos = produtoRepository.findAll();
@@ -53,7 +56,8 @@ public class ProdutoService {
 
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
         Fabricante fabricante = verificarRegraDeNegocio(produtoRequest);
-        Produto produto = produtoRepository.save(new Produto(produtoRequest, fabricante));
+        SubCategoria subCategoria = regraDeNegocio(produtoRequest);
+        Produto produto = produtoRepository.save(new Produto(produtoRequest, fabricante, subCategoria));
         Fornecedor fornecedor = fornecedorRepository.findByNome(produtoRequest.fornecedor()).orElseThrow(FornecedorNotFoundException::new);
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
@@ -63,7 +67,8 @@ public class ProdutoService {
     public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
         Produto produto = getProdutoById(id);
         Fabricante fabricante = verificarRegraDeNegocio(produtoRequest);
-        produto.setAll(produtoRequest, fabricante);
+        SubCategoria subCategoria = regraDeNegocio(produtoRequest);
+        produto.setAll(produtoRequest, fabricante, subCategoria);
         produtoRepository.save(produto);
 
         return ResponseEntity.ok().build();
@@ -90,7 +95,8 @@ public class ProdutoService {
                 produto.getAltura(),
                 produto.getComprimento(),
                 produto.getLargura(),
-                produto.getFabricante().getFabricante()
+                produto.getFabricante().getFabricante(),
+                produto.getSubCategoria().getSubCategoria()
         );
     }
 
@@ -113,7 +119,7 @@ public class ProdutoService {
         if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
             throw new ProdutoNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
         }
-        if(produtoRequest.valor() <= 0.00 || produtoRequest.valor() >= 99999999.99){
+        if(produtoRequest.valor() < 0.00 || produtoRequest.valor() > 99999999.99){
             throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
         }
         if(StringUtils.isBlank(produtoRequest.modelo())) {
@@ -161,5 +167,81 @@ public class ProdutoService {
         }
 
         return fabricanteRepository.save(new Fabricante(produtoRequest.fabricante()));
+    }
+    private SubCategoria regraDeNegocio(ProdutoRequest produtoRequest){
+        if(StringUtils.isBlank(produtoRequest.nome())){
+            throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O campo Nome é obrigatório!");
+        }
+        if(produtoRequest.nome().length() < 5 || produtoRequest.nome().length() > 50){
+            throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.descricao())){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO.ordinal(), "O campo Descrição é obrigatório!");
+        }
+        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 200){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO.ordinal(), "A descrição deve conter entre 5 e 200 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.cor())){
+            throw new ProdutoNotValidException(Codigo.COR.ordinal(), "O campo Cor é obrigatório!");
+        }
+        if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
+            throw new ProdutoNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
+        }
+        if(produtoRequest.valor() < 0.00 || produtoRequest.valor() > 99999999.99){
+            throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
+        }
+        if(StringUtils.isBlank(produtoRequest.modelo())) {
+            throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo é obrigatório!");
+        }
+        if(produtoRequest.modelo().length() < 2 || produtoRequest.modelo().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo deve conter entre 2 e 30 caracteres!");
+        }
+        if(produtoRequest.peso() == null) {
+            throw new ProdutoNotValidException(Codigo.PESO.ordinal(), "O campo Peso é obrigatório!");
+        }
+        if(produtoRequest.peso() < 0 || produtoRequest.peso() > 1000) {
+            throw new ProdutoNotValidException(Codigo.PESO.ordinal(), "O campo Peso deve ser positivo e menor que 1000Kg!");
+        }
+        if(produtoRequest.altura() == null) {
+            throw new ProdutoNotValidException(Codigo.ALTURA.ordinal(), "O campo Altura é obrigatório!");
+        }
+        if(produtoRequest.altura() < 0 || produtoRequest.altura() > 200) {
+            throw new ProdutoNotValidException(Codigo.ALTURA.ordinal(), "O campo Altura deve ser positivo e menor que 200cm!");
+        }
+        if(produtoRequest.comprimento() == null) {
+            throw new ProdutoNotValidException(Codigo.COMPRIMENTO.ordinal(), "O campo Comprimento é obrigatório!");
+        }
+        if(produtoRequest.comprimento() < 0 || produtoRequest.comprimento() > 500) {
+            throw new ProdutoNotValidException(Codigo.COMPRIMENTO.ordinal(), "O campo Comprimento deve ser positivo e menor que 500cm!");
+        }
+        if(produtoRequest.largura() == null) {
+            throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura é obrigatório!");
+        }
+        if(produtoRequest.largura() < 0 || produtoRequest.largura() > 500) {
+            throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura deve ser positivo e menor que 500cm!");
+        }
+        if(StringUtils.isBlank(produtoRequest.fabricante())) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante é obrigatório!");
+        }
+        Optional<SubCategoria> subCategoriaOptional = subCategoriaRepository.findBySubCategoria(produtoRequest.subCategoria());
+        if(subCategoriaOptional.isPresent()) {
+            return subCategoriaOptional.get();
+        }
+        if(produtoRequest.fabricante().length() < 2 || produtoRequest.fabricante().length() > 50) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.fornecedor())) {
+            throw new ProdutoNotValidException(Codigo.GLOBAL.ordinal(), "O campo Fabricante é obrigatório!");
+        }
+        System.out.println(produtoRequest.fabricante());
+        System.out.println(produtoRequest.nome());
+        System.out.println(produtoRequest.subCategoria());
+        if(StringUtils.isBlank(produtoRequest.subCategoria())){
+            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "O campo Subcategoria é obrigatório!");
+        }
+        if(produtoRequest.subCategoria().length() < 2 || produtoRequest.subCategoria().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
+        }
+        return subCategoriaRepository.save(new SubCategoria(produtoRequest.subCategoria()));
     }
 }
