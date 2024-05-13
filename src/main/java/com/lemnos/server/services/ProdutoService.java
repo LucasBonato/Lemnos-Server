@@ -51,8 +51,6 @@ public class ProdutoService {
         System.out.println(id);
         Produto produto = getProdutoById(id);
 
-        subCategoriaRepository.findBySubCategoria("Placa de Video");
-
         return ResponseEntity.ok(getProdutoResponse(produto));
     }
 
