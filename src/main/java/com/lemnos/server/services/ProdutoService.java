@@ -18,6 +18,7 @@ import com.lemnos.server.repositories.entidades.FabricanteRepository;
 import com.lemnos.server.repositories.produto.SubCategoriaRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class ProdutoService {
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private SubCategoriaRepository subCategoriaRepository;
 
+    @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
         List<Produto> produtos = produtoRepository.findAll();
         List<ProdutoResponse> dto = new ArrayList<>();

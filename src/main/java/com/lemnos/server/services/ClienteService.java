@@ -19,6 +19,7 @@ import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class ClienteService extends Util {
 
     @Autowired private ClienteRepository clienteRepository;
 
+    @Cacheable("allClientes")
     public ResponseEntity<List<ClienteResponse>> getAll() {
         List<Cliente> clientes = clienteRepository.findAll();
         List<ClienteResponse> dto = new ArrayList<>();
