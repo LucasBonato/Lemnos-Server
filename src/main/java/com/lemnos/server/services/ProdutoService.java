@@ -70,9 +70,13 @@ public class ProdutoService {
 
     public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
         Produto produto = getProdutoById(id);
-        verificarRegraDeNegocio(produtoRequest);
 
-        produto.setAll(produtoRequest, getFabricante(produtoRequest.fabricante()), getSubCategoria(produtoRequest.subCategoria()));
+        Fabricante fabricante = (produtoRequest.fabricante() == null) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
+        SubCategoria subCategoria = (produtoRequest.subCategoria() == null) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
+
+        produto.setAll(produtoRequest, fabricante, subCategoria);
+
+        verificarRegraDeNegocio(produto);
 
         produtoRepository.save(produto);
 
@@ -170,6 +174,41 @@ public class ProdutoService {
             throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "O campo Subcategoria é obrigatório!");
         }
         if(produtoRequest.subCategoria().length() < 2 || produtoRequest.subCategoria().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
+        }
+    }
+    private void verificarRegraDeNegocio(Produto produto) {
+        if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
+            throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
+        }
+        if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO.ordinal(), "A descrição deve conter entre 5 e 200 caracteres!");
+        }
+        if(produto.getCor().length() < 4 || produto.getCor().length() > 30){
+            throw new ProdutoNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
+        }
+        if(produto.getValor() < 0.00 || produto.getValor() > 99999999.99){
+            throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
+        }
+        if(produto.getModelo().length() < 2 || produto.getModelo().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo deve conter entre 2 e 30 caracteres!");
+        }
+        if(produto.getPeso() < 0 || produto.getPeso() > 1000) {
+            throw new ProdutoNotValidException(Codigo.PESO.ordinal(), "O campo Peso deve ser positivo e menor que 1000Kg!");
+        }
+        if(produto.getAltura() < 0 || produto.getAltura() > 200) {
+            throw new ProdutoNotValidException(Codigo.ALTURA.ordinal(), "O campo Altura deve ser positivo e menor que 200cm!");
+        }
+        if(produto.getComprimento() < 0 || produto.getComprimento() > 500) {
+            throw new ProdutoNotValidException(Codigo.COMPRIMENTO.ordinal(), "O campo Comprimento deve ser positivo e menor que 500cm!");
+        }
+        if(produto.getLargura() < 0 || produto.getLargura() > 500) {
+            throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura deve ser positivo e menor que 500cm!");
+        }
+        if(produto.getFabricante().getFabricante().length() < 2 || produto.getFabricante().getFabricante().length() > 50) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
+        }
+        if(produto.getSubCategoria().getSubCategoria().length() < 2 || produto.getSubCategoria().getSubCategoria().length() > 30) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
         }
     }
