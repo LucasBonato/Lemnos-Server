@@ -374,6 +374,78 @@ Class Api{
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
 > `{{baseUri}}/produto`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function cadastrarProduto(produto){
+    tratarDados(produto);
+
+    axios.post(baseUri + "/produto",{
+        "nome": produto.nome,
+        "descricao": produto.descricao,
+        "cor": produto.cor,
+        "valor": produto.valor,
+        "modelo": produto.modelo,
+        "peso": produto.peso,
+        "altura": produto.altura,
+        "comprimento": produto.comprimento,
+        "largura": produto.largura,
+        "fabricante": produto.fabricante,
+        "fornecedor": produto.fornecedor,
+        "subCategoria": produto.subCategoria
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarProduto(Produto produto) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/produto"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "nome": produto.nome,
+                "descricao": produto.descricao,
+                "cor": produto.cor,
+                "valor": produto.valor,
+                "modelo": produto.modelo,
+                "peso": produto.peso,
+                "altura": produto.altura,
+                "comprimento": produto.comprimento,
+                "largura": produto.largura,
+                "fabricante": produto.fabricante,
+                "fornecedor": produto.fornecedor,
+                "subCategoria": produto.subCategoria
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?               |
+|-------------|:-----------:|:------------------------------------:|
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |    
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
 ## Cliente
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
