@@ -1,6 +1,7 @@
 package com.lemnos.server.models.produto;
 
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,16 +68,16 @@ public class Produto {
     }
 
     public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria) {
-        setNome((produtoRequest.nome() != null) ? produtoRequest.nome() : this.nome);
-        setDescricao((produtoRequest.descricao() != null) ? produtoRequest.descricao() : this.descricao);
-        setCor((produtoRequest.cor() != null) ? produtoRequest.cor() : this.cor);
+        setNome((StringUtils.isNotBlank(produtoRequest.nome())) ? produtoRequest.nome() : this.nome);
+        setDescricao((StringUtils.isNotBlank(produtoRequest.descricao())) ? produtoRequest.descricao() : this.descricao);
+        setCor((StringUtils.isNotBlank(produtoRequest.cor())) ? produtoRequest.cor() : this.cor);
+        setModelo((StringUtils.isNotBlank(produtoRequest.modelo())) ? produtoRequest.modelo() : this.modelo);
         setValor((produtoRequest.valor() != null) ? produtoRequest.valor() : this.valor);
-        setModelo((produtoRequest.modelo() != null) ? produtoRequest.modelo() : this.modelo);
         setPeso((produtoRequest.peso() != null) ? produtoRequest.peso() : this.peso);
         setAltura((produtoRequest.altura() != null) ? produtoRequest.altura() : this.altura);
         setComprimento((produtoRequest.comprimento() != null) ? produtoRequest.comprimento() : this.comprimento);
         setLargura((produtoRequest.largura() != null) ? produtoRequest.largura() : this.largura);
-        setFabricante((fabricante != null) ? fabricante : this.fabricante);
-        setSubCategoria((subCategoria != null) ? subCategoria : this.subCategoria);
+        setFabricante(fabricante);
+        setSubCategoria(subCategoria);
     }
 }

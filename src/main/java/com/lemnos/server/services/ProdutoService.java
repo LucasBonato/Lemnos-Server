@@ -71,8 +71,8 @@ public class ProdutoService {
     public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
         Produto produto = getProdutoById(id);
 
-        Fabricante fabricante = (produtoRequest.fabricante() == null) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
-        SubCategoria subCategoria = (produtoRequest.subCategoria() == null) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
+        Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
+        SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
 
         produto.setAll(produtoRequest, fabricante, subCategoria);
 
