@@ -67,16 +67,16 @@ public class Produto {
     }
 
     public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria) {
-        this.nome = produtoRequest.nome();
-        this.descricao = produtoRequest.descricao();
-        this.cor = produtoRequest.cor();
-        this.valor = produtoRequest.valor();
-        this.modelo = produtoRequest.modelo();
-        this.peso = produtoRequest.peso();
-        this.altura = produtoRequest.altura();
-        this.comprimento = produtoRequest.comprimento();
-        this.largura = produtoRequest.largura();
-        this.fabricante = fabricante;
-        this.subCategoria = subCategoria;
+        setNome((produtoRequest.nome() != null) ? produtoRequest.nome() : this.nome);
+        setDescricao((produtoRequest.descricao() != null) ? produtoRequest.descricao() : this.descricao);
+        setCor((produtoRequest.cor() != null) ? produtoRequest.cor() : this.cor);
+        setValor((produtoRequest.valor() != null) ? produtoRequest.valor() : this.valor);
+        setModelo((produtoRequest.modelo() != null) ? produtoRequest.modelo() : this.modelo);
+        setPeso((produtoRequest.peso() != null) ? produtoRequest.peso() : this.peso);
+        setAltura((produtoRequest.altura() != null) ? produtoRequest.altura() : this.altura);
+        setComprimento((produtoRequest.comprimento() != null) ? produtoRequest.comprimento() : this.comprimento);
+        setLargura((produtoRequest.largura() != null) ? produtoRequest.largura() : this.largura);
+        setFabricante((fabricante != null) ? fabricante : this.fabricante);
+        setSubCategoria((subCategoria != null) ? subCategoria : this.subCategoria);
     }
 }
