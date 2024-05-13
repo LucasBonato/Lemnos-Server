@@ -24,6 +24,7 @@
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
   - [Endereço](#Endereço)
+  - [Produto](#Produto)
 
 
 # Como utilizar a API
@@ -51,7 +52,9 @@ gerenciamento de carrinho.
 | /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |          Permite realizar o cadastro das entidades do sistema           |
 | /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
 | /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
-| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |  Possui a forma de conseguir procurar Fornecedor, alterar ou desativar  |
+| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              | Possui a forma de conseguir procurar fornecedores, alterar ou desativar |
+| /produto      | /{id}                                     | [produto](#Body-Produto)                                                                         | [Produto](#Produto)                                                |    Possui a forma de conseguir procurar produtos, alterar ou deletar    |
+
 ---
 
 # Erros
@@ -84,6 +87,18 @@ Segue a tabela de valores:
 | 12 |              Bairro               |
 | 13 |                UF                 |
 | 14 |       Número do Logradouro        |
+| 15 |            Complemento            |
+| 16 |             Descrição             |
+| 17 |                Cor                |
+| 18 |               Valor               |
+| 19 |              Modelo               |
+| 20 |               Peso                |
+| 21 |              Altura               |
+| 22 |            Comprimento            |
+| 23 |              Largura              |
+| 24 |            Fabricante             |
+| 25 |           SubCategoria            |
+---
 
 # Exemplos
 
@@ -339,7 +354,26 @@ Class Api{
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
+### Body Produto:
 
+``` JSON
+"nome": "Nome do Produto",
+"descricao": "Descrição do Produto",
+"Cor": "Qualquer cor",
+"valor": "999,99",
+"modelo": "Modelo do Produto",
+"peso": 1.0,
+"altura": 1.0,
+"comprimento": 1.0,
+"largura": 1.0,
+"fabricante": "Nome do Fabricante",
+"fornecedor": "Nome do Fornecedor",
+"subCategoria": "Subcategoria do Produto"
+```
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto`
 ## Cliente
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
