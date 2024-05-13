@@ -18,6 +18,7 @@ import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class FornecedorService extends Util {
 
     @Autowired private FornecedorRepository fornecedorRepository;
 
+    @Cacheable("allFornecedores")
     public ResponseEntity<List<FornecedorResponse>> getAll() {
         List<Fornecedor> fornecedores = fornecedorRepository.findAll();
         List<FornecedorResponse> dto = new ArrayList<>();

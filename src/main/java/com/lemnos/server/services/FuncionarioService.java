@@ -18,6 +18,7 @@ import com.lemnos.server.repositories.entidades.FuncionarioRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class FuncionarioService extends Util {
 
     @Autowired private FuncionarioRepository funcionarioRepository;
 
+    @Cacheable("allFuncionarios")
     public ResponseEntity<List<FuncionarioResponse>> getAll() {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         List<FuncionarioResponse> dto = new ArrayList<>();
