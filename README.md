@@ -53,7 +53,7 @@ gerenciamento de carrinho.
 | /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
 | /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
 | /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              | Possui a forma de conseguir procurar fornecedores, alterar ou desativar |
-| /produto      | /{id}                                     | [produto](#Body-Produto)                                                                         | [Produto](#Produto)                                                |    Possui a forma de conseguir procurar produtos, alterar ou deletar    |
+| /produto      | /{id}                                     | [produto](#body-produto)                                                                         | [Produto](#produto)                                                                            |    Possui a forma de conseguir procurar produtos, alterar ou deletar    |
 
 ---
 
@@ -354,97 +354,6 @@ Class Api{
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
-### Body Produto:
-
-``` JSON
-"nome": "Nome do Produto",
-"descricao": "Descrição do Produto",
-"Cor": "Qualquer cor",
-"valor": "999,99",
-"modelo": "Modelo do Produto",
-"peso": 1.0,
-"altura": 1.0,
-"comprimento": 1.0,
-"largura": 1.0,
-"fabricante": "Nome do Fabricante",
-"fornecedor": "Nome do Fornecedor",
-"subCategoria": "Subcategoria do Produto"
-```
-
-![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
-
-> `{{baseUri}}/produto`
-
-JavaScript
-~~~javascript
-import axios from "axios";
-const axios = require(axios);
-
-let baseUri = "http://localhost:8080/api";
-
-function cadastrarProduto(produto){
-    tratarDados(produto);
-
-    axios.post(baseUri + "/produto",{
-        "nome": produto.nome,
-        "descricao": produto.descricao,
-        "cor": produto.cor,
-        "valor": produto.valor,
-        "modelo": produto.modelo,
-        "peso": produto.peso,
-        "altura": produto.altura,
-        "comprimento": produto.comprimento,
-        "largura": produto.largura,
-        "fabricante": produto.fabricante,
-        "fornecedor": produto.fornecedor,
-        "subCategoria": produto.subCategoria
-    })
-    .then((response) => console.log(response.data))
-    .catch((error) => console.log(error));
-}
-~~~
-
-Dart
-~~~dart
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-Class Api{
-    var client = http.Client();
-    String baseUri = "https//localhost:8080/api";
-    
-    Future<dynamic> cadastrarProduto(Produto produto) async{
-        var response = await client.post(
-            Uri.parse(baseUri + "/produto"),
-            headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
-            },
-            body: jsonEncode({
-                "nome": produto.nome,
-                "descricao": produto.descricao,
-                "cor": produto.cor,
-                "valor": produto.valor,
-                "modelo": produto.modelo,
-                "peso": produto.peso,
-                "altura": produto.altura,
-                "comprimento": produto.comprimento,
-                "largura": produto.largura,
-                "fabricante": produto.fabricante,
-                "fornecedor": produto.fornecedor,
-                "subCategoria": produto.subCategoria
-            })
-        );
-    }
-}
-~~~
-
-#### Responses:
-| Status Code | Significado |               Por quê?               |
-|-------------|:-----------:|:------------------------------------:|
-| 201         |   CREATED   |        Cadastrou com sucesso         |                 
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |    
-###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ## Cliente
 
@@ -1360,9 +1269,180 @@ Class Api{
 
 ---
 
-Nada de importante
+### Body Produto:
+
+``` JSON
+"nome": "Nome do Produto",
+"descricao": "Descrição do Produto",
+"Cor": "Qualquer cor",
+"valor": 999,99,
+"modelo": "Modelo do Produto",
+"peso": 1.0,
+"altura": 1.0,
+"comprimento": 1.0,
+"largura": 1.0,
+"fabricante": "Nome do Fabricante",
+"fornecedor": "Nome do Fornecedor",
+"subCategoria": "Subcategoria do Produto"
+```
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function cadastrarProduto(produto){
+    tratarDados(produto);
+
+    axios.post(baseUri + "/produto",{
+        "nome": produto.nome,
+        "descricao": produto.descricao,
+        "cor": produto.cor,
+        "valor": produto.valor,
+        "modelo": produto.modelo,
+        "peso": produto.peso,
+        "altura": produto.altura,
+        "comprimento": produto.comprimento,
+        "largura": produto.largura,
+        "fabricante": produto.fabricante,
+        "fornecedor": produto.fornecedor,
+        "subCategoria": produto.subCategoria
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarProduto(Produto produto) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/produto"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "nome": produto.nome,
+                "descricao": produto.descricao,
+                "cor": produto.cor,
+                "valor": produto.valor,
+                "modelo": produto.modelo,
+                "peso": produto.peso,
+                "altura": produto.altura,
+                "comprimento": produto.comprimento,
+                "largura": produto.largura,
+                "fabricante": produto.fabricante,
+                "fornecedor": produto.fornecedor,
+                "subCategoria": produto.subCategoria
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?               |
+|-------------|:-----------:|:------------------------------------:|
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |    
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+### Produto:
+
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutos() {
+    axios.get(baseUri + "/produto")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProduto() async{
+        var uri = Uri.parse(baseUri + "/produto");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Produto produto = jsonResponse.map((json) => produto.fromJson(json));
+        return produto;
+    }
+}
+~~~
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutos(id) {
+    axios.get(baseUri + "/produto/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProduto(int id) async{
+        var uri = Uri.parse(baseUri + "/produto/$id");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Produto produto = jsonResponse.map((json) => Produto.fromJson(json));
+        return produto;
+    }
+}
+~~~
+Nada de importante
+
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
