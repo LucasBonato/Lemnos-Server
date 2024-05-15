@@ -1403,6 +1403,15 @@ Class Api{
 }
 ~~~
 
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |        Atualizado com sucesso         |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
 > `{{baseUri}}/produto/{id}`
@@ -1441,6 +1450,16 @@ Class Api{
     }
 }
 ~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |        Atualizado com sucesso         |            
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
 
 ### Body Put Produto:
 
