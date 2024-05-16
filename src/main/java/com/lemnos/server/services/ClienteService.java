@@ -7,7 +7,7 @@ import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.entidades.Cliente;
-import com.lemnos.server.models.dtos.requests.ClienteRequest;
+import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.endereco.Endereco;
@@ -63,7 +63,7 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<Void> updateCliente(Integer id, ClienteRequest clienteDTO){
+    public ResponseEntity<Void> updateCliente(Integer id, RegisterRequest clienteDTO){
         Cliente updatedCliente = insertData(id, clienteDTO);
         clienteRepository.save(updatedCliente);
 
@@ -129,29 +129,29 @@ public class ClienteService extends Util {
         }
         return enderecoResponses;
     }
-    private Cliente insertData(Integer id, ClienteRequest clienteEnviado) {
+    private Cliente insertData(Integer id, RegisterRequest clienteEnviado) {
         Cliente clienteEncontrado = getOneClienteById(id);
 
-        if(StringUtils.isBlank(clienteEnviado.nome()) && (clienteEnviado.cpf() == null || clienteEnviado.cpf().isBlank())){
+        if(StringUtils.isBlank(clienteEnviado.getNome()) && StringUtils.isBlank(clienteEnviado.getCpf())){
             throw new UpdateNotValidException("Cliente");
         }
-        if(StringUtils.isBlank(clienteEnviado.nome())){
-            clienteEnviado = clienteEnviado.setNome(clienteEncontrado.getNome());
+        if(StringUtils.isBlank(clienteEnviado.getNome())){
+            clienteEnviado.setNome(clienteEncontrado.getNome());
         }
-        if(clienteEnviado.nome().length() < 2 || clienteEnviado.nome().length() > 40){
+        if(clienteEnviado.getNome().length() < 2 || clienteEnviado.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(clienteEnviado.cpf() == null){
-            clienteEnviado = clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
+        if(clienteEnviado.getCpf() == null){
+            clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
-        Long cpf = convertStringToLong(clienteEnviado.cpf(), Codigo.CPF);
+        Long cpf = convertStringToLong(clienteEnviado.getCpf(), Codigo.CPF);
 
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
 
         Cliente updatedCliente = new Cliente();
         updatedCliente.setId(id);
-        updatedCliente.setNome(clienteEnviado.nome());
+        updatedCliente.setNome(clienteEnviado.getNome());
         updatedCliente.setCpf(cpf);
         updatedCliente.setCadastro(clienteEncontrado.getCadastro());
         updatedCliente.setEnderecos(clienteEncontrado.getEnderecos());

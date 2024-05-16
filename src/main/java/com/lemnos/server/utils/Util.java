@@ -33,7 +33,7 @@ public class Util {
     @Autowired protected ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
     @Autowired protected FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
 
-    protected Date convertData(String data) {
+    public static Date convertData(String data) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date dataFormatada;
         try{
