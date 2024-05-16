@@ -1530,8 +1530,56 @@ Class Api{
 
 ---
 
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+>`{{baseUri}}/produto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function excluirProduto(id) {
+    axios.delete(baseUri + "/produto/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> excluirProduto(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/produto/${id}"));
+        if(response.statusCode != 200){
+          return "Produto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |           Retornou o valor            |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
 Nada de importante
 
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
