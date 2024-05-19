@@ -3,6 +3,7 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
+import com.lemnos.server.models.dtos.requests.ImagemRequest;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.DataFornece;
 import com.lemnos.server.models.produto.Fabricante;
@@ -11,15 +12,15 @@ import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.produto.categoria.SubCategoria;
+import com.lemnos.server.models.produto.imagens.Imagem;
 import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
-import com.lemnos.server.models.produto.imagens.Imagens;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.repositories.entidades.FabricanteRepository;
 import com.lemnos.server.repositories.produto.SubCategoriaRepository;
 import com.lemnos.server.repositories.produto.imagens.ImagemPrincipalRepository;
-import com.lemnos.server.repositories.produto.imagens.ImagensRepository;
+import com.lemnos.server.repositories.produto.imagens.ImagemRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +43,7 @@ public class ProdutoService {
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private SubCategoriaRepository subCategoriaRepository;
     @Autowired private ImagemPrincipalRepository imagemPrincipalRepository;
-    @Autowired private ImagensRepository imagensRepository;
+    @Autowired private ImagemRepository imagemRepository;
 
     @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
@@ -66,7 +68,12 @@ public class ProdutoService {
 
         Fornecedor fornecedor = getFornecedor(produtoRequest);
 
-        Produto produto = produtoRepository.save(new Produto(produtoRequest, getFabricante(produtoRequest.fabricante()), getSubCategoria(produtoRequest.subCategoria()), getImagemPrincipal(produtoRequest.imagemPrincipal()), getImagens(produtoRequest.imagens())));
+        Produto produto = produtoRepository.save(new Produto(
+                produtoRequest,
+                getFabricante(produtoRequest.fabricante()),
+                getSubCategoria(produtoRequest.subCategoria()),
+                getImagemPrincipal(produtoRequest)
+        ));
 
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
@@ -78,10 +85,9 @@ public class ProdutoService {
 
         Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
-        ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest.imagemPrincipal());
-        Imagens imagens = (StringUtils.isBlank(produtoRequest.imagens())) ? (Imagens) produto.getImagemPrincipal().getImagens() : getImagens(produtoRequest.imagens());
+        ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
 
-        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, imagens);
+        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal);
 
         verificarRegraDeNegocio(produto);
 
@@ -100,6 +106,10 @@ public class ProdutoService {
     }
 
     private static ProdutoResponse getProdutoResponse(Produto produto) {
+        List<String> imagens = new ArrayList<>();
+        for (Imagem imagem : produto.getImagemPrincipal().getImagens()) {
+            imagens.add(imagem.getImagem());
+        }
         return new ProdutoResponse(
                 produto.getId().toString(),
                 produto.getNome(),
@@ -114,7 +124,7 @@ public class ProdutoService {
                 produto.getFabricante().getFabricante(),
                 produto.getSubCategoria().getSubCategoria(),
                 produto.getImagemPrincipal().getImagemPrincipal(),
-                produto.getImagemPrincipal().getImagens().toString()
+                imagens
         );
     }
 
@@ -188,6 +198,9 @@ public class ProdutoService {
         if(StringUtils.isBlank(produtoRequest.imagemPrincipal())){
             throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "O campo Imagem Principal é obrigatório!");
         }
+        if(produtoRequest.imagens() == null) {
+            throw new ProdutoNotValidException(Codigo.IMAGENS.ordinal(), "É necessário ter no minimo uma imagem secundária!");
+        }
     }
     private void verificarRegraDeNegocio(Produto produto) {
         if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
@@ -246,19 +259,15 @@ public class ProdutoService {
         return subCategoriaOptional.get();
     }
 
-    private ImagemPrincipal getImagemPrincipal(String imagemPrincipal) {
-        Optional<ImagemPrincipal> imagemPrincipalOptional = imagemPrincipalRepository.findByImagemPrincipal(imagemPrincipal);
-        if(imagemPrincipalOptional.isEmpty()) {
-            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "Imagem do produto inexistente!");
-        }
-        return imagemPrincipalOptional.get();
-    }
+    private ImagemPrincipal getImagemPrincipal(ProdutoRequest produtoRequest) {
+        List<Imagem> imagens = new ArrayList<>();
+        ImagemPrincipal imagemPrincipal = new ImagemPrincipal(produtoRequest.imagemPrincipal());
 
-    private Imagens getImagens(String imagens){
-        Optional<Imagens> imagensOptional = imagensRepository.findByImagens(imagens);
-        if(imagensOptional.isEmpty()){
-            throw new ProdutoNotValidException(Codigo.IMAGENS.ordinal(), "Imagem secundária inexistente!");
+        for (ImagemRequest imagemRequest : produtoRequest.imagens()) {
+            Imagem imagem = imagemRepository.save(new Imagem(imagemRequest, imagemPrincipal));
+            imagens.add(imagem);
         }
-        return imagensOptional.get();
+        imagemPrincipal.setImagens(imagens);
+        return imagemPrincipalRepository.save(imagemPrincipal);
     }
 }

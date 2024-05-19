@@ -1,5 +1,7 @@
 package com.lemnos.server.models.dtos.requests;
 
+import java.util.List;
+
 public record ProdutoRequest(
         String nome,
         String descricao,
@@ -14,5 +16,5 @@ public record ProdutoRequest(
         String fornecedor,
         String subCategoria,
         String imagemPrincipal,
-        String imagens
+        List<ImagemRequest> imagens
 ) { }

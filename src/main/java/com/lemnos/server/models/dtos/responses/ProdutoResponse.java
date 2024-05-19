@@ -1,5 +1,7 @@
 package com.lemnos.server.models.dtos.responses;
 
+import java.util.List;
+
 public record ProdutoResponse(
         String id,
         String nome,
@@ -14,5 +16,5 @@ public record ProdutoResponse(
         String fabricante,
         String subCategoria,
         String imagemPrincipal,
-        String imagens
+        List<String> imagens
 ) {}

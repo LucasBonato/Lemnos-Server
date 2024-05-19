@@ -1,7 +1,7 @@
 package com.lemnos.server.models.produto.imagens;
 
-import com.lemnos.server.models.dtos.requests.ProdutoRequest;
-import io.micrometer.common.util.StringUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemnos.server.models.dtos.requests.ImagemRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,20 +10,22 @@ import lombok.NoArgsConstructor;
 @Data
 @Table(name = "Imagens")
 @NoArgsConstructor
-public class Imagens {
+public class Imagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
 
     @Column(name = "Imagem")
-    private String imagens;
+    private String imagem;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "Id_Imagem")
+    @JsonIgnore
     private ImagemPrincipal imagemPrincipal;
 
-    public Imagens(ImagemPrincipal imagemPrincipal){
+    public Imagem(ImagemRequest imagemRequest, ImagemPrincipal imagemPrincipal) {
+        this.imagem = imagemRequest.imagem();
         this.imagemPrincipal = imagemPrincipal;
     }
 }

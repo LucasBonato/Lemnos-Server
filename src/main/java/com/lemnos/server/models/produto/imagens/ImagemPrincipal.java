@@ -21,5 +21,9 @@ public class ImagemPrincipal {
     private String imagemPrincipal;
 
     @OneToMany(mappedBy = "imagemPrincipal")
-    private List<Imagens> imagens;
+    private List<Imagem> imagens;
+
+    public ImagemPrincipal(String imagemPrincipal) {
+        this.imagemPrincipal = imagemPrincipal;
+    }
 }
