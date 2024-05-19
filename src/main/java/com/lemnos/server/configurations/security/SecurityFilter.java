@@ -10,11 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -27,7 +22,6 @@ import java.util.Optional;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-
     @Autowired private TokenService tokenService;
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private FuncionarioRepository funcionarioRepository;
@@ -37,10 +31,9 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = recoverToken(request);
         String id = tokenService.validateToken(token);
 
-        if(id != null) {
+        if (id != null) {
             Jwt validatedToken = tokenService.jwtDecoder.decode(token);
             UserDetails userDetails = findById(id);
-            System.out.println(userDetails);
             JwtAuthenticationToken authentication = new JwtAuthenticationToken(validatedToken, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -63,6 +56,8 @@ public class SecurityFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null)
             return null;
-        return authHeader.replace("Bearer ", "");
+        if(authHeader.startsWith("Bearer "))
+            return authHeader.substring(7);
+        return authHeader;
     }
 }

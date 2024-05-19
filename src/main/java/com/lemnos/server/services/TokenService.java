@@ -46,8 +46,7 @@ public class TokenService {
         try {
             return jwtDecoder
                     .decode(token)
-                    .getClaims()
-                    .get("sub")
+                    .getClaim("sub")
                     .toString();
         } catch (BadJwtException e) {
             return null;
@@ -57,7 +56,7 @@ public class TokenService {
     private Instant generateExpirationDate() {
         return LocalDateTime
                 .now()
-                .plusMinutes(1)
+                .plusMinutes(5)
                 .toInstant(
                     ZoneOffset.of("-03:00")
                 );

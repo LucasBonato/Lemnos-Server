@@ -8,10 +8,7 @@ import com.lemnos.server.models.dtos.responses.auth.LoginReponse;
 import com.lemnos.server.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,6 +19,16 @@ public class AuthController {
     @PostMapping("/login")
     private ResponseEntity<LoginReponse> login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
+    }
+
+    @PostMapping("/login/oauth2/google")
+    private String loginGoogle(@RequestBody Object algo) {
+        return "Post";
+    }
+
+    @GetMapping("/login/oauth2/google")
+    private String login(@RequestBody Object algo) {
+        return "Get?";
     }
 
     @PostMapping("/register")
