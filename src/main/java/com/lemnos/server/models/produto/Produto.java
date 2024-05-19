@@ -1,6 +1,7 @@
 package com.lemnos.server.models.produto;
 
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
+import com.lemnos.server.models.produto.categoria.SubCategoria;
 import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
@@ -54,7 +55,7 @@ public class Produto {
     @JoinColumn(name = "Id_Sub_Categoria")
     private SubCategoria subCategoria;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Imagem")
     private ImagemPrincipal imagemPrincipal;
 
@@ -73,7 +74,7 @@ public class Produto {
         this.imagemPrincipal = imagemPrincipal;
     }
 
-    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria) {
+    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal) {
         setNome((StringUtils.isNotBlank(produtoRequest.nome())) ? produtoRequest.nome() : this.nome);
         setDescricao((StringUtils.isNotBlank(produtoRequest.descricao())) ? produtoRequest.descricao() : this.descricao);
         setCor((StringUtils.isNotBlank(produtoRequest.cor())) ? produtoRequest.cor() : this.cor);

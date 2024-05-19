@@ -10,12 +10,14 @@ import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
-import com.lemnos.server.models.produto.SubCategoria;
+import com.lemnos.server.models.produto.categoria.SubCategoria;
+import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.repositories.entidades.FabricanteRepository;
 import com.lemnos.server.repositories.produto.SubCategoriaRepository;
+import com.lemnos.server.repositories.produto.imagens.ImagemPrincipalRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,6 +38,7 @@ public class ProdutoService {
     @Autowired private DataForneceRepository dataForneceRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private SubCategoriaRepository subCategoriaRepository;
+    @Autowired private ImagemPrincipalRepository imagemPrincipalRepository;
 
     @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
@@ -61,7 +64,7 @@ public class ProdutoService {
 
         Fornecedor fornecedor = getFornecedor(produtoRequest);
 
-        Produto produto = produtoRepository.save(new Produto(produtoRequest, getFabricante(produtoRequest.fabricante()), getSubCategoria(produtoRequest.subCategoria())));
+        Produto produto = produtoRepository.save(new Produto(produtoRequest, getFabricante(produtoRequest.fabricante()), getSubCategoria(produtoRequest.subCategoria()), getImagemPrincipal(produtoRequest.imagemPrincipal())));
 
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
@@ -73,8 +76,9 @@ public class ProdutoService {
 
         Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
+        ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest.imagemPrincipal());
 
-        produto.setAll(produtoRequest, fabricante, subCategoria);
+        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal);
 
         verificarRegraDeNegocio(produto);
 
@@ -105,7 +109,8 @@ public class ProdutoService {
                 produto.getComprimento(),
                 produto.getLargura(),
                 produto.getFabricante().getFabricante(),
-                produto.getSubCategoria().getSubCategoria()
+                produto.getSubCategoria().getSubCategoria(),
+                produto.getImagemPrincipal().getImagemPrincipal()
         );
     }
 
@@ -176,6 +181,9 @@ public class ProdutoService {
         if(produtoRequest.subCategoria().length() < 2 || produtoRequest.subCategoria().length() > 30) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
         }
+        if(StringUtils.isBlank(produtoRequest.imagemPrincipal())){
+            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "O campo Imagem Principal é obrigatório!");
+        }
     }
     private void verificarRegraDeNegocio(Produto produto) {
         if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
@@ -211,6 +219,9 @@ public class ProdutoService {
         if(produto.getSubCategoria().getSubCategoria().length() < 2 || produto.getSubCategoria().getSubCategoria().length() > 30) {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
         }
+        if(StringUtils.isBlank(produto.getImagemPrincipal().getImagemPrincipal())){
+            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "O campo Imagem Principal é obrigatório!");
+        };
     }
 
     private Fornecedor getFornecedor(ProdutoRequest produtoRequest) {
@@ -227,4 +238,13 @@ public class ProdutoService {
         }
         return subCategoriaOptional.get();
     }
+
+    private ImagemPrincipal getImagemPrincipal(String imagemPrincipal) {
+        Optional<ImagemPrincipal> imagemPrincipalOptional = imagemPrincipalRepository.findByImagemPrincipal(imagemPrincipal);
+        if(imagemPrincipalOptional.isEmpty()) {
+            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "Imagem do produto inexistente!");
+        }
+        return imagemPrincipalOptional.get();
+    }
+
 }

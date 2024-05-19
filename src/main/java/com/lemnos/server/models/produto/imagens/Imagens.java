@@ -17,7 +17,7 @@ public class Imagens {
     @Column(name = "Imagem")
     private String imagens;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Imagem")
     private ImagemPrincipal imagemPrincipal;
 }

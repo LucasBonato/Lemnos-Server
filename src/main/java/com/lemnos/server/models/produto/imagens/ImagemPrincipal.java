@@ -17,4 +17,6 @@ public class ImagemPrincipal {
 
     @Column(name = "Imagem_Principal")
     private String imagemPrincipal;
+
+    public ImagemPrincipal(String imagemPrincipal){ this.imagemPrincipal = imagemPrincipal; }
 }
