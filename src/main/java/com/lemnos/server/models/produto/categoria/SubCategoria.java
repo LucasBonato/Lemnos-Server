@@ -1,10 +1,8 @@
-package com.lemnos.server.models.produto;
+package com.lemnos.server.models.produto.categoria;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "Sub_Categoria")
