@@ -13,7 +13,7 @@ public class CPFValidator implements ConstraintValidator<CPF, Long> {
 
     @Override
     public boolean isValid(Long cpf, ConstraintValidatorContext context) {
-        if(cpf == null) return false;
+        if(cpf == null) return true;
 
         String message = isValidCPF(cpf.toString());
         if(!message.equals("CPF válido")){

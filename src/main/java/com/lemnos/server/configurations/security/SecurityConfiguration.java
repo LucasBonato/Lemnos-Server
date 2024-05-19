@@ -39,7 +39,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/").authenticated()
                         .anyRequest().authenticated()
                 )
-                .formLogin(withDefaults())
                 .oauth2Login(withDefaults())
                 .oauth2Client(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2

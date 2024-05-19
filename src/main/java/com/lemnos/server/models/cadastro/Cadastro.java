@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 @Entity
 @Table(name = "Cadastro")
@@ -45,7 +46,15 @@ public class Cadastro {
         this.senha = senha;
     }
 
+    public Cadastro(OAuth2AuthenticationToken oAuthToken, String senha) {
+        this.email = oAuthToken.getPrincipal().getAttribute("email");
+        this.senha = senha;
+    }
+
     public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.senha(), this.senha);
+    }
+    public boolean isLoginCorrect(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password, this.senha);
     }
 }
