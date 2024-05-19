@@ -11,7 +11,7 @@ CREATE TABLE Cadastro (
 CREATE TABLE Cliente (
 	Id int primary key auto_increment,
 	Nome varchar(40) NOT NULL,
-	CPF numeric(11) UNIQUE NOT NULL,
+	CPF numeric(11) UNIQUE,
 	Situacao varchar(7) NOT NULL,
 	Role varChar(15) NOT NULL,
 	Id_Cadastro int,
