@@ -13,5 +13,6 @@ public record ProdutoRequest(
         String fabricante,
         String fornecedor,
         String subCategoria,
-        String imagemPrincipal
+        String imagemPrincipal,
+        String imagens
 ) { }

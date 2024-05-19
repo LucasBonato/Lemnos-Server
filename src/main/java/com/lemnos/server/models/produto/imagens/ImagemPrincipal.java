@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "Imagem")
@@ -18,5 +20,6 @@ public class ImagemPrincipal {
     @Column(name = "Imagem_Principal")
     private String imagemPrincipal;
 
-    public ImagemPrincipal(String imagemPrincipal){ this.imagemPrincipal = imagemPrincipal; }
+    @OneToMany(mappedBy = "imagemPrincipal")
+    private List<Imagens> imagens;
 }

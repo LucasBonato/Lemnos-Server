@@ -13,4 +13,6 @@ public record ProdutoResponse(
         Double largura,
         String fabricante,
         String subCategoria,
-        String imagemPrincipal) {}
+        String imagemPrincipal,
+        String imagens
+) {}
