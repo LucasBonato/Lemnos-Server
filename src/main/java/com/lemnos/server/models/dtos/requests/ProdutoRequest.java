@@ -12,5 +12,6 @@ public record ProdutoRequest(
         Double largura,
         String fabricante,
         String fornecedor,
-        String subCategoria
+        String subCategoria,
+        String imagemPrincipal
 ) { }
