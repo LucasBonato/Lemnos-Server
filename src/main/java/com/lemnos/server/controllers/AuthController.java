@@ -21,16 +21,6 @@ public class AuthController {
         return authService.login(loginRequest);
     }
 
-    @PostMapping("/login/oauth2/google")
-    private String loginGoogle(@RequestBody Object algo) {
-        return "Post";
-    }
-
-    @GetMapping("/login/oauth2/google")
-    private String login(@RequestBody Object algo) {
-        return "Get?";
-    }
-
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest){
         return authService.register(registerRequest);
