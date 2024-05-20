@@ -28,7 +28,8 @@ public enum Codigo {
     FABRICANTE(24),
     SUBCATEGORIA(25),
     IMGPRINCIPAL(26),
-    IMAGENS(27);
+    IMAGENS(27),
+    DESCONTO(28);
 
     Codigo(Integer i){}
 }
