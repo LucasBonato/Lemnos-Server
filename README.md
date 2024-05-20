@@ -1269,6 +1269,8 @@ Class Api{
 
 ---
 
+## Produto
+
 ### Body Produto:
 
 ``` JSON
@@ -1283,7 +1285,13 @@ Class Api{
 "largura": 1.0,
 "fabricante": "Nome do Fabricante",
 "fornecedor": "Nome do Fornecedor",
-"subCategoria": "Subcategoria do Produto"
+"subCategoria": "Subcategoria do Produto",
+"imagemPrincipal": "linkDeUmaImagem",
+"imagens": [
+     "linkDeUmaImagem",
+     "linkDeUmaImagem",
+     ...
+]
 ```
 
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
@@ -1312,7 +1320,9 @@ function cadastrarProduto(produto){
         "largura": produto.largura,
         "fabricante": produto.fabricante,
         "fornecedor": produto.fornecedor,
-        "subCategoria": produto.subCategoria
+        "subCategoria": produto.subCategoria,
+        "ImagemPrincipal": produto.imgPrinc,
+        "imagens": produto.imagens
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));
@@ -1346,7 +1356,9 @@ Class Api{
                 "largura": produto.largura,
                 "fabricante": produto.fabricante,
                 "fornecedor": produto.fornecedor,
-                "subCategoria": produto.subCategoria
+                "subCategoria": produto.subCategoria,
+                "ImagemPrincipal": produto.imgPrinc,
+                "imagens": produto.imagens
             })
         );
     }
@@ -1361,8 +1373,7 @@ Class Api{
 | 400         | BAD REQUEST | Alguma informação foi enviada errada |    
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
-### Produto:
-
+---
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
@@ -1404,9 +1415,9 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code | Significado |               Por quê?                |
-|-------------|:-----------:|:-------------------------------------:|
-| 200         |     OK      |        Atualizado com sucesso         |
+| Status Code | Significado |     Por quê?     |
+|-------------|:-----------:|:----------------:|
+| 200         |     OK      | Retornou o valor |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -1454,7 +1465,7 @@ Class Api{
 #### Responses:
 | Status Code | Significado |               Por quê?                |
 |-------------|:-----------:|:-------------------------------------:|
-| 200         |     OK      |        Atualizado com sucesso         |            
+| 200         |     OK      |           Retornou o valor            |            
 | 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
@@ -1463,9 +1474,27 @@ Class Api{
 
 ### Body Put Produto:
 
+O body do put só precisa ter pelo menos uma campo, se não houver ele mantem os dados que já estavam anteriormente.
+
 ``` JSON
 "nome": "Nome do Produto",
-"valor": 9999,99
+"descricao": "Descrição do Produto",
+"Cor": "Qualquer cor",
+"valor": 999,99,
+"modelo": "Modelo do Produto",
+"peso": 1.0,
+"altura": 1.0,
+"comprimento": 1.0,
+"largura": 1.0,
+"fabricante": "Nome do Fabricante",
+"fornecedor": "Nome do Fornecedor",
+"subCategoria": "Subcategoria do Produto",
+"imagemPrincipal": "linkDeUmaImagem",
+"imagens": [
+     "linkDeUmaImagem",
+     "linkDeUmaImagem",
+     ...
+]
 ```
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
@@ -1521,7 +1550,7 @@ Class Api{
 #### Responses:
 | Status Code |   Meaning   |                           Why?                           |
 |-------------|:-----------:|:--------------------------------------------------------:|
-| 200         |     OK      |                     Retornou o valor                     |
+| 200         |     OK      |                   Alterou com sucesso                    |
 | 209         |  CONFLICT   |         Algum dado único já foi cadastrado antes         |
 | 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
 | 404         |  NOT FOUND  |          O objeto procurado não foi encontrado           |
@@ -1571,12 +1600,16 @@ Class Api{
 #### Responses:
 | Status Code |  Meaning  |                 Why?                  |
 |-------------|:---------:|:-------------------------------------:|
-| 200         |    OK     |           Retornou o valor            |
+| 200         |    OK     |     Excluiu o objeto com sucesso      |
 | 404         | NOT FOUND | O objeto procurado não foi encontrado |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
+
+
+
+
 Nada de importante
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
