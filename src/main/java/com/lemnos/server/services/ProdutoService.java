@@ -1,9 +1,11 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
 import com.lemnos.server.models.dtos.requests.ImagemRequest;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.DataFornece;
 import com.lemnos.server.models.produto.Fabricante;
@@ -14,6 +16,7 @@ import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.produto.categoria.SubCategoria;
 import com.lemnos.server.models.produto.imagens.Imagem;
 import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
+import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
@@ -39,6 +42,7 @@ public class ProdutoService {
 
     @Autowired private ProdutoRepository produtoRepository;
     @Autowired private FabricanteRepository fabricanteRepository;
+    @Autowired private ClienteRepository clienteRepository;
     @Autowired private DataForneceRepository dataForneceRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private SubCategoriaRepository subCategoriaRepository;
@@ -78,6 +82,31 @@ public class ProdutoService {
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> favoritar(Integer idCliente, String idProd) {
+        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNotFoundException::new);
+        Produto produto = getProdutoById(idProd);
+
+        if(cliente.getProdutosFavoritos().remove(produto)) throw new RuntimeException("O produto já está favoritado");
+
+        cliente.getProdutosFavoritos().add(produto);
+        clienteRepository.save(cliente);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    public ResponseEntity<Void> desfavoritar(Integer idCliente, String idProd) {
+        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNotFoundException::new);
+        List<Produto> novosProdutosFavoritos = new ArrayList<>();
+        for (Produto produto : cliente.getProdutosFavoritos()) {
+            if(produto.getId().toString().equals(idProd)) continue;
+            novosProdutosFavoritos.add(produto);
+        }
+        cliente.setProdutosFavoritos(novosProdutosFavoritos);
+        clienteRepository.save(cliente);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {

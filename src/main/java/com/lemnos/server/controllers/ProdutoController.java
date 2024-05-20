@@ -39,4 +39,14 @@ public class ProdutoController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         return produtoService.delete(id);
     }
+
+    @PostMapping("/fav")
+    public ResponseEntity<Void> favoritar(@RequestParam(name = "id_cliente") Integer idCliente, @RequestParam(name = "id_prod") String idProd) {
+        return produtoService.favoritar(idCliente, idProd);
+    }
+
+    @DeleteMapping("/desfav")
+    public ResponseEntity<Void> desfavoritar(@RequestParam(name = "id_cliente") Integer idCliente, @RequestParam(name = "id_prod") String idProd) {
+        return produtoService.desfavoritar(idCliente, idProd);
+    }
 }

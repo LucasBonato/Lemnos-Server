@@ -1,6 +1,8 @@
 package com.lemnos.server.models.produto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.produto.categoria.SubCategoria;
 import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
 import io.micrometer.common.util.StringUtils;
@@ -8,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -58,6 +61,10 @@ public class Produto {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Imagem")
     private ImagemPrincipal imagemPrincipal;
+
+    @ManyToMany(mappedBy = "produtosFavoritos")
+    @JsonIgnore
+    private List<Cliente> clientes;
 
     public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal){
         this.nome = produtoRequest.nome();

@@ -5,6 +5,7 @@ import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.models.enums.Situacao;
+import com.lemnos.server.models.produto.Produto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,6 +41,14 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     @Column(name = "Situacao")
     private Situacao situacao = Situacao.ATIVO;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "Produtos_Favoritos",
+            joinColumns = @JoinColumn(name = "Id_Cliente"),
+            inverseJoinColumns = @JoinColumn(name = "Id_Produto")
+    )
+    private List<Produto> produtosFavoritos;
 
     public Cliente(ClienteRequest clienteRequest){
         this.nome = clienteRequest.nome();

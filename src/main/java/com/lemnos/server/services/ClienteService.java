@@ -15,6 +15,7 @@ import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
+import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
@@ -39,13 +40,7 @@ public class ClienteService extends Util {
         List<Cliente> clientes = clienteRepository.findAll();
         List<ClienteResponse> dto = new ArrayList<>();
         for(Cliente cliente : clientes){
-            dto.add(new ClienteResponse(
-                    cliente.getNome(),
-                    cliente.getCpf(),
-                    cliente.getCadastro().getEmail(),
-                    cliente.getCadastro().getSenha(),
-                    getEnderecoRecords(cliente)
-            ));
+            dto.add(getClienteResponse(cliente));
         }
 
         return ResponseEntity.ok(dto);
@@ -53,13 +48,7 @@ public class ClienteService extends Util {
 
     public ResponseEntity<ClienteResponse> getOneById(Integer id) {
         Cliente cliente = getOneClienteById(id);
-        ClienteResponse record = new ClienteResponse(
-                cliente.getNome(),
-                cliente.getCpf(),
-                cliente.getCadastro().getEmail(),
-                cliente.getCadastro().getSenha(),
-                getEnderecoRecords(cliente)
-        );
+        ClienteResponse record = getClienteResponse(cliente);
         return ResponseEntity.ok(record);
     }
 
@@ -109,6 +98,26 @@ public class ClienteService extends Util {
         ClientePossuiEndereco cpe = clientePossuiEnderecoRepository.findByCepAndId_Cliente(cep, id).orElseThrow(() -> new EnderecoNotFoundException("Cliente"));
         clientePossuiEnderecoRepository.delete(cpe);
         return ResponseEntity.ok().build();
+    }
+
+    private static ClienteResponse getClienteResponse(Cliente cliente) {
+        return new ClienteResponse(
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getCadastro().getEmail(),
+                cliente.getCadastro().getSenha(),
+                getProdutosFavoritos(cliente),
+                getEnderecoRecords(cliente)
+        );
+    }
+
+    private static List<String> getProdutosFavoritos(Cliente cliente) {
+        List<Produto> produtos = cliente.getProdutosFavoritos();
+        List<String> produtosFavoritos = new ArrayList<>();
+        for (Produto produto : produtos) {
+            produtosFavoritos.add(produto.getId().toString());
+        }
+        return produtosFavoritos;
     }
 
     private Cliente getOneClienteById(Integer id) {
