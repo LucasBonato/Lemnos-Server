@@ -7,6 +7,7 @@ import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.DataFornece;
+import com.lemnos.server.models.produto.Desconto;
 import com.lemnos.server.models.produto.Fabricante;
 import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
@@ -18,6 +19,7 @@ import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
+import com.lemnos.server.repositories.produto.DescontoRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.repositories.entidades.FabricanteRepository;
 import com.lemnos.server.repositories.produto.SubCategoriaRepository;
@@ -46,6 +48,7 @@ public class ProdutoService {
     @Autowired private SubCategoriaRepository subCategoriaRepository;
     @Autowired private ImagemPrincipalRepository imagemPrincipalRepository;
     @Autowired private ImagemRepository imagemRepository;
+    @Autowired private DescontoRepository descontoRepository;
 
     @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
@@ -296,5 +299,13 @@ public class ProdutoService {
         }
         imagemPrincipal.setImagens(imagens);
         return imagemPrincipalRepository.save(imagemPrincipal);
+    }
+
+    private Desconto getDesconto(String desconto){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
+        if(descontoOptional.isEmpty()){
+            throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
+        }
+        return descontoOptional.get();
     }
 }
