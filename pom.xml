@@ -10,11 +10,13 @@
 	</parent>
 	<groupId>com.lemnos</groupId>
 	<artifactId>Lemnos-API</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>Lemnos</name>
 	<description>Api para TCC Lemnos</description>
 	<properties>
 		<java.version>21</java.version>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
