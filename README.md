@@ -53,7 +53,7 @@ gerenciamento de carrinho.
 | /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
 | /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
 | /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              | Possui a forma de conseguir procurar fornecedores, alterar ou desativar |
-| /produto      | /{id}                                     | [produto](#body-produto)                                                                         | [Produto](#produto)                                                                            |    Possui a forma de conseguir procurar produtos, alterar ou deletar    |
+| /produto      | /{id}<br/>/fav<br/>/desfav                | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)           | [Produto](#produto)                                                                            |    Possui a forma de conseguir procurar produtos, alterar ou deletar    |
 
 ---
 
@@ -1602,6 +1602,143 @@ Class Api{
 |-------------|:---------:|:-------------------------------------:|
 | 200         |    OK     |     Excluiu o objeto com sucesso      |
 | 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Favoritar Produtos
+
+### Favoritar:
+
+### Parâmetros:
+| Key        |     Tipo      | Descrição                      |
+|------------|:-------------:|--------------------------------|
+| id_cliente |      int      | Id do cliente                  |
+| id_prod    |  UUID/String  | Id do Produto a ser favoritado |
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto/fav?id_cliente=&id_prod=`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function adicionarFavorito(produto, cliente){
+
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/produto/fav",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      params: {
+        id_cliente: cliente.id,
+        id_prod: produto.id
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> favoritarProduto(Cliente cliente, Produto produto) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/produto/fav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                Por quê?                 |
+|-------------|:-----------:|:---------------------------------------:|
+| 201         |   CREATED   |          Cadastrou com sucesso          |                 
+| 209         |  CONFLICT   |   Algum dado único já foi cadastrado    |                 
+| 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
+| 409         |  NOT FOUND  | Alguma das entidades não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Desfavoritar:
+
+### Parâmetros:
+| Key        |     Tipo      | Descrição                               |
+|------------|:-------------:|-----------------------------------------|
+| id_cliente |      int      | Id do cliente                           |
+| id_prod    |  UUID/String  | Id do Produto a se retirar o favoritado |
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto/fav?id_cliente=&id_prod=`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function dasfavoritarProduto(produto, cliente){
+
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/produto/desfav",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      params: {
+        id_cliente: cliente.id,
+        id_prod: produto.id
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> desfavoritarProduto(Cliente cliente, Produto produto) async{
+        var response = await client.delete(
+            Uri.parse(baseUri + "/produto/desfav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                Por quê?                 |
+|-------------|:-----------:|:---------------------------------------:|
+| 200         |     OK      |          Deletado com sucesso           |
+| 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
+| 409         |  NOT FOUND  | Alguma das entidades não foi encontrada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
