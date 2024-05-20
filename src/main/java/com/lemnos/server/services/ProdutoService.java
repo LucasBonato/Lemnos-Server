@@ -4,7 +4,6 @@ import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
-import com.lemnos.server.models.dtos.requests.ImagemRequest;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.DataFornece;
@@ -31,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -292,7 +290,7 @@ public class ProdutoService {
         List<Imagem> imagens = new ArrayList<>();
         ImagemPrincipal imagemPrincipal = new ImagemPrincipal(produtoRequest.imagemPrincipal());
 
-        for (ImagemRequest imagemRequest : produtoRequest.imagens()) {
+        for (String imagemRequest : produtoRequest.imagens()) {
             Imagem imagem = imagemRepository.save(new Imagem(imagemRequest, imagemPrincipal));
             imagens.add(imagem);
         }

@@ -1,7 +1,6 @@
 package com.lemnos.server.models.produto.imagens;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lemnos.server.models.dtos.requests.ImagemRequest;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +23,8 @@ public class Imagem {
     @JsonIgnore
     private ImagemPrincipal imagemPrincipal;
 
-    public Imagem(ImagemRequest imagemRequest, ImagemPrincipal imagemPrincipal) {
-        this.imagem = imagemRequest.imagem();
+    public Imagem(String imagem, ImagemPrincipal imagemPrincipal) {
+        this.imagem = imagem;
         this.imagemPrincipal = imagemPrincipal;
     }
 }
