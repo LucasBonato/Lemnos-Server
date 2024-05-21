@@ -16,6 +16,5 @@ public record ProdutoResponse(
         String fabricante,
         String subCategoria,
         String imagemPrincipal,
-        List<String> imagens,
-        String desconto
+        List<String> imagens
 ) {}
