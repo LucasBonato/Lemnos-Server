@@ -19,7 +19,8 @@
 - [EndPoints](#Endpoints)
 - [Erros](#Erros)
 - [Exemplos](#Exemplos)
-  - [Cadastro](#Cadastro)
+  - [Login](#Login)
+  - [Registrar](#Register)
   - [Cliente](#Cliente)
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
@@ -37,20 +38,21 @@ gerenciamento de carrinho.
 
 # Headers
 
-|   Headers    | Description                     |
-|:------------:|:--------------------------------|
-| Content-Type | application/json; charset=UTF-8 |
+|    Headers    |           Description            |
+|:-------------:|:--------------------------------:|
+| Content-Type  | application/json; charset=UTF-8  |
+| Authorization |            {{token}}             |
 
 ---
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |
-|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |
-| /cliente      | /{id}                                     | [cliente](#Cliente)                                                                              | [cliente](#body-put-cliente)                                                                   |
-| /funcionario  | /{id}                                     | [funcionario](#Funcionário)                                                                      | [funcionario](#body-put-funcionário)                                                           |
-| /fornecedor   | /{id}                                     | [fornecedor](#Fornecedor)                                                                        | [fornecedor](#body-put-fornecedor)                                                             |
+| **EndPoints** | **Sub Endpoints**                                                       | **Exemplos**                                                                                                      | **Body**                                                                                                                    |
+|---------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| /auth         | /login<br/>/register<br/>/register/funcionario<br/>/register/fornecedor | [login](#Login)<br/>[register](#Register)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [login](#body-login)<br/>[register](#body-register)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) |
+| /cliente      | /{id}                                                                   | [cliente](#Cliente)                                                                                               | [cliente](#body-put-cliente)                                                                                                |
+| /funcionario  | /{id}                                                                   | [funcionario](#Funcionário)                                                                                       | [funcionario](#body-put-funcionário)                                                                                        |
+| /fornecedor   | /{id}                                                                   | [fornecedor](#Fornecedor)                                                                                         | [fornecedor](#body-put-fornecedor)                                                                                          |
 
 ---
 
@@ -82,11 +84,13 @@ Segue a tabela de valores:
 
 # Exemplos
 
-## Cadastro
+## Auth
 
-Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sendo que todas as requisições são de *POST*
+Login o Registro de um Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sendo que todas as requisições são de *POST*
 
-### Body Cliente:
+## Register
+
+### Body Register:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": "11122233311",
@@ -97,27 +101,26 @@ Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sen
 #### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
 
-> `{{baseUri}}/cadastro/cliente`
+> `{{baseUri}}/auth/register`
 
 JavaScript
 ~~~ javascript
 let baseUri = "https://localhost:8080/api";
 
-function cadastrarCliente(cliente){
+function register(usuario){
     
-    cliente = tratarDados(cliente);
+    usuario = tratarDados(usuario);
 
-    fetch(baseUri + "/cadastro/cliente", {
+    fetch(baseUri + "/auth/register", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         },
         body: JSON.stringify({
-            nome: cliente.nome,
-            telefone: cliente.telefone,
-            cpf: cliente.cpf,
-            email: cliente.email,
-            senha: cliente.senha
+            nome: usuario.nome,
+            cpf: usuario.cpf,
+            email: usuario.email,
+            senha: usuario.senha
         })
     });
 }
@@ -125,16 +128,15 @@ function cadastrarCliente(cliente){
 import axios from 'axios';
 const axios = require("axios");
 
-function cadastrarCliente(cliente) {
+function register(usuario) {
     
-    cliente = tratarDados(cliente);
+    usuario = tratarDados(usuario);
     
-    axios.post(baseUri + "/cadastro/cliente", {
-        nome: cliente.nome,
-        telefone: cliente.telefone,
-        cpf: cliente.cpf,
-        email: cliente.email,
-        senha: cliente.senha
+    axios.post(baseUri + "/auth/register", {
+        nome: usuario.nome,
+        cpf: usuario.cpf,
+        email: usuario.email,
+        senha: usuario.senha
       })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -150,18 +152,17 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> cadastrarCliente(Cliente cliente) async{
+    Future<dynamic> register(Usuario usuario) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/cadastro/cliente"),
+            Uri.parse(baseUri + "/auth/register"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             },
             body: jsonEncode({
-                "nome": cliente.nome,
-                "telefone": cliente.telefone,
-                "cpf": cliente.cpf,
-                "email": cliente.email,
-                "senha": cliente.senha
+                "nome": usuario.nome,
+                "cpf": usuario.cpf,
+                "email": usuario.email,
+                "senha": usuario.senha
             })
         );
     }
@@ -174,6 +175,90 @@ Class Api{
 | 200         |     OK      |        Cadastrou com sucesso         |                 
 | 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Login
+
+Quando logado a API irá retornar um token para ser utlizado posteriormente no [Header](#Headers) Authorization.
+
+### Body Login
+``` JSON
+"email": "emailParaRealizarOLogin@email.com"
+"senha": "senhaParaRealizarLogin"
+```
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/auth/login`
+
+JavaScript
+~~~ javascript
+let baseUri = "https://localhost:8080/api";
+
+import axios from 'axios';
+const axios = require("axios");
+
+function login(usuario) {
+    
+    let token = "";
+    
+    usuario = tratarDados(usuario);
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/auth/login/fav",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: {
+        email: usuario.email,
+        senha: usuario.senha
+      }
+    })
+    .then((response) => token = response.data)
+    .catch((error) => console.log(error));
+    
+    return token;  
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<String> login(Usuario usuario) async{
+        String token = "";
+      
+        var response = await client.post(
+            Uri.parse(baseUri + "/auth/login"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "email": usuario.email,
+                "senha": usuario.senha
+            })
+        );
+        
+        token = response.body;
+        return token;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?               |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |          Logado com sucesso          |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |             
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -192,7 +277,7 @@ Class Api{
 
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/cadastro/funcionario`
+> `{{baseUri}}/auth/register/funcionario`
 
 JavaScript
 ~~~javascript
@@ -201,11 +286,19 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function cadastrarFuncionario(cliente) {
+function cadastrarFuncionario(funcionario) {
     
-    cliente = tratarDados(cliente);
+    funcionario = tratarDados(funcionario);
     
-    axios.post(baseUri + "/cadastro/funcionario", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/auth/register/funcionario",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         telefone: funcionario.telefone,
@@ -213,9 +306,10 @@ function cadastrarFuncionario(cliente) {
         dataAdmissao: funcionario.dataAdmissao,
         email: funcionario.email,
         senha: funcionario.senha
-      })
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -230,9 +324,10 @@ Class Api{
     
     Future<dynamic> cadastrarFuncionario(Funcionario funcionario) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/cadastro/funcionario"),
+            Uri.parse(baseUri + "/auth/register/funcionario"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": token
             },
             body: jsonEncode({
                 "nome": funcionario.nome,
@@ -270,7 +365,7 @@ Class Api{
 
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/cadastro/fornecedor`
+> `{{baseUri}}/auth/register/fornecedor`
 
 JavaScript
 ~~~javascript
@@ -283,15 +378,24 @@ function cadastrarFornecedor(fornecedor) {
     
     fornecedor = tratarDados(fornecedor);
     
-    axios.post(baseUri + "/cadastro/fornecedor", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/auth/register/fornecedor",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone,
         numeroLogradouro: fornecedor.numeroLogradouro,
         email: fornecedor.email
-      })
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -306,9 +410,10 @@ Class Api{
     
     Future<dynamic> cadastrarFornecedor(Fornecedor fornecedor) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/cadastro/fornecedor"),
+            Uri.parse(baseUri + "/auth/register/fornecedor"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": token
             },
             body: jsonEncode({
                 "nome": fornecedor.nome,
@@ -349,9 +454,18 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getClientes() {
-    axios.get(baseUri + "/cliente")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/cliente",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -397,9 +511,18 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getCliente(id) {
-    axios.get(baseUri + "/cliente/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/cliente/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -451,9 +574,18 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarCliente(cliente) {
-    axios.put(baseUri + "/cliente/${cliente.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: "/cliente/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: cliente.nome,
-        cpf: cliente.cpf,
+        cpf: cliente.cpf
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -474,6 +606,7 @@ Class Api{
           Uri.parse("$baseUri/${cliente.id}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
           },
           body: jsonEncode({
             "nome": cliente.nome,
@@ -514,7 +647,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirCliente(id) {
-    axios.delete(baseUri + "/cliente/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/cliente/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -564,7 +705,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFuncionarios() {
-    axios.get(baseUri + "/funcionario")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/funcionario",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -612,7 +761,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFuncionario(id) {
-    axios.get(baseUri + "/funcionario/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/funcionario/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -669,12 +826,22 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarFuncionario(funcionario) {
-    axios.put(baseUri + "/funcionario/${funcionario.id}", {
+
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: "/funcionario/${funcionario.id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         dataNascimento: funcionario.dtNasc,
         dataAdmissao: funcionario.dtAdmi,
         telefone: funcionario.telefone
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -738,7 +905,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirFuncionario(id) {
-    axios.delete(baseUri + "/funcionario/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/funcionario/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -788,7 +963,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFornecedores() {
-    axios.get(baseUri + "/fornecedor")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/fornecedor",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -836,7 +1019,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFornecedor(id) {
-    axios.get(baseUri + "/fornecedor/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/fornecedor/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -891,10 +1082,19 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarFornecedor(fornecedor) {
-    axios.put(baseUri + "/fornecedor/${fornecedor.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: "/funcionario/${fornecedor.id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -956,7 +1156,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirFornecedor(id) {
-    axios.delete(baseUri + "/fornecedor/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/fornecedor/${id}",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
