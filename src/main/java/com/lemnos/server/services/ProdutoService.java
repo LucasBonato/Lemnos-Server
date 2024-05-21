@@ -80,6 +80,8 @@ public class ProdutoService {
                 getImagemPrincipal(produtoRequest)
         ));
 
+        calcularPorcentagem(produtoRequest, produto);
+
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -118,7 +120,7 @@ public class ProdutoService {
         ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
 
         produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal);
-
+        calcularPorcentagem(produtoRequest, produto );
         verificarRegraDeNegocio(produto);
 
         produtoRepository.save(produto);
@@ -264,7 +266,7 @@ public class ProdutoService {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
         }
         if(produto.getSubCategoria().getSubCategoria().length() < 2 || produto.getSubCategoria().getSubCategoria().length() > 30) {
-            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
+            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
         }
         if(StringUtils.isBlank(produto.getImagemPrincipal().getImagemPrincipal())){
             throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "O campo Imagem Principal é obrigatório!");
@@ -307,5 +309,11 @@ public class ProdutoService {
             throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
         }
         return descontoOptional.get();
+    }
+
+    private void calcularPorcentagem(ProdutoRequest produtoRequest, Produto produto){
+        Double porcentagem = produtoRequest.valor() * (Double.parseDouble(produtoRequest.desconto()) / 100);
+
+        produto.setValor(porcentagem);
     }
 }
