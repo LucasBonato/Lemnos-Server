@@ -32,10 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProdutoService {
@@ -73,14 +70,12 @@ public class ProdutoService {
 
         Fornecedor fornecedor = getFornecedor(produtoRequest);
 
-        Produto produto = produtoRepository.save(new Produto(
-                produtoRequest,
-                getFabricante(produtoRequest.fabricante()),
-                getSubCategoria(produtoRequest.subCategoria()),
-                getImagemPrincipal(produtoRequest)
-        ));
-
-        calcularPorcentagem(produtoRequest, produto);
+            Produto produto = produtoRepository.save(new Produto(
+                    produtoRequest,
+                    getFabricante(produtoRequest.fabricante()),
+                    getSubCategoria(produtoRequest.subCategoria()),
+                    getImagemPrincipal(produtoRequest)
+            ));
 
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
@@ -120,7 +115,7 @@ public class ProdutoService {
         ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
 
         produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal);
-        calcularPorcentagem(produtoRequest, produto );
+        calcularPorcentagem(produto, produtoRequest.desconto());
         verificarRegraDeNegocio(produto);
 
         produtoRepository.save(produto);
@@ -303,16 +298,13 @@ public class ProdutoService {
         return imagemPrincipalRepository.save(imagemPrincipal);
     }
 
-    private Desconto getDesconto(String desconto){
+    private void calcularPorcentagem(Produto produto, String desconto){
         Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
         if(descontoOptional.isEmpty()){
             throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
         }
-        return descontoOptional.get();
-    }
 
-    private void calcularPorcentagem(ProdutoRequest produtoRequest, Produto produto){
-        Double porcentagem = produtoRequest.valor() * (Double.parseDouble(produtoRequest.desconto()) / 100);
+        Double porcentagem = produto.getValor() * (Double.parseDouble((desconto)) / 100);
 
         produto.setValor(porcentagem);
     }
