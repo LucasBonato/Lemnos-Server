@@ -98,6 +98,8 @@ Segue a tabela de valores:
 | 23 |              Largura              |
 | 24 |            Fabricante             |
 | 25 |           SubCategoria            |
+| 26 |         Imagem Principal          |
+| 27 |        Imagens Secundárias        |
 ---
 
 # Exemplos
@@ -1277,7 +1279,7 @@ Class Api{
 "nome": "Nome do Produto",
 "descricao": "Descrição do Produto",
 "Cor": "Qualquer cor",
-"valor": 999,99,
+"valor": 9999.99,
 "modelo": "Modelo do Produto",
 "peso": 1.0,
 "altura": 1.0,
