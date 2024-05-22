@@ -72,7 +72,7 @@ public class CadastroService extends Util {
         if(StringUtils.isBlank(clienteRequest.senha())){
             throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha é obrigatória!");
         }
-        if(clienteRequest.senha().length() < 8 || clienteRequest.nome().length() > 16){
+        if(clienteRequest.senha().length() < 8 || clienteRequest.senha().length() > 16){
             throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha precisa ter mínimo 8 caracteres!");
         }
 
