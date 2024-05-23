@@ -74,7 +74,8 @@ public class ProdutoService {
                     produtoRequest,
                     getFabricante(produtoRequest.fabricante()),
                     getSubCategoria(produtoRequest.subCategoria()),
-                    getImagemPrincipal(produtoRequest)
+                    getImagemPrincipal(produtoRequest),
+                    getDesconto(produtoRequest)
             ));
 
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
@@ -104,6 +105,27 @@ public class ProdutoService {
         }
         cliente.setProdutosFavoritos(novosProdutosFavoritos);
         clienteRepository.save(cliente);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> calcularPorcentagem(Produto produto, String desconto){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
+        if(descontoOptional.isEmpty()){
+            throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
+        }
+
+        Double porcentagem = produto.getValor() * (Double.parseDouble((desconto)) / 100);
+        Double valorComDesconto = produto.getValor() - porcentagem;
+
+        produto.setValor(valorComDesconto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> retirarPorcentagem(ProdutoRequest produtoRequest, String desconto){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
+        produtoRequest.desconto().replace(desconto, "0.0");
+
         return ResponseEntity.ok().build();
     }
 
@@ -151,7 +173,8 @@ public class ProdutoService {
                 produto.getFabricante().getFabricante(),
                 produto.getSubCategoria().getSubCategoria(),
                 produto.getImagemPrincipal().getImagemPrincipal(),
-                imagens
+                imagens,
+                produto.getDesconto().getValorDesconto()
         );
     }
 
@@ -298,14 +321,13 @@ public class ProdutoService {
         return imagemPrincipalRepository.save(imagemPrincipal);
     }
 
-    private void calcularPorcentagem(Produto produto, String desconto){
-        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
+    private Desconto getDesconto(ProdutoRequest produtoRequest){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(produtoRequest.desconto());
+
         if(descontoOptional.isEmpty()){
             throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
         }
 
-        Double porcentagem = produto.getValor() * (Double.parseDouble((desconto)) / 100);
-
-        produto.setValor(porcentagem);
+        return descontoOptional.get();
     }
 }

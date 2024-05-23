@@ -66,7 +66,11 @@ public class Produto {
     @JsonIgnore
     private List<Cliente> clientes;
 
-    public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal){
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Id_Desconto")
+    private Desconto desconto;
+
+    public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto){
         this.nome = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
@@ -79,6 +83,7 @@ public class Produto {
         this.fabricante = fabricante;
         this.subCategoria = subCategoria;
         this.imagemPrincipal = imagemPrincipal;
+        this.desconto = desconto;
     }
 
     public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal) {
@@ -94,5 +99,6 @@ public class Produto {
         setFabricante(fabricante);
         setSubCategoria(subCategoria);
         setImagemPrincipal(imagemPrincipal);
+        setDesconto(desconto);
     }
 }
