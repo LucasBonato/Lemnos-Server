@@ -57,4 +57,7 @@ public class ProdutoController {
 
     @DeleteMapping("/desconto/{id}")
     public ResponseEntity<Void> retirarDesconto(@PathVariable UUID id, ProdutoRequest produtoRequest, String desconto) { return produtoService.retirarPorcentagem(produtoRequest, desconto);}
+
+    @PutMapping("/desconto/{id}")
+    public ResponseEntity<Void> alterarDesconto(@PathVariable UUID id, ProdutoRequest produtoRequest, String desconto){ return  produtoService.alterarPorcentagem(produtoRequest, desconto); }
 }

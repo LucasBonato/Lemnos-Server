@@ -75,7 +75,7 @@ public class ProdutoService {
                     getFabricante(produtoRequest.fabricante()),
                     getSubCategoria(produtoRequest.subCategoria()),
                     getImagemPrincipal(produtoRequest),
-                    getDesconto(produtoRequest)
+                    getDesconto(produtoRequest.desconto())
             ));
 
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
@@ -119,6 +119,17 @@ public class ProdutoService {
 
         produto.setValor(valorComDesconto);
 
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> alterarPorcentagem(ProdutoRequest produtoRequest, String id){
+        Produto produto = getProdutoById(id);
+
+        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
+        produto.setDesconto(desconto);
+        verificarRegraDeNegocio(produto);
+
+        produtoRepository.save(produto);
         return ResponseEntity.ok().build();
     }
 
@@ -321,8 +332,8 @@ public class ProdutoService {
         return imagemPrincipalRepository.save(imagemPrincipal);
     }
 
-    private Desconto getDesconto(ProdutoRequest produtoRequest){
-        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(produtoRequest.desconto());
+    private Desconto getDesconto(String desconto){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
 
         if(descontoOptional.isEmpty()){
             throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
