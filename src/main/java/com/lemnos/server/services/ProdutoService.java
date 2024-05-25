@@ -146,8 +146,9 @@ public class ProdutoService {
         Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
         ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
+        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
 
-        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal);
+        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, desconto);
         calcularPorcentagem(produto, produtoRequest.desconto());
         verificarRegraDeNegocio(produto);
 
@@ -172,7 +173,7 @@ public class ProdutoService {
         }
         return new ProdutoResponse(
                 produto.getId().toString(),
-                produto.getNome(),
+                produto.getNomeProduto(),
                 produto.getDescricao(),
                 produto.getCor(),
                 produto.getValor(),
@@ -264,7 +265,7 @@ public class ProdutoService {
         }
     }
     private void verificarRegraDeNegocio(Produto produto) {
-        if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
+        if(produto.getNomeProduto().length() < 5 || produto.getNomeProduto().length() > 50){
             throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
         }
         if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
@@ -334,11 +335,6 @@ public class ProdutoService {
 
     private Desconto getDesconto(String desconto){
         Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
-
-        if(descontoOptional.isEmpty()){
-            throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
-        }
-
-        return descontoOptional.get();
+        return descontoOptional.orElseGet(() -> descontoRepository.save(new Desconto(desconto)));
     }
 }

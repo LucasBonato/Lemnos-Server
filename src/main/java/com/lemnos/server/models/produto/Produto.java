@@ -24,7 +24,7 @@ public class Produto {
     private UUID id;
 
     @Column(name = "Nome")
-    private String nome;
+    private String nomeProduto;
 
     @Column(name = "Descricao")
     private String descricao;
@@ -71,7 +71,7 @@ public class Produto {
     private Desconto desconto;
 
     public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto){
-        this.nome = produtoRequest.nome();
+        this.nomeProduto = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
         this.valor = produtoRequest.valor();
@@ -86,8 +86,8 @@ public class Produto {
         this.desconto = desconto;
     }
 
-    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal) {
-        setNome((StringUtils.isNotBlank(produtoRequest.nome())) ? produtoRequest.nome() : this.nome);
+    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto) {
+        setNomeProduto((StringUtils.isNotBlank(produtoRequest.nome())) ? produtoRequest.nome() : this.nomeProduto);
         setDescricao((StringUtils.isNotBlank(produtoRequest.descricao())) ? produtoRequest.descricao() : this.descricao);
         setCor((StringUtils.isNotBlank(produtoRequest.cor())) ? produtoRequest.cor() : this.cor);
         setModelo((StringUtils.isNotBlank(produtoRequest.modelo())) ? produtoRequest.modelo() : this.modelo);
