@@ -26,6 +26,7 @@ import com.lemnos.server.repositories.produto.SubCategoriaRepository;
 import com.lemnos.server.repositories.produto.imagens.ImagemPrincipalRepository;
 import com.lemnos.server.repositories.produto.imagens.ImagemRepository;
 import io.micrometer.common.util.StringUtils;
+import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class ProdutoService {
         List<Produto> produtos = produtoRepository.findAll();
         List<ProdutoResponse> dto = new ArrayList<>();
 
-        for(Produto produto: produtos){
+        for(Produto produto : produtos){
             dto.add(getProdutoResponse(produto));
         }
 
@@ -70,7 +71,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
-        verificarRegraDeNegocio(produtoRequest);
+        verificarRegraDeNegocioCreate(produtoRequest);
 
         Fornecedor fornecedor = getFornecedor(produtoRequest);
 
@@ -85,6 +86,27 @@ public class ProdutoService {
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
+        Produto produto = getProdutoById(id);
+
+        Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
+        SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
+        ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
+        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
+
+        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, desconto);
+        verificarRegraDeNegocioUpdate(produto);
+
+        produtoRepository.save(produto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> delete(String id){
+        produtoRepository.delete(getProdutoById(id));
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Void> favoritar(Integer idCliente, String idProd) {
@@ -111,65 +133,138 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> calcularPorcentagem(Produto produto, String desconto){
-        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
-        if(descontoOptional.isEmpty()){
-            throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
+    public ResponseEntity<Void> retirarPorcentagem(String idProduto){
+        Produto produto = getProdutoById(idProduto);
+        produto.setDesconto(getDesconto(null));
+        produtoRepository.save(produto);
+        return ResponseEntity.ok().build();
+    }
+
+    private void verificarRegraDeNegocioCreate(ProdutoRequest produtoRequest) {
+        if(StringUtils.isBlank(produtoRequest.nome())){
+            throw new ProdutoNotValidException(Codigo.NOME, "O campo Nome é obrigatório!");
         }
-
-        Double porcentagem = (Double) (produto.getValor() * (Double.parseDouble((desconto)) / 100));
-        Double valorComDesconto = (Double) (produto.getValor() - porcentagem);
-
-        produto.setValor(valorComDesconto);
-
-        return ResponseEntity.ok().build();
+        if(produtoRequest.nome().length() < 5 || produtoRequest.nome().length() > 50){
+            throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 50 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.descricao())){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO, "O campo Descrição é obrigatório!");
+        }
+        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 200){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO, "A descrição deve conter entre 5 e 200 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.cor())){
+            throw new ProdutoNotValidException(Codigo.COR, "O campo Cor é obrigatório!");
+        }
+        if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
+            throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 4 e 30 caracteres!");
+        }
+        if(produtoRequest.valor() < 0.00 || produtoRequest.valor() > 99999999.99){
+            throw new ProdutoNotValidException(Codigo.VALOR, "O valor deve ser entre R$0.00 e R$99999999.99");
+        }
+        if(StringUtils.isBlank(produtoRequest.modelo())) {
+            throw new ProdutoNotValidException(Codigo.MODELO, "O campo Modelo é obrigatório!");
+        }
+        if(produtoRequest.modelo().length() < 2 || produtoRequest.modelo().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.MODELO, "O campo Modelo deve conter entre 2 e 30 caracteres!");
+        }
+        if(produtoRequest.peso() == null) {
+            throw new ProdutoNotValidException(Codigo.PESO, "O campo Peso é obrigatório!");
+        }
+        if(produtoRequest.peso() < 0 || produtoRequest.peso() > 1000) {
+            throw new ProdutoNotValidException(Codigo.PESO, "O campo Peso deve ser positivo e menor que 1000Kg!");
+        }
+        if(produtoRequest.altura() == null) {
+            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura é obrigatório!");
+        }
+        if(produtoRequest.altura() < 0 || produtoRequest.altura() > 200) {
+            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura deve ser positivo e menor que 200cm!");
+        }
+        if(produtoRequest.comprimento() == null) {
+            throw new ProdutoNotValidException(Codigo.COMPRIMENTO, "O campo Comprimento é obrigatório!");
+        }
+        if(produtoRequest.comprimento() < 0 || produtoRequest.comprimento() > 500) {
+            throw new ProdutoNotValidException(Codigo.COMPRIMENTO, "O campo Comprimento deve ser positivo e menor que 500cm!");
+        }
+        if(produtoRequest.largura() == null) {
+            throw new ProdutoNotValidException(Codigo.LARGURA, "O campo Largura é obrigatório!");
+        }
+        if(produtoRequest.largura() < 0 || produtoRequest.largura() > 500) {
+            throw new ProdutoNotValidException(Codigo.LARGURA, "O campo Largura deve ser positivo e menor que 500cm!");
+        }
+        if(StringUtils.isBlank(produtoRequest.fabricante())) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE, "O campo Fabricante é obrigatório!");
+        }
+        if(produtoRequest.fabricante().length() < 2 || produtoRequest.fabricante().length() > 50) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE, "O campo Fabricante deve conter entre 2 e 50 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.fornecedor())) {
+            throw new ProdutoNotValidException(Codigo.GLOBAL, "O campo Fornecedor é obrigatório!");
+        }
+        if(StringUtils.isBlank(produtoRequest.subCategoria())){
+            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA, "O campo Subcategoria é obrigatório!");
+        }
+        if(produtoRequest.subCategoria().length() < 2 || produtoRequest.subCategoria().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE, "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
+        }
+        if(StringUtils.isBlank(produtoRequest.imagemPrincipal())){
+            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL, "O campo Imagem Principal é obrigatório!");
+        }
+        if(produtoRequest.imagens() == null) {
+            throw new ProdutoNotValidException(Codigo.IMAGENS, "É necessário ter no minimo uma imagem secundária!");
+        }
+    }
+    private void verificarRegraDeNegocioUpdate(Produto produto) {
+        if(produto.getNomeProduto().length() < 5 || produto.getNomeProduto().length() > 50){
+            throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 50 caracteres!");
+        }
+        if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO, "A descrição deve conter entre 5 e 200 caracteres!");
+        }
+        if(produto.getCor().length() < 4 || produto.getCor().length() > 30){
+            throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 4 e 30 caracteres!");
+        }
+        if(produto.getValor() < 0.00 || produto.getValor() > 99999999.99){
+            throw new ProdutoNotValidException(Codigo.VALOR, "O valor deve ser entre R$0.00 e R$99999999.99");
+        }
+        if(produto.getModelo().length() < 2 || produto.getModelo().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.MODELO, "O campo Modelo deve conter entre 2 e 30 caracteres!");
+        }
+        if(produto.getPeso() < 0 || produto.getPeso() > 1000) {
+            throw new ProdutoNotValidException(Codigo.PESO, "O campo Peso deve ser positivo e menor que 1000Kg!");
+        }
+        if(produto.getAltura() < 0 || produto.getAltura() > 200) {
+            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura deve ser positivo e menor que 200cm!");
+        }
+        if(produto.getComprimento() < 0 || produto.getComprimento() > 500) {
+            throw new ProdutoNotValidException(Codigo.COMPRIMENTO, "O campo Comprimento deve ser positivo e menor que 500cm!");
+        }
+        if(produto.getLargura() < 0 || produto.getLargura() > 500) {
+            throw new ProdutoNotValidException(Codigo.LARGURA, "O campo Largura deve ser positivo e menor que 500cm!");
+        }
+        if(produto.getFabricante().getFabricante().length() < 2 || produto.getFabricante().getFabricante().length() > 50) {
+            throw new ProdutoNotValidException(Codigo.FABRICANTE, "O campo Fabricante deve conter entre 2 e 50 caracteres!");
+        }
+        if(produto.getSubCategoria().getSubCategoria().length() < 2 || produto.getSubCategoria().getSubCategoria().length() > 30) {
+            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA, "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
+        }
+        if(StringUtils.isBlank(produto.getImagemPrincipal().getImagemPrincipal())){
+            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL, "O campo Imagem Principal é obrigatório!");
+        };
+        if(StringUtils.isBlank(produto.getImagemPrincipal().getImagens().toString())){
+            throw new ProdutoNotValidException(Codigo.IMAGENS, "O campo Imagens é obrigatório!");
+        }
     }
 
-    public ResponseEntity<Void> alterarPorcentagem(ProdutoRequest produtoRequest, String id){
-        Produto produto = getProdutoById(id);
-
-        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
-        produto.setDesconto(desconto);
-        verificarRegraDeNegocio(produto);
-
-        produtoRepository.save(produto);
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> retirarPorcentagem(ProdutoRequest produtoRequest, String desconto){
-        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
-        produtoRequest.desconto().replace(desconto, "0.0");
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
-        Produto produto = getProdutoById(id);
-
-        Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
-        SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
-        ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
-        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
-
-        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, desconto);
-        calcularPorcentagem(produto, produtoRequest.desconto());
-        verificarRegraDeNegocio(produto);
-
-        produtoRepository.save(produto);
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> delete(String id){
-        produtoRepository.delete(getProdutoById(id));
-        return ResponseEntity.ok().build();
+    private Double calcularPorcentagem(Produto produto){
+        Double porcentagem = produto.getValor() * (Double.parseDouble(produto.getDesconto().getValorDesconto()) / 100);
+        return produto.getValor() - porcentagem;
     }
 
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
-
-    private static ProdutoResponse getProdutoResponse(Produto produto) {
+    private ProdutoResponse getProdutoResponse(Produto produto) {
         List<String> imagens = new ArrayList<>();
         for (Imagem imagem : produto.getImagemPrincipal().getImagens()) {
             imagens.add(imagem.getImagem());
@@ -180,6 +275,7 @@ public class ProdutoService {
                 produto.getDescricao(),
                 produto.getCor(),
                 produto.getValor(),
+                calcularPorcentagem(produto),
                 produto.getModelo(),
                 produto.getPeso(),
                 produto.getAltura(),
@@ -192,123 +288,6 @@ public class ProdutoService {
                 produto.getDesconto().getValorDesconto()
         );
     }
-
-    private void verificarRegraDeNegocio(ProdutoRequest produtoRequest) {
-        if(StringUtils.isBlank(produtoRequest.nome())){
-            throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O campo Nome é obrigatório!");
-        }
-        if(produtoRequest.nome().length() < 5 || produtoRequest.nome().length() > 50){
-            throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
-        }
-        if(StringUtils.isBlank(produtoRequest.descricao())){
-            throw new ProdutoNotValidException(Codigo.DESCRICAO.ordinal(), "O campo Descrição é obrigatório!");
-        }
-        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 200){
-            throw new ProdutoNotValidException(Codigo.DESCRICAO.ordinal(), "A descrição deve conter entre 5 e 200 caracteres!");
-        }
-        if(StringUtils.isBlank(produtoRequest.cor())){
-            throw new ProdutoNotValidException(Codigo.COR.ordinal(), "O campo Cor é obrigatório!");
-        }
-        if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
-            throw new ProdutoNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
-        }
-        if(produtoRequest.valor() < 0.00 || produtoRequest.valor() > 99999999.99){
-            throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
-        }
-        if(StringUtils.isBlank(produtoRequest.modelo())) {
-            throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo é obrigatório!");
-        }
-        if(produtoRequest.modelo().length() < 2 || produtoRequest.modelo().length() > 30) {
-            throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo deve conter entre 2 e 30 caracteres!");
-        }
-        if(produtoRequest.peso() == null) {
-            throw new ProdutoNotValidException(Codigo.PESO.ordinal(), "O campo Peso é obrigatório!");
-        }
-        if(produtoRequest.peso() < 0 || produtoRequest.peso() > 1000) {
-            throw new ProdutoNotValidException(Codigo.PESO.ordinal(), "O campo Peso deve ser positivo e menor que 1000Kg!");
-        }
-        if(produtoRequest.altura() == null) {
-            throw new ProdutoNotValidException(Codigo.ALTURA.ordinal(), "O campo Altura é obrigatório!");
-        }
-        if(produtoRequest.altura() < 0 || produtoRequest.altura() > 200) {
-            throw new ProdutoNotValidException(Codigo.ALTURA.ordinal(), "O campo Altura deve ser positivo e menor que 200cm!");
-        }
-        if(produtoRequest.comprimento() == null) {
-            throw new ProdutoNotValidException(Codigo.COMPRIMENTO.ordinal(), "O campo Comprimento é obrigatório!");
-        }
-        if(produtoRequest.comprimento() < 0 || produtoRequest.comprimento() > 500) {
-            throw new ProdutoNotValidException(Codigo.COMPRIMENTO.ordinal(), "O campo Comprimento deve ser positivo e menor que 500cm!");
-        }
-        if(produtoRequest.largura() == null) {
-            throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura é obrigatório!");
-        }
-        if(produtoRequest.largura() < 0 || produtoRequest.largura() > 500) {
-            throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura deve ser positivo e menor que 500cm!");
-        }
-        if(StringUtils.isBlank(produtoRequest.fabricante())) {
-            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante é obrigatório!");
-        }
-        if(produtoRequest.fabricante().length() < 2 || produtoRequest.fabricante().length() > 50) {
-            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
-        }
-        if(StringUtils.isBlank(produtoRequest.fornecedor())) {
-            throw new ProdutoNotValidException(Codigo.GLOBAL.ordinal(), "O campo Fornecedor é obrigatório!");
-        }
-        if(StringUtils.isBlank(produtoRequest.subCategoria())){
-            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "O campo Subcategoria é obrigatório!");
-        }
-        if(produtoRequest.subCategoria().length() < 2 || produtoRequest.subCategoria().length() > 30) {
-            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
-        }
-        if(StringUtils.isBlank(produtoRequest.imagemPrincipal())){
-            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "O campo Imagem Principal é obrigatório!");
-        }
-        if(produtoRequest.imagens() == null) {
-            throw new ProdutoNotValidException(Codigo.IMAGENS.ordinal(), "É necessário ter no minimo uma imagem secundária!");
-        }
-    }
-    private void verificarRegraDeNegocio(Produto produto) {
-        if(produto.getNomeProduto().length() < 5 || produto.getNomeProduto().length() > 50){
-            throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
-        }
-        if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
-            throw new ProdutoNotValidException(Codigo.DESCRICAO.ordinal(), "A descrição deve conter entre 5 e 200 caracteres!");
-        }
-        if(produto.getCor().length() < 4 || produto.getCor().length() > 30){
-            throw new ProdutoNotValidException(Codigo.COR.ordinal(), "A cor deve conter entre 4 e 30 caracteres!");
-        }
-        if(produto.getValor() < 0.00 || produto.getValor() > 99999999.99){
-            throw new ProdutoNotValidException(Codigo.VALOR.ordinal(), "O valor deve ser entre R$0.00 e R$99999999.99");
-        }
-        if(produto.getModelo().length() < 2 || produto.getModelo().length() > 30) {
-            throw new ProdutoNotValidException(Codigo.MODELO.ordinal(), "O campo Modelo deve conter entre 2 e 30 caracteres!");
-        }
-        if(produto.getPeso() < 0 || produto.getPeso() > 1000) {
-            throw new ProdutoNotValidException(Codigo.PESO.ordinal(), "O campo Peso deve ser positivo e menor que 1000Kg!");
-        }
-        if(produto.getAltura() < 0 || produto.getAltura() > 200) {
-            throw new ProdutoNotValidException(Codigo.ALTURA.ordinal(), "O campo Altura deve ser positivo e menor que 200cm!");
-        }
-        if(produto.getComprimento() < 0 || produto.getComprimento() > 500) {
-            throw new ProdutoNotValidException(Codigo.COMPRIMENTO.ordinal(), "O campo Comprimento deve ser positivo e menor que 500cm!");
-        }
-        if(produto.getLargura() < 0 || produto.getLargura() > 500) {
-            throw new ProdutoNotValidException(Codigo.LARGURA.ordinal(), "O campo Largura deve ser positivo e menor que 500cm!");
-        }
-        if(produto.getFabricante().getFabricante().length() < 2 || produto.getFabricante().getFabricante().length() > 50) {
-            throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
-        }
-        if(produto.getSubCategoria().getSubCategoria().length() < 2 || produto.getSubCategoria().getSubCategoria().length() > 30) {
-            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "O campo Subcategoria deve conter entre 2 e 30 caracteres!");
-        }
-        if(StringUtils.isBlank(produto.getImagemPrincipal().getImagemPrincipal())){
-            throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL.ordinal(), "O campo Imagem Principal é obrigatório!");
-        };
-        if(StringUtils.isBlank(produto.getImagemPrincipal().getImagens().toString())){
-            throw new ProdutoNotValidException(Codigo.IMAGENS.ordinal(), "O campo Imagens é obrigatório!");
-        }
-    }
-
     private Fornecedor getFornecedor(ProdutoRequest produtoRequest) {
         return fornecedorRepository.findByNome(produtoRequest.fornecedor()).orElseThrow(FornecedorNotFoundException::new);
     }
@@ -317,13 +296,10 @@ public class ProdutoService {
         return fabricanteOptional.orElseGet(() -> fabricanteRepository.save(new Fabricante(fabricante)));
     }
     private SubCategoria getSubCategoria(String subCategoria) {
-        Optional<SubCategoria> subCategoriaOptional = subCategoriaRepository.findBySubCategoria(subCategoria);
-        if(subCategoriaOptional.isEmpty()) {
-            throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "Sub Categoria inexistente!");
-        }
-        return subCategoriaOptional.get();
+        return subCategoriaRepository
+                .findBySubCategoria(subCategoria)
+                .orElseThrow(() -> new ProdutoNotValidException(Codigo.SUBCATEGORIA, "SubCategoria inexistente!"));
     }
-
     private ImagemPrincipal getImagemPrincipal(ProdutoRequest produtoRequest) {
         List<Imagem> imagens = new ArrayList<>();
         ImagemPrincipal imagemPrincipal = new ImagemPrincipal(produtoRequest.imagemPrincipal());
@@ -335,9 +311,9 @@ public class ProdutoService {
         imagemPrincipal.setImagens(imagens);
         return imagemPrincipalRepository.save(imagemPrincipal);
     }
-
     private Desconto getDesconto(String desconto){
-        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
-        return descontoOptional.orElseGet(() -> descontoRepository.save(new Desconto(desconto)));
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto((desconto == null) ? "0" : desconto);
+        if(descontoOptional.isPresent()) return descontoOptional.get();
+        throw new ProdutoNotValidException(Codigo.DESCONTO, "Desconto inválido, digite um número entre 0 e 99!");
     }
 }

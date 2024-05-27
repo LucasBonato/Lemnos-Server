@@ -55,25 +55,25 @@ public class CadastroService extends Util {
     private Cliente verificarRegraDeNegocio(ClienteRequest clienteRequest) {
 
         if(StringUtils.isBlank(clienteRequest.nome())){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome é obrigatório!");
         }
         if(clienteRequest.nome().length() < 2 || clienteRequest.nome().length() > 40){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(clienteRequest.cpf() == null || clienteRequest.cpf().isBlank()){
-            throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
+            throw new CadastroNotValidException(Codigo.CPF, "O CPF é obrigatório!");
         }
 
         Long cpf = convertStringToLong(clienteRequest.cpf(), Codigo.CPF);
 
         if(StringUtils.isBlank(clienteRequest.email())){
-            throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
+            throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
         }
         if(StringUtils.isBlank(clienteRequest.senha())){
-            throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha é obrigatória!");
+            throw new CadastroNotValidException(Codigo.SENHA, "A Senha é obrigatória!");
         }
         if(clienteRequest.senha().length() < 8 || clienteRequest.senha().length() > 16){
-            throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha precisa ter mínimo 8 caracteres!");
+            throw new CadastroNotValidException(Codigo.SENHA, "A Senha precisa ter mínimo 8 caracteres!");
         }
 
         clienteRequest = clienteRequest.setEmail(clienteRequest.email().toLowerCase());
@@ -88,37 +88,37 @@ public class CadastroService extends Util {
     private Funcionario verificarRegraDeNegocio(FuncionarioRequest funcionarioRequest) {
 
         if(StringUtils.isBlank(funcionarioRequest.nome())){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome é obrigatório!");
         }
         if(funcionarioRequest.nome().length() < 2 || funcionarioRequest.nome().length() > 40){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(funcionarioRequest.cpf() == null || funcionarioRequest.cpf().isBlank()){
-            throw new CadastroNotValidException(Codigo.CPF.ordinal(), "O CPF é obrigatório!");
+            throw new CadastroNotValidException(Codigo.CPF, "O CPF é obrigatório!");
         }
 
         Long cpf = convertStringToLong(funcionarioRequest.cpf(), Codigo.CPF);
 
         if(StringUtils.isBlank(funcionarioRequest.dataNascimento())){
-            throw new CadastroNotValidException(Codigo.DATANASC.ordinal(), "A Data de Nascimento é obrigatória!");
+            throw new CadastroNotValidException(Codigo.DATANASC, "A Data de Nascimento é obrigatória!");
         }
         if(StringUtils.isBlank(funcionarioRequest.dataAdmissao())){
-            throw new CadastroNotValidException(Codigo.DATAADMI.ordinal(), "A Data de Admissão é obrigatória!");
+            throw new CadastroNotValidException(Codigo.DATAADMI, "A Data de Admissão é obrigatória!");
         }
         if(funcionarioRequest.telefone() == null || funcionarioRequest.telefone().isBlank()){
-            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone é obrigatório");
+            throw new CadastroNotValidException(Codigo.TELEFONE, "Telefone é obrigatório");
         }
 
         convertStringToLong(funcionarioRequest.telefone(), Codigo.TELEFONE);
 
         if(StringUtils.isBlank(funcionarioRequest.email())){
-            throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
+            throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
         }
         if(StringUtils.isBlank(funcionarioRequest.senha())){
-            throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha é obrigatória!");
+            throw new CadastroNotValidException(Codigo.SENHA, "A Senha é obrigatória!");
         }
         if(funcionarioRequest.senha().length() < 8 || funcionarioRequest.senha().length() > 16){
-            throw new CadastroNotValidException(Codigo.SENHA.ordinal(), "A Senha precisa ter mínimo 8 caracteres!");
+            throw new CadastroNotValidException(Codigo.SENHA, "A Senha precisa ter mínimo 8 caracteres!");
         }
 
         funcionarioRequest = funcionarioRequest.setEmail(funcionarioRequest.email().toLowerCase());
@@ -137,25 +137,25 @@ public class CadastroService extends Util {
     private Fornecedor verificarRegraDeNegocio(FornecedorRequest fornecedorRequest) {
 
         if(StringUtils.isBlank(fornecedorRequest.nome())){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome é obrigatório!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome é obrigatório!");
         }
         if(fornecedorRequest.nome().length() < 2 || fornecedorRequest.nome().length() > 40){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(fornecedorRequest.cnpj() == null || fornecedorRequest.cnpj().isBlank()){
-            throw new CadastroNotValidException(Codigo.CNPJ.ordinal(), "O CNPJ é obrigatório!");
+            throw new CadastroNotValidException(Codigo.CNPJ, "O CNPJ é obrigatório!");
         }
 
         Long cnpj = convertStringToLong(fornecedorRequest.cnpj(), Codigo.CNPJ);
 
         if(fornecedorRequest.telefone() == null || fornecedorRequest.telefone().isBlank()){
-            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "O Telefone é obrigatório!");
+            throw new CadastroNotValidException(Codigo.TELEFONE, "O Telefone é obrigatório!");
         }
 
         convertStringToLong(fornecedorRequest.telefone(), Codigo.TELEFONE);
 
         if(StringUtils.isBlank(fornecedorRequest.email())){
-            throw new CadastroNotValidException(Codigo.EMAIL.ordinal(), "O Email é obrigatório!");
+            throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
         }
 
         Optional<Fornecedor> Optionalmail = fornecedorRepository.findByEmail(fornecedorRequest.email());

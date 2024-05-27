@@ -18,7 +18,7 @@ public class Imagem {
     @Column(name = "Imagem")
     private String imagem;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Id_Imagem")
     @JsonIgnore
     private ImagemPrincipal imagemPrincipal;
@@ -26,5 +26,13 @@ public class Imagem {
     public Imagem(String imagem, ImagemPrincipal imagemPrincipal) {
         this.imagem = imagem;
         this.imagemPrincipal = imagemPrincipal;
+    }
+
+    @Override
+    public String toString() {
+        return "Imagem{" +
+                "id=" + id +
+                ", imagem='" + imagem + '\'' +
+                '}';
     }
 }

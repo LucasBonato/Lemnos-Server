@@ -20,10 +20,18 @@ public class ImagemPrincipal {
     @Column(name = "Imagem_Principal")
     private String imagemPrincipal;
 
-    @OneToMany(mappedBy = "imagemPrincipal")
+    @OneToMany(mappedBy = "imagemPrincipal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagem> imagens;
 
     public ImagemPrincipal(String imagemPrincipal) {
         this.imagemPrincipal = imagemPrincipal;
+    }
+
+    @Override
+    public String toString() {
+        return "ImagemPrincipal{" +
+                "id=" + id +
+                ", imagemPrincipal='" + imagemPrincipal + '\'' +
+                '}';
     }
 }

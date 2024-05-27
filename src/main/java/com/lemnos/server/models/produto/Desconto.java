@@ -1,12 +1,11 @@
 package com.lemnos.server.models.produto;
 
-import com.lemnos.server.models.produto.categoria.Categoria;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Descontos")
+@Table(name = "Desconto")
 @Data
 @NoArgsConstructor
 public class Desconto {
@@ -17,10 +16,4 @@ public class Desconto {
 
     @Column(name = "Valor_Porcentagem")
     private String valorDesconto;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Id_Categoria")
-    private Categoria categoria;
-
-    public Desconto(String valorDesconto){ this.valorDesconto = valorDesconto; }
 }

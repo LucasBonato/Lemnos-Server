@@ -141,10 +141,10 @@ public class FornecedorService extends Util {
             fornecedorEnviado = fornecedorEnviado.setNome(fornecedorEncontrado.getNome());
         }
         if(fornecedorEnviado.nome().length() < 2 || fornecedorEnviado.nome().length() > 40){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(fornecedorEnviado.telefone() != null && fornecedorEnviado.telefone().length() != 11){
-            throw new CadastroNotValidException(Codigo.TELEFONE.ordinal(), "Telefone inválido! (XX)XXXXX-XXXX");
+            throw new CadastroNotValidException(Codigo.TELEFONE, "Telefone inválido! (XX)XXXXX-XXXX");
         }
         if(fornecedorEnviado.telefone() == null || fornecedorEnviado.telefone().isBlank()){
             fornecedorEnviado = fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone().toString());

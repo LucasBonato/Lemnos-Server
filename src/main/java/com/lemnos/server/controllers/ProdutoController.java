@@ -52,17 +52,11 @@ public class ProdutoController {
         return produtoService.favoritar(idCliente, idProd);
     }
 
-    @DeleteMapping("/desfav")
+    @DeleteMapping("/fav")
     public ResponseEntity<Void> desfavoritar(@RequestParam(name = "id_cliente") Integer idCliente, @RequestParam(name = "id_prod") String idProd) {
         return produtoService.desfavoritar(idCliente, idProd);
     }
 
-    @PostMapping("/desconto/{id}")
-    public ResponseEntity<Void> desconto(@PathVariable UUID id, Produto produto, String desconto) { return produtoService.calcularPorcentagem(produto, desconto); }
-
     @DeleteMapping("/desconto/{id}")
-    public ResponseEntity<Void> retirarDesconto(@PathVariable UUID id, ProdutoRequest produtoRequest, String desconto) { return produtoService.retirarPorcentagem(produtoRequest, desconto);}
-
-    @PutMapping("/desconto/{id}")
-    public ResponseEntity<Void> alterarDesconto(@PathVariable UUID id, ProdutoRequest produtoRequest, String desconto){ return  produtoService.alterarPorcentagem(produtoRequest, desconto); }
+    public ResponseEntity<Void> retirarDesconto(@PathVariable String id) { return produtoService.retirarPorcentagem(id);}
 }

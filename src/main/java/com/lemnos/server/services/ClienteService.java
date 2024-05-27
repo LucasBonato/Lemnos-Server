@@ -148,7 +148,7 @@ public class ClienteService extends Util {
             clienteEnviado = clienteEnviado.setNome(clienteEncontrado.getNome());
         }
         if(clienteEnviado.nome().length() < 2 || clienteEnviado.nome().length() > 40){
-            throw new CadastroNotValidException(Codigo.NOME.ordinal(), "O Nome precisa ter de 3 à 40 caracteres!");
+            throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
         if(clienteEnviado.cpf() == null){
             clienteEnviado = clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
