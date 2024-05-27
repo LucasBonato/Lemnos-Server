@@ -47,13 +47,13 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |                                Descrição                                |
-|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------:|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |          Permite realizar o cadastro das entidades do sistema           |
-| /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |   Possui a forma de conseguir procurar clientes, alterar ou desativar   |
-| /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            | Possui a forma de conseguir procurar funcionários, alterar ou desativar |
-| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              | Possui a forma de conseguir procurar fornecedores, alterar ou desativar |
-| /produto      | /{id}<br/>/fav<br/>/desfav                | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)           | [Produto](#produto)                                                                            |    Possui a forma de conseguir procurar produtos, alterar ou deletar    |
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |                                         Descrição                                          |
+|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
+| /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /produto      | /{id}<br/>/fav                            | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)           | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 
 ---
 
@@ -1703,7 +1703,7 @@ function dasfavoritarProduto(produto, cliente){
     axios({
       baseURL: baseUri,
       method: "DELETE",
-      url: "/produto/desfav",
+      url: "/produto/fav",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       params: {
         id_cliente: cliente.id,
@@ -1726,7 +1726,7 @@ Class Api{
     
     Future<dynamic> desfavoritarProduto(Cliente cliente, Produto produto) async{
         var response = await client.delete(
-            Uri.parse(baseUri + "/produto/desfav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            Uri.parse(baseUri + "/produto/fav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             })
