@@ -79,11 +79,9 @@ CREATE TABLE Sub_Categoria (
     CONSTRAINT fk_sub_categoria_categoria FOREIGN KEY(Id_Categoria) REFERENCES Categoria(Id),
     CHECK(LENGTH(Nome) > 2)
 );
-CREATE TABLE Descontos (
+CREATE TABLE Desconto (
     Id SERIAL PRIMARY KEY,
-    Valor_Porcentagem varchar(2) NOT NULL,
-    Id_Categoria int,
-    CONSTRAINT fk_descontos_categoria FOREIGN KEY(Id_Categoria) REFERENCES Categoria(Id)
+    Valor_Porcentagem varchar(2) NOT NULL
 );
 CREATE TABLE Fabricante(
     Id SERIAL PRIMARY KEY,
@@ -107,7 +105,7 @@ CREATE TABLE Produto (
     CONSTRAINT fk_produto_imagem FOREIGN KEY(Id_Imagem) REFERENCES Imagem(Id),
     CONSTRAINT fk_produto_sub_categoria FOREIGN KEY(Id_Sub_Categoria) REFERENCES Sub_Categoria(Id),
     CONSTRAINT fk_especificacao_fabricante FOREIGN KEY(Id_Fabricante) REFERENCES Fabricante(Id),
-    CONSTRAINT fk_desconto FOREIGN KEY(Id_Desconto) REFERENCES Descontos(Id),
+    CONSTRAINT fk_desconto FOREIGN KEY(Id_Desconto) REFERENCES Desconto(Id),
     CHECK(Valor > 0 AND Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
 CREATE TABLE Itens_Carrinho (
