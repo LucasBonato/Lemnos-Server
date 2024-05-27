@@ -7,6 +7,8 @@ import com.lemnos.server.exceptions.endereco.EstadoNotFoundException;
 import com.lemnos.server.exceptions.entidades.cliente.CnpjNotValidException;
 import com.lemnos.server.exceptions.entidades.cliente.CpfNotValidException;
 import com.lemnos.server.exceptions.global.TelefoneNotValidException;
+import com.lemnos.server.exceptions.viacep.ViaCepNetworkException;
+import com.lemnos.server.exceptions.viacep.ViaCepServerDownException;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.endereco.Cidade;
 import com.lemnos.server.models.endereco.Endereco;
@@ -19,6 +21,7 @@ import com.lemnos.server.repositories.endereco.possui.FuncionarioPossuiEnderecoR
 import io.micrometer.common.util.StringUtils;
 import com.lemnos.server.repositories.endereco.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +42,7 @@ public class Util {
         try{
             dataFormatada = formatter.parse(data);
         }catch (ParseException e){
-            throw new CadastroWrongDataFormatException(Codigo.GLOBAL.ordinal());
+            throw new CadastroWrongDataFormatException(Codigo.GLOBAL);
         }
         return dataFormatada;
     }
@@ -81,11 +84,29 @@ public class Util {
             return optionalEndereco.get();
         }
 
-        ViaCepDTO via = ViaCep.getViaCepObject(cep);
+        ViaCepDTO via = getViaCepObject(cep);
         if(via != null) {
             return optionalEndereco.orElseGet(() -> cadastrarNovoEndereco(via, enderecoRequest));
         }
-        throw new EnderecoNotValidException(Codigo.CEP.ordinal() ,"Cep não existe!");
+        throw new EnderecoNotValidException(Codigo.CEP ,"Cep não existe!");
+    }
+
+    @Autowired private RestTemplate restTemplate;
+
+    public ViaCepDTO getViaCepObject(String cep){
+        try {
+            ViaCep viaCep = restTemplate.getForObject("https://viacep.com.br/ws/{cep}/json", ViaCep.class, cep);
+            if(viaCep == null) return null;
+            return new ViaCepDTO(viaCep.getCep().replace("-", ""), viaCep.getLogradouro(), viaCep.getLocalidade(), viaCep.getBairro(), viaCep.getUf());
+        } catch (HttpClientErrorException e) {
+            throw new EnderecoNotValidException(Codigo.CEP, "CEP inexistente!");
+        } catch (HttpServerErrorException e) {
+            throw new ViaCepServerDownException();
+        } catch (ResourceAccessException e) {
+            throw new ViaCepNetworkException("Problema de rede ao acessar o serviço ViaCep");
+        } catch (RestClientException e) {
+            throw new RuntimeException("Erro no RestTemplate, consulte um desenvolvedor!");
+        }
     }
 
     private Endereco cadastrarNovoEndereco(ViaCepDTO viaCep, EnderecoRequest enderecoRequest) {
@@ -101,13 +122,13 @@ public class Util {
     }
     private void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
         if(enderecoRequest.numeroLogradouro() == null){
-            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO.ordinal(), "O campo de número logradouro é obrigatório!");
+            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO, "O campo de número logradouro é obrigatório!");
         }
         if(enderecoRequest.numeroLogradouro() < 0 || enderecoRequest.numeroLogradouro() > 9999){
-            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO.ordinal(), "O número de Logradouro não pode ser negativo ou maior que 9999");
+            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO, "O número de Logradouro não pode ser negativo ou maior que 9999");
         }
         if(StringUtils.isNotBlank(enderecoRequest.complemento()) && enderecoRequest.complemento().length() > 20) {
-            throw new EnderecoNotValidException(Codigo.COMPLEMENTO.ordinal(), "O complemento só pode possuir até 20 caracteres!");
+            throw new EnderecoNotValidException(Codigo.COMPLEMENTO, "O complemento só pode possuir até 20 caracteres!");
         }
     }
 }
