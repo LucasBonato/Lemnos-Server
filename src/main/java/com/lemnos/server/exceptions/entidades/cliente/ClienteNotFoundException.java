@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class ClienteNotFoundException extends BaseException {
     public ClienteNotFoundException() {
-        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL.ordinal(), "Cliente não encontrado!"));
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL, "Cliente não encontrado!"));
     }
 }

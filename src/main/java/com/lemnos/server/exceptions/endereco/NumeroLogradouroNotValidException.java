@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class NumeroLogradouroNotValidException extends BaseException {
     public NumeroLogradouroNotValidException() {
-        super(HttpStatus.BAD_REQUEST, new ExceptionResponse(Codigo.NUMERO_LOGRADOURO.ordinal(), "Número do Logradouro inválido: utilize só números"));
+        super(HttpStatus.BAD_REQUEST, new ExceptionResponse(Codigo.NUMERO_LOGRADOURO, "Número do Logradouro inválido: utilize só números"));
     }
 }

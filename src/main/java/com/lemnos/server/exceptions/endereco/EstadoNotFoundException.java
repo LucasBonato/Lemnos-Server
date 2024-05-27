@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class EstadoNotFoundException extends BaseException {
     public EstadoNotFoundException() {
-        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.UF.ordinal(), "Estado não encontrado!"));
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.UF, "Estado não encontrado!"));
     }
 }

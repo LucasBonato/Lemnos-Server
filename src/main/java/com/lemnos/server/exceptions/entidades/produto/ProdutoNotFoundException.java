@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class ProdutoNotFoundException extends BaseException {
     public ProdutoNotFoundException(){
-        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL.ordinal(), "Produto não encontrado!"));
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL, "Produto não encontrado!"));
     }
 }

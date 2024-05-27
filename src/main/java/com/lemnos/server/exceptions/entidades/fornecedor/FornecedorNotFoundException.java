@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class FornecedorNotFoundException extends BaseException {
     public FornecedorNotFoundException() {
-        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL.ordinal(), "Fornecedor não encontrado!"));
+        super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL, "Fornecedor não encontrado!"));
     }
 }

@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class CadastroEmailAlreadyInUseException extends BaseException {
     public CadastroEmailAlreadyInUseException(){
-        super(HttpStatus.CONFLICT, new ExceptionResponse(Codigo.EMAIL.ordinal(), "O Email inserido já está sendo utilizado!"));
+        super(HttpStatus.CONFLICT, new ExceptionResponse(Codigo.EMAIL, "O Email inserido já está sendo utilizado!"));
     }
 }

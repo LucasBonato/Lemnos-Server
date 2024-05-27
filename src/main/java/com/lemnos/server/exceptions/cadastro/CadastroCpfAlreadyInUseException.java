@@ -7,6 +7,6 @@ import org.springframework.http.HttpStatus;
 
 public class CadastroCpfAlreadyInUseException extends BaseException {
     public CadastroCpfAlreadyInUseException() {
-        super(HttpStatus.CONFLICT, new ExceptionResponse(Codigo.CPF.ordinal(), "O CPF inserido já está sendo utilizado!"));
+        super(HttpStatus.CONFLICT, new ExceptionResponse(Codigo.CPF, "O CPF inserido já está sendo utilizado!"));
     }
 }

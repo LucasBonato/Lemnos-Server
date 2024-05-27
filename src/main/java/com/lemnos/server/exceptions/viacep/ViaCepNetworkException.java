@@ -5,8 +5,8 @@ import com.lemnos.server.exceptions.ExceptionResponse;
 import com.lemnos.server.models.enums.Codigo;
 import org.springframework.http.HttpStatus;
 
-public class ViaCepServerDownException extends BaseException {
-    public ViaCepServerDownException() {
-        super(HttpStatus.SERVICE_UNAVAILABLE, new ExceptionResponse(Codigo.GLOBAL, "Servidor da ViaCep caiu."));
+public class ViaCepNetworkException extends BaseException {
+    public ViaCepNetworkException(String message) {
+        super(HttpStatus.INTERNAL_SERVER_ERROR, new ExceptionResponse(Codigo.GLOBAL, message));
     }
 }
