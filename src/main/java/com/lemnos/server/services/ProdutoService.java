@@ -68,6 +68,10 @@ public class ProdutoService {
         return ResponseEntity.ok(getProdutoResponse(produto));
     }
 
+    public ResponseEntity<ProdutoResponse> getBy(String categoria, String subCategoria, String marca, String menorPreco, String maiorPreco) {
+        throw new RuntimeException("Não implementado ainda!");
+    }
+
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
         verificarRegraDeNegocio(produtoRequest);
 
@@ -98,7 +102,6 @@ public class ProdutoService {
 
         return ResponseEntity.ok().build();
     }
-
 
     public ResponseEntity<Void> desfavoritar(Integer idCliente, String idProd) {
         Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNotFoundException::new);
@@ -219,7 +222,7 @@ public class ProdutoService {
             throw new ProdutoNotValidException(Codigo.FABRICANTE.ordinal(), "O campo Fabricante deve conter entre 2 e 50 caracteres!");
         }
         if(StringUtils.isBlank(produtoRequest.fornecedor())) {
-            throw new ProdutoNotValidException(Codigo.GLOBAL.ordinal(), "O campo Fabricante é obrigatório!");
+            throw new ProdutoNotValidException(Codigo.GLOBAL.ordinal(), "O campo Fornecedor é obrigatório!");
         }
         if(StringUtils.isBlank(produtoRequest.subCategoria())){
             throw new ProdutoNotValidException(Codigo.SUBCATEGORIA.ordinal(), "O campo Subcategoria é obrigatório!");
@@ -312,7 +315,7 @@ public class ProdutoService {
     }
 
     private void calcularPorcentagem(ProdutoRequest produtoRequest, Produto produto){
-        Double porcentagem = produtoRequest.valor() * (Double.parseDouble(produtoRequest.desconto()) / 100);
+        Double porcentagem = (Double) (produtoRequest.valor() * (Double.parseDouble(produtoRequest.desconto()) / 100));
 
         produto.setValor(porcentagem);
     }

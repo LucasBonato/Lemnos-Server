@@ -25,6 +25,11 @@ public class ProdutoController {
         return produtoService.getOneById(id);
     }
 
+//    @GetMapping
+//    public ResponseEntity<ProdutoResponse> getBy(@RequestParam(name = "c") String categoria, @RequestParam(name = "sc") String subCategoria, @RequestParam(name = "m") String marca, @RequestParam(name = "min_p") String menorPreco, @RequestParam(name = "max_p") String maiorPreco) {
+//        return produtoService.getBy(categoria, subCategoria, marca, menorPreco, maiorPreco);
+//    }
+
     @PostMapping
     public ResponseEntity<Void> cadastrar(@RequestBody ProdutoRequest produtoRequest){
         return produtoService.cadastrar(produtoRequest);
