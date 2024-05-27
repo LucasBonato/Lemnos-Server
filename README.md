@@ -47,13 +47,13 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |                                         Descrição                                          |
-|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
-| /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                    | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                            | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                              | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
-| /produto      | /{id}<br/>/fav                            | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)           | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
+| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                                             | **Body**                                                                                       |                                         Descrição                                          |
+|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)                         | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
+| /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                            | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                    | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                      | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /produto      | /{id}<br/>/fav<br/>/desconto/{id}         | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 
 ---
 
@@ -1746,7 +1746,55 @@ Class Api{
 
 ---
 
+### Retirar-Desconto
 
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+>`{{baseUri}}/produto/desconto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function retirarDesconto(id) {
+    axios.delete(baseUri + "/produto/desconto/${id}")
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> retirarDesconto(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/produto/desconto/${id}"));
+        if(response.statusCode != 200){
+          return "Produto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |    Retirou o desconto com sucesso     |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
 
 
 Nada de importante
