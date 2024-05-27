@@ -1096,11 +1096,13 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code | Significado |               Por quê?                |
-|-------------|:-----------:|:-------------------------------------:|
-| 201         |   CREATED   |         Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada  |               
-| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+| Status Code |     Significado     |               Por quê?                |
+|-------------|:-------------------:|:-------------------------------------:|
+| 201         |       CREATED       |         Cadastrou com sucesso         |                 
+| 400         |     BAD REQUEST     | Alguma informação foi enviada errada  |               
+| 404         |      NOT FOUND      | A entidade buscada não foi encontrada |
+| 500         |   INTERNAL SERVER   | A entidade buscada não foi encontrada |
+| 503         | SERVICE UNAVAILABLE |   A API ViaCep não está disponivel    |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
