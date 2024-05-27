@@ -103,9 +103,11 @@ CREATE TABLE Produto (
     Id_Fabricante int,
     Id_Imagem int,
     Id_Sub_Categoria int,
+    Id_Desconto int,
     CONSTRAINT fk_produto_imagem FOREIGN KEY(Id_Imagem) REFERENCES Imagem(Id),
     CONSTRAINT fk_produto_sub_categoria FOREIGN KEY(Id_Sub_Categoria) REFERENCES Sub_Categoria(Id),
     CONSTRAINT fk_especificacao_fabricante FOREIGN KEY(Id_Fabricante) REFERENCES Fabricante(Id),
+    CONSTRAINT fk_desconto FOREIGN KEY(Id_Desconto) REFERENCES Descontos(Id),
     CHECK(Valor > 0 AND Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
 CREATE TABLE Itens_Carrinho (

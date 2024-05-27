@@ -96,9 +96,11 @@ CREATE TABLE Produto (
     Id_Fabricante int,
 	Id_Imagem int,
     Id_Sub_Categoria int,
+    Id_Desconto int,
     foreign key(Id_Imagem) references Imagem(Id),
     foreign key(Id_Sub_Categoria) references Sub_Categoria(Id),
-    foreign key(Id_Fabricante) references Fabricante (Id),
+    foreign key(Id_Fabricante) references Fabricante(Id),
+    foreign key(Id_Desconto) references Descontos(Id),
     constraint check(Valor > 0 AND Peso > 0 AND Altura > 0 AND Comprimento > 0 AND Largura > 0)
 );
 CREATE TABLE Itens_Carrinho (

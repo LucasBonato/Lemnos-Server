@@ -2,12 +2,14 @@ package com.lemnos.server.controllers;
 
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
+import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/produto")
@@ -54,4 +56,13 @@ public class ProdutoController {
     public ResponseEntity<Void> desfavoritar(@RequestParam(name = "id_cliente") Integer idCliente, @RequestParam(name = "id_prod") String idProd) {
         return produtoService.desfavoritar(idCliente, idProd);
     }
+
+    @PostMapping("/desconto/{id}")
+    public ResponseEntity<Void> desconto(@PathVariable UUID id, Produto produto, String desconto) { return produtoService.calcularPorcentagem(produto, desconto); }
+
+    @DeleteMapping("/desconto/{id}")
+    public ResponseEntity<Void> retirarDesconto(@PathVariable UUID id, ProdutoRequest produtoRequest, String desconto) { return produtoService.retirarPorcentagem(produtoRequest, desconto);}
+
+    @PutMapping("/desconto/{id}")
+    public ResponseEntity<Void> alterarDesconto(@PathVariable UUID id, ProdutoRequest produtoRequest, String desconto){ return  produtoService.alterarPorcentagem(produtoRequest, desconto); }
 }

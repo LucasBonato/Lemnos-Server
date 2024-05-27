@@ -32,10 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProdutoService {
@@ -77,14 +74,13 @@ public class ProdutoService {
 
         Fornecedor fornecedor = getFornecedor(produtoRequest);
 
-        Produto produto = produtoRepository.save(new Produto(
-                produtoRequest,
-                getFabricante(produtoRequest.fabricante()),
-                getSubCategoria(produtoRequest.subCategoria()),
-                getImagemPrincipal(produtoRequest)
-        ));
-
-        calcularPorcentagem(produtoRequest, produto);
+            Produto produto = produtoRepository.save(new Produto(
+                    produtoRequest,
+                    getFabricante(produtoRequest.fabricante()),
+                    getSubCategoria(produtoRequest.subCategoria()),
+                    getImagemPrincipal(produtoRequest),
+                    getDesconto(produtoRequest.desconto())
+            ));
 
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
@@ -115,15 +111,48 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> calcularPorcentagem(Produto produto, String desconto){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
+        if(descontoOptional.isEmpty()){
+            throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
+        }
+
+        Double porcentagem = (Double) (produto.getValor() * (Double.parseDouble((desconto)) / 100));
+        Double valorComDesconto = (Double) (produto.getValor() - porcentagem);
+
+        produto.setValor(valorComDesconto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> alterarPorcentagem(ProdutoRequest produtoRequest, String id){
+        Produto produto = getProdutoById(id);
+
+        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
+        produto.setDesconto(desconto);
+        verificarRegraDeNegocio(produto);
+
+        produtoRepository.save(produto);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> retirarPorcentagem(ProdutoRequest produtoRequest, String desconto){
+        Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
+        produtoRequest.desconto().replace(desconto, "0.0");
+
+        return ResponseEntity.ok().build();
+    }
+
     public ResponseEntity<Void> update(String id, ProdutoRequest produtoRequest) {
         Produto produto = getProdutoById(id);
 
         Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
         ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
+        Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
 
-        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal);
-        calcularPorcentagem(produtoRequest, produto );
+        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, desconto);
+        calcularPorcentagem(produto, produtoRequest.desconto());
         verificarRegraDeNegocio(produto);
 
         produtoRepository.save(produto);
@@ -147,7 +176,7 @@ public class ProdutoService {
         }
         return new ProdutoResponse(
                 produto.getId().toString(),
-                produto.getNome(),
+                produto.getNomeProduto(),
                 produto.getDescricao(),
                 produto.getCor(),
                 produto.getValor(),
@@ -159,7 +188,8 @@ public class ProdutoService {
                 produto.getFabricante().getFabricante(),
                 produto.getSubCategoria().getSubCategoria(),
                 produto.getImagemPrincipal().getImagemPrincipal(),
-                imagens
+                imagens,
+                produto.getDesconto().getValorDesconto()
         );
     }
 
@@ -238,7 +268,7 @@ public class ProdutoService {
         }
     }
     private void verificarRegraDeNegocio(Produto produto) {
-        if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
+        if(produto.getNomeProduto().length() < 5 || produto.getNomeProduto().length() > 50){
             throw new ProdutoNotValidException(Codigo.NOME.ordinal(), "O nome deve conter entre 5 a 50 caracteres!");
         }
         if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
@@ -308,15 +338,6 @@ public class ProdutoService {
 
     private Desconto getDesconto(String desconto){
         Optional<Desconto> descontoOptional = descontoRepository.findByValorDesconto(desconto);
-        if(descontoOptional.isEmpty()){
-            throw new ProdutoNotValidException(Codigo.DESCONTO.ordinal(), "Valor de desconto não encontrado!");
-        }
-        return descontoOptional.get();
-    }
-
-    private void calcularPorcentagem(ProdutoRequest produtoRequest, Produto produto){
-        Double porcentagem = (Double) (produtoRequest.valor() * (Double.parseDouble(produtoRequest.desconto()) / 100));
-
-        produto.setValor(porcentagem);
+        return descontoOptional.orElseGet(() -> descontoRepository.save(new Desconto(desconto)));
     }
 }
