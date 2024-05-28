@@ -5,15 +5,18 @@ import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
 import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
+import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
+import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
+import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.FuncionarioRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
@@ -29,6 +32,7 @@ import java.util.*;
 public class FuncionarioService extends Util {
 
     @Autowired private FuncionarioRepository funcionarioRepository;
+    @Autowired private CadastroRepository cadastroRepository;
 
     @Cacheable("allFuncionarios")
     public ResponseEntity<List<FuncionarioResponse>> getAll() {
@@ -62,6 +66,13 @@ public class FuncionarioService extends Util {
                 getEnderecoRecords(funcionario)
         );
         return ResponseEntity.ok(record);
+    }
+
+
+    public ResponseEntity<IdResponse> getByEmail(String email) {
+        Cadastro cadastro = cadastroRepository.findByEmail(email).orElseThrow(FuncionarioNotFoundException::new);
+        Funcionario funcionario = funcionarioRepository.findByCadastro(cadastro).orElseThrow(FuncionarioNotFoundException::new);
+        return ResponseEntity.ok(new IdResponse(funcionario.getId()));
     }
 
     public ResponseEntity<Void> updateFuncionario(Integer id, FuncionarioRequest funcionarioRequest){
