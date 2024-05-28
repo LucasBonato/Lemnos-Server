@@ -99,7 +99,8 @@ Segue a tabela de valores:
 | 24 |            Fabricante             |
 | 25 |           SubCategoria            |
 | 26 |         Imagem Principal          |
-| 27 |        Imagens Secundárias        |
+| 27 |        Imagens Secundárias        | 
+| 28 |             Desconto              |
 ---
 
 # Exemplos
@@ -1501,7 +1502,7 @@ O body do put só precisa ter pelo menos uma campo, se não houver ele mantem os
 ]
 ```
 
-![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)  
 
 >`{{baseUri}}/produto/{id}`
 
@@ -1675,7 +1676,7 @@ Class Api{
 | 201         |   CREATED   |          Cadastrou com sucesso          |                 
 | 209         |  CONFLICT   |   Algum dado único já foi cadastrado    |                 
 | 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
-| 409         |  NOT FOUND  | Alguma das entidades não foi encontrada |
+| 404         |  NOT FOUND  | Alguma das entidades não foi encontrada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -1742,7 +1743,7 @@ Class Api{
 |-------------|:-----------:|:---------------------------------------:|
 | 200         |     OK      |          Deletado com sucesso           |
 | 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
-| 409         |  NOT FOUND  | Alguma das entidades não foi encontrada |
+| 404         |  NOT FOUND  | Alguma das entidades não foi encontrada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
