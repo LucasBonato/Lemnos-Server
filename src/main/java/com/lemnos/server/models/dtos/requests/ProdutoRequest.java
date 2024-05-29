@@ -18,4 +18,5 @@ public record ProdutoRequest(
         String imagemPrincipal,
         List<String> imagens,
         String desconto
+        //String avaliacao
 ) { }

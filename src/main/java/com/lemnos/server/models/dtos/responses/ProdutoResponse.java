@@ -19,4 +19,5 @@ public record ProdutoResponse(
         String imagemPrincipal,
         List<String> imagens,
         String desconto
+        //String avaliacao
 ) {}
