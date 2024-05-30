@@ -3,6 +3,7 @@ package com.lemnos.server.models.produto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ public class Avaliacao {
     @Column(name = "Id")
     private Integer id;
 
+    @CurrentTimestamp
     @Column(name = "Data_Avaliacao")
     private Date dataAvaliacao;
 
