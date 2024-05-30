@@ -69,37 +69,6 @@ public class ClienteService extends Util {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Cliente cliente = getOneClienteById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
-
-        clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    public ResponseEntity<Void> updateEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Cliente cliente = getOneClienteById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(cpeOptional.isEmpty()) throw new EnderecoNotFoundException("Cliente");
-
-        clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> removeEndereco(Integer id, String cep) {
-        getOneClienteById(id);
-        ClientePossuiEndereco cpe = clientePossuiEnderecoRepository.findByCepAndId_Cliente(cep, id).orElseThrow(() -> new EnderecoNotFoundException("Cliente"));
-        clientePossuiEnderecoRepository.delete(cpe);
-        return ResponseEntity.ok().build();
-    }
-
     private static ClienteResponse getClienteResponse(Cliente cliente) {
         return new ClienteResponse(
                 cliente.getNome(),

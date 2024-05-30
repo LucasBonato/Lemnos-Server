@@ -73,37 +73,6 @@ public class FuncionarioService extends Util {
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Funcionario funcionario = getOneFuncionarioById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
-
-        funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    public ResponseEntity<Void> updateEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Funcionario funcionario = getOneFuncionarioById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        Optional<FuncionarioPossuiEndereco> cpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), id);
-        if(cpeOptional.isEmpty()) throw new EnderecoNotFoundException("Cliente");
-
-        funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> removeEndereco(Integer id, String cep) {
-        getOneFuncionarioById(id);
-        FuncionarioPossuiEndereco fpe = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(cep, id).orElseThrow(() -> new EnderecoNotFoundException("Funcionário"));
-        funcionarioPossuiEnderecoRepository.delete(fpe);
-        return ResponseEntity.ok().build();
-    }
-
     private static FuncionarioResponse getFuncionarioResponse(Funcionario funcionario) {
         return new FuncionarioResponse(
                 funcionario.getNome(),

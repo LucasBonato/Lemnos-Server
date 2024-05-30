@@ -34,19 +34,4 @@ public class ClienteController {
     public ResponseEntity<Void> deleteById(@PathVariable Integer id){
         return clienteService.deleteById(id);
     }
-
-    @PostMapping("/endereco")
-    public ResponseEntity<Void> createEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
-        return clienteService.createEndereco(id, enderecoRequest);
-    }
-
-    @PutMapping("/endereco")
-    public ResponseEntity<Void> updateEndereco(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
-        return clienteService.updateEndereco(id, enderecoRequest);
-    }
-
-    @DeleteMapping("/endereco")
-    public ResponseEntity<Void> removeEndereco(@RequestParam(value = "id") Integer id, @RequestParam(value = "cep") String cep){
-        return clienteService.removeEndereco(id, cep);
-    }
 }

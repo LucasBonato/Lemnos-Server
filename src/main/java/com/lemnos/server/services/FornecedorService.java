@@ -78,44 +78,6 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> createEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Fornecedor fornecedor = getOneFornecedorById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        if(fornecedor.getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
-
-        fornecedor.setEndereco(endereco);
-        fornecedor.setComplemento(enderecoRequest.complemento());
-        fornecedor.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
-        fornecedorRepository.save(fornecedor);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    public ResponseEntity<Void> updateEndereco(Integer id, EnderecoRequest enderecoRequest) {
-        Fornecedor fornecedor = getOneFornecedorById(id);
-        Endereco endereco = getEndereco(enderecoRequest);
-
-        if(fornecedor.getEndereco() == null) throw new EnderecoNotFoundException("Fornecedor");
-
-        fornecedor.setEndereco(endereco);
-        fornecedor.setComplemento(enderecoRequest.complemento());
-        fornecedor.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
-        fornecedorRepository.save(fornecedor);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    public ResponseEntity<Void> removeEndereco(Integer id, String cep) {
-        Fornecedor fornecedor = getOneFornecedorById(id);
-
-        if(!fornecedor.getEndereco().getCep().equals(cep)) throw new EnderecoNotFoundException("Fornecedor");
-
-        fornecedor.setEndereco(null);
-        fornecedorRepository.save(fornecedor);
-        return ResponseEntity.ok().build();
-    }
-
     private Fornecedor getOneFornecedorById(Integer id) {
         return fornecedorRepository.findById(id).orElseThrow(FornecedorNotFoundException::new);
     }

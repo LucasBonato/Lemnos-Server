@@ -29,13 +29,6 @@ import java.util.Date;
 import java.util.Optional;
 
 public class Util {
-    @Autowired private EnderecoRepository enderecoRepository;
-    @Autowired private CidadeRepository cidadeRepository;
-    @Autowired private EstadoRepository estadoRepository;
-
-    @Autowired protected ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
-    @Autowired protected FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
-
     protected Date convertData(String data) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date dataFormatada;
@@ -74,61 +67,6 @@ public class Util {
                 }
             default:
                 return 0L;
-        }
-    }
-
-    protected Endereco getEndereco(EnderecoRequest enderecoRequest) {
-        String cep = enderecoRequest.cep();
-        Optional<Endereco> optionalEndereco = enderecoRepository.findById(cep);
-        if(optionalEndereco.isPresent()) {
-            return optionalEndereco.get();
-        }
-
-        ViaCepDTO via = getViaCepObject(cep);
-        if(via != null) {
-            return optionalEndereco.orElseGet(() -> cadastrarNovoEndereco(via, enderecoRequest));
-        }
-        throw new EnderecoNotValidException(Codigo.CEP ,"Cep não existe!");
-    }
-
-    @Autowired private RestTemplate restTemplate;
-
-    public ViaCepDTO getViaCepObject(String cep){
-        try {
-            ViaCep viaCep = restTemplate.getForObject("https://viacep.com.br/ws/{cep}/json", ViaCep.class, cep);
-            if(viaCep == null) return null;
-            return new ViaCepDTO(viaCep.getCep().replace("-", ""), viaCep.getLogradouro(), viaCep.getLocalidade(), viaCep.getBairro(), viaCep.getUf());
-        } catch (HttpClientErrorException e) {
-            throw new EnderecoNotValidException(Codigo.CEP, "CEP inexistente!");
-        } catch (HttpServerErrorException e) {
-            throw new ViaCepServerDownException();
-        } catch (ResourceAccessException e) {
-            throw new ViaCepNetworkException("Problema de rede ao acessar o serviço ViaCep");
-        } catch (RestClientException e) {
-            throw new RuntimeException("Erro no RestTemplate, consulte um desenvolvedor!");
-        }
-    }
-
-    private Endereco cadastrarNovoEndereco(ViaCepDTO viaCep, EnderecoRequest enderecoRequest) {
-        verificarCamposEndereco(enderecoRequest);
-
-        Optional<Cidade> cidadeOptional = cidadeRepository.findByCidade(viaCep.cidade());
-        Cidade cidade = cidadeOptional.orElseGet(() -> cidadeRepository.save(new Cidade(viaCep.cidade())));
-
-        Estado estado = estadoRepository.findByUf(viaCep.uf()).orElseThrow(EstadoNotFoundException::new);
-
-        Endereco endereco = new Endereco(viaCep, cidade, estado);
-        return enderecoRepository.save(endereco);
-    }
-    private void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
-        if(enderecoRequest.numeroLogradouro() == null){
-            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO, "O campo de número logradouro é obrigatório!");
-        }
-        if(enderecoRequest.numeroLogradouro() < 0 || enderecoRequest.numeroLogradouro() > 9999){
-            throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO, "O número de Logradouro não pode ser negativo ou maior que 9999");
-        }
-        if(StringUtils.isNotBlank(enderecoRequest.complemento()) && enderecoRequest.complemento().length() > 20) {
-            throw new EnderecoNotValidException(Codigo.COMPLEMENTO, "O complemento só pode possuir até 20 caracteres!");
         }
     }
 }
