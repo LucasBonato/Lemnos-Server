@@ -39,35 +39,16 @@ public class FuncionarioService extends Util {
         List<Funcionario> funcionarios = funcionarioRepository.findAll();
         List<FuncionarioResponse> dto = new ArrayList<>();
         for(Funcionario funcionario : funcionarios){
-            dto.add(new FuncionarioResponse(
-                    funcionario.getNome(),
-                    funcionario.getCpf(),
-                    funcionario.getDataNascimento(),
-                    funcionario.getDataAdmissao(),
-                    funcionario.getTelefone(),
-                    funcionario.getCadastro().getEmail(),
-                    funcionario.getCadastro().getSenha(),
-                    getEnderecoRecords(funcionario)
-            ));
+            dto.add(getFuncionarioResponse(funcionario));
         }
         return ResponseEntity.ok(dto);
     }
 
     public ResponseEntity<FuncionarioResponse> getOneById(Integer id) {
         Funcionario funcionario = getOneFuncionarioById(id);
-        FuncionarioResponse record = new FuncionarioResponse(
-                funcionario.getNome(),
-                funcionario.getCpf(),
-                funcionario.getDataNascimento(),
-                funcionario.getDataAdmissao(),
-                funcionario.getTelefone(),
-                funcionario.getCadastro().getEmail(),
-                funcionario.getCadastro().getSenha(),
-                getEnderecoRecords(funcionario)
-        );
+        FuncionarioResponse record = getFuncionarioResponse(funcionario);
         return ResponseEntity.ok(record);
     }
-
 
     public ResponseEntity<IdResponse> getByEmail(String email) {
         Cadastro cadastro = cadastroRepository.findByEmail(email).orElseThrow(FuncionarioNotFoundException::new);
@@ -121,6 +102,19 @@ public class FuncionarioService extends Util {
         FuncionarioPossuiEndereco fpe = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(cep, id).orElseThrow(() -> new EnderecoNotFoundException("Funcionário"));
         funcionarioPossuiEnderecoRepository.delete(fpe);
         return ResponseEntity.ok().build();
+    }
+
+    private static FuncionarioResponse getFuncionarioResponse(Funcionario funcionario) {
+        return new FuncionarioResponse(
+                funcionario.getNome(),
+                funcionario.getCpf(),
+                funcionario.getDataNascimento(),
+                funcionario.getDataAdmissao(),
+                funcionario.getTelefone(),
+                funcionario.getCadastro().getEmail(),
+                funcionario.getCadastro().getSenha(),
+                getEnderecoRecords(funcionario)
+        );
     }
 
     private Funcionario getOneFuncionarioById(Integer id) {
