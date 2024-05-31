@@ -6,6 +6,7 @@ import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.AvaliacaoNotValidException;
 import com.lemnos.server.exceptions.produto.ProdutoAlreadyFavoritoException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
+import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.*;
@@ -28,6 +29,7 @@ import com.lemnos.server.repositories.produto.imagens.ImagemRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -64,8 +66,29 @@ public class ProdutoService {
         return ResponseEntity.ok(getProdutoResponse(getProdutoById(id)));
     }
 
-    public ResponseEntity<ProdutoResponse> getBy(String categoria, String subCategoria, String marca, String menorPreco, String maiorPreco) {
-        throw new RuntimeException("Não implementado ainda!");
+    public ResponseEntity<List<ProdutoResponse>> getBy(ProdutoFiltroRequest filtroRequest) {
+        Specification<Produto> specification = Specification.where(null);
+
+        if (filtroRequest.categoria() != null) {
+            specification = specification.and(ProdutoSpecifications.hasCategoria(filtroRequest.categoria()));
+        }
+        if (filtroRequest.subCategoria() != null) {
+            specification = specification.and(ProdutoSpecifications.hasSubCategoria(filtroRequest.subCategoria()));
+        }
+        if (filtroRequest.marca() != null) {
+            specification = specification.and(ProdutoSpecifications.hasFabricante(filtroRequest.marca()));
+        }
+        if (filtroRequest.menorPreco() != null && filtroRequest.maiorPreco() != null) {
+            specification = specification.and(ProdutoSpecifications.isPrecoBetween(filtroRequest.menorPreco(), filtroRequest.maiorPreco()));
+        } else if (filtroRequest.menorPreco() == null && filtroRequest.maiorPreco() != null) {
+            specification = specification.and(ProdutoSpecifications.isPrecoBetween(0.0, filtroRequest.maiorPreco()));
+        }
+
+        List<Produto> produtos = produtoRepository.findAll(specification);
+        List<ProdutoResponse> produtoResponses = new ArrayList<>();
+        for (Produto produto : produtos) { produtoResponses.add(getProdutoResponse(produto)); }
+
+        return ResponseEntity.ok(produtoResponses);
     }
 
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
@@ -280,6 +303,7 @@ public class ProdutoService {
                 produto.getComprimento(),
                 produto.getLargura(),
                 produto.getFabricante().getFabricante(),
+                produto.getSubCategoria().getCategoria().getNome(),
                 produto.getSubCategoria().getSubCategoria(),
                 produto.getImagemPrincipal().getImagemPrincipal(),
                 imagens,

@@ -1,6 +1,7 @@
 package com.lemnos.server.controllers;
 
 import com.lemnos.server.models.dtos.requests.AvaliacaoRequest;
+import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.produto.Avaliacao;
@@ -22,14 +23,14 @@ public class ProdutoController {
         return produtoService.getAll();
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<List<ProdutoResponse>> getBy(@RequestBody ProdutoFiltroRequest filtroRequest) {
+        return produtoService.getBy(filtroRequest);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoResponse> getOneById(@PathVariable String id){
         return produtoService.getOneById(id);
-    }
-
-    @GetMapping
-    public ResponseEntity<ProdutoResponse> getBy(@RequestParam(name = "c") String categoria, @RequestParam(name = "sc") String subCategoria, @RequestParam(name = "m") String marca, @RequestParam(name = "min_p") String menorPreco, @RequestParam(name = "max_p") String maiorPreco) {
-        return produtoService.getBy(categoria, subCategoria, marca, menorPreco, maiorPreco);
     }
 
     @PostMapping

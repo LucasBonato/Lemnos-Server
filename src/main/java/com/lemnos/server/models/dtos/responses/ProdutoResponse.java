@@ -15,6 +15,7 @@ public record ProdutoResponse(
         Double comprimento,
         Double largura,
         String fabricante,
+        String categoria,
         String subCategoria,
         String imagemPrincipal,
         List<String> imagens,
