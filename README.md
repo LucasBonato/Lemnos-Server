@@ -1027,6 +1027,57 @@ Permite o cadastro de novos endereços ou alteração de endereços já existent
 com as entidade, Cliente, Funcionário e Fornecedor, Cliente e Funcionário podem possuir mais de um endereço, 
 o Fornecedor só pode possui um endereço. Utilizando uma API externa para consulta de cep: [ViaCep](https://viacep.com.br/)
 
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/endereco`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getEndereco(cep) {
+    axios.get(baseUri + `/endereco?cep=${cep}`)
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Endereco> getEndereco(String cep) async{
+        var uri = Uri.parse(baseUri + "/endereco?cep=$cep");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes);
+        var jsonResponse = json.decode(responseBodyUtf8);
+        Endereco endereco = jsonResponse.map((json) => Endereco.fromJson(json));
+        return endereco;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |       Meaning       |                 Why?                  |
+|-------------|:-------------------:|:-------------------------------------:|
+| 200         |         OK          |          Retornou os valores          |
+| 404         |      NOT FOUND      | A entidade buscada não foi encontrada |
+| 500         |   INTERNAL SERVER   | A entidade buscada não foi encontrada |
+| 503         | SERVICE UNAVAILABLE |   A API ViaCep não está disponivel    |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
 ### Body Endereço:
 ``` JSON
 "cep": "11111222",
