@@ -159,14 +159,18 @@ const axios = require("axios");
 function cadastrarCliente(cliente) {
     
     cliente = tratarDados(cliente);
-    
-    axios.post(baseUri + "/cadastro/cliente", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/cadastro/cliente",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
         nome: cliente.nome,
-        telefone: cliente.telefone,
         cpf: cliente.cpf,
         email: cliente.email,
         senha: cliente.senha
-      })
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -236,7 +240,12 @@ function cadastrarFuncionario(cliente) {
     
     cliente = tratarDados(cliente);
     
-    axios.post(baseUri + "/cadastro/funcionario", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/cadastro/funcionario",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         telefone: funcionario.telefone,
@@ -244,7 +253,8 @@ function cadastrarFuncionario(cliente) {
         dataAdmissao: funcionario.dataAdmissao,
         email: funcionario.email,
         senha: funcionario.senha
-      })
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -314,13 +324,19 @@ function cadastrarFornecedor(fornecedor) {
     
     fornecedor = tratarDados(fornecedor);
     
-    axios.post(baseUri + "/cadastro/fornecedor", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/cadastro/fornecedor",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone,
         numeroLogradouro: fornecedor.numeroLogradouro,
         email: fornecedor.email
-      })
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -380,7 +396,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getClientes() {
-    axios.get(baseUri + "/cliente")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/cliente"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -428,9 +448,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getCliente(id) {
-    axios.get(baseUri + "/cliente/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/cliente/${id}`
+    })
       .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error)); 
+     
 }
 ~~~
 
@@ -482,9 +507,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarCliente(cliente) {
-    axios.put(baseUri + "/cliente/${cliente.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/cliente/${cliente.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
         nome: cliente.nome,
-        cpf: cliente.cpf,
+        cpf: cliente.cpf
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -545,9 +576,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirCliente(id) {
-    axios.delete(baseUri + "/cliente/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/cliente/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -595,7 +631,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFuncionarios() {
-    axios.get(baseUri + "/funcionario")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/funcionario"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -643,7 +683,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFuncionario(id) {
-    axios.get(baseUri + "/funcionario/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/funcionario/${id}`
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -700,12 +744,18 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarFuncionario(funcionario) {
-    axios.put(baseUri + "/funcionario/${funcionario.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/funcionario/${funcionario.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         dataNascimento: funcionario.dtNasc,
         dataAdmissao: funcionario.dtAdmi,
         telefone: funcionario.telefone
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -769,9 +819,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirFuncionario(id) {
-    axios.delete(baseUri + "/funcionario/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/funcionario/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -819,7 +874,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFornecedores() {
-    axios.get(baseUri + "/fornecedor")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/fornecedor"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -867,7 +926,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFornecedor(id) {
-    axios.get(baseUri + "/fornecedor/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/fornecedor/${id}`
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -922,10 +985,16 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarFornecedor(fornecedor) {
-    axios.put(baseUri + "/fornecedor/${fornecedor.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/fornecedor/${fornecedor.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -987,9 +1056,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirFornecedor(id) {
-    axios.delete(baseUri + "/fornecedor/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/fornecedor/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -1040,8 +1114,15 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function getEndereco(cep) {
-    axios.get(baseUri + `/endereco?cep=${cep}`)
+function getEndereco(endereco) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/endereco",
+      params: {
+        cep: endereco.cep
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -1374,25 +1455,32 @@ let baseUri = "http://localhost:8080/api";
 
 function cadastrarProduto(produto){
     tratarDados(produto);
-
-    axios.post(baseUri + "/produto",{
-        "nome": produto.nome,
-        "descricao": produto.descricao,
-        "cor": produto.cor,
-        "valor": produto.valor,
-        "modelo": produto.modelo,
-        "peso": produto.peso,
-        "altura": produto.altura,
-        "comprimento": produto.comprimento,
-        "largura": produto.largura,
-        "fabricante": produto.fabricante,
-        "fornecedor": produto.fornecedor,
-        "subCategoria": produto.subCategoria,
-        "ImagemPrincipal": produto.imgPrinc,
-        "imagens": produto.imagens
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/produto",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
+        nome: produto.nome,
+        descricao: produto.descricao,
+        cor: produto.cor,
+        valor: produto.valor,
+        modelo: produto.modelo,
+        peso: produto.peso,
+        altura: produto.altura,
+        comprimento: produto.comprimento,
+        largura: produto.largura,
+        fabricante: produto.fabricante,
+        fornecedor: produto.fornecedor,
+        subCategoria: produto.subCategoria,
+        desconto: produto.desconto, //Opcional
+        imagemPrincipal: produto.imgPrinc,
+        imagens: produto.imagens
+      }
     })
-    .then((response) => console.log(response.data))
-    .catch((error) => console.log(error));
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
 }
 ~~~
 
@@ -1454,7 +1542,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getProdutos() {
-    axios.get(baseUri + "/produto")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/produto"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -1580,7 +1672,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getProdutos(id) {
-    axios.get(baseUri + "/produto/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/produto/${id}`
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -1654,9 +1750,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarProduto(produto, id) {
-    axios.put(baseUri + "/produto/${id}", {
-        "nome": produto.nome,
-        "valor": produto.valor
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/produto/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
+        nome: produto.nome,
+        valor: produto.valor
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -1716,9 +1818,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirProduto(id) {
-    axios.delete(baseUri + "/produto/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/produto/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -1847,7 +1954,7 @@ function dasfavoritarProduto(produto, cliente){
       baseURL: baseUri,
       method: "DELETE",
       url: "/produto/fav",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
       params: {
         id_cliente: cliente.id,
         id_prod: produto.id
@@ -1903,9 +2010,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function retirarDesconto(id) {
-    axios.delete(baseUri + "/produto/desconto/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/produto/desconto/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -1957,8 +2069,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function avaliarProduto(produto, valorAvaliacao) {
-    axios.post(baseUri + "/produto/avaliar/${produto.id}", {
-        "avaliacao": valorAvaliacao
+   axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: `/produto/avaliar/${produto.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
+        avaliacao: valorAvaliacao,
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
