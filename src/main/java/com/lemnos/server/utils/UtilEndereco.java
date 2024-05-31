@@ -5,6 +5,7 @@ import com.lemnos.server.exceptions.endereco.EstadoNotFoundException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
+import com.lemnos.server.exceptions.viacep.RestTemplateException;
 import com.lemnos.server.exceptions.viacep.ViaCepNetworkException;
 import com.lemnos.server.exceptions.viacep.ViaCepServerDownException;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
@@ -74,7 +75,7 @@ public class UtilEndereco {
         } catch (ResourceAccessException e) {
             throw new ViaCepNetworkException("Problema de rede ao acessar o serviço ViaCep");
         } catch (RestClientException e) {
-            throw new RuntimeException("Erro no RestTemplate, consulte um desenvolvedor!");
+            throw new RestTemplateException("Erro no RestTemplate, consulte um desenvolvedor!");
         }
     }
 

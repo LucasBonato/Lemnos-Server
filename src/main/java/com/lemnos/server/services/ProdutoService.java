@@ -3,6 +3,8 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
+import com.lemnos.server.exceptions.produto.AvaliacaoNotValidException;
+import com.lemnos.server.exceptions.produto.ProdutoAlreadyFavoritoException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
@@ -24,7 +26,6 @@ import com.lemnos.server.repositories.produto.SubCategoriaRepository;
 import com.lemnos.server.repositories.produto.imagens.ImagemPrincipalRepository;
 import com.lemnos.server.repositories.produto.imagens.ImagemRepository;
 import io.micrometer.common.util.StringUtils;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -37,15 +38,15 @@ import java.util.*;
 public class ProdutoService {
 
     @Autowired private ProdutoRepository produtoRepository;
-    @Autowired private FabricanteRepository fabricanteRepository;
     @Autowired private ClienteRepository clienteRepository;
+    @Autowired private AvaliacaoRepository avaliacaoRepository;
+    @Autowired private FabricanteRepository fabricanteRepository;
     @Autowired private DataForneceRepository dataForneceRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private SubCategoriaRepository subCategoriaRepository;
     @Autowired private ImagemPrincipalRepository imagemPrincipalRepository;
     @Autowired private ImagemRepository imagemRepository;
     @Autowired private DescontoRepository descontoRepository;
-    @Autowired private AvaliacaoRepository avaliacaoRepository;
 
     @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
@@ -60,9 +61,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<ProdutoResponse> getOneById(String id){
-        Produto produto = getProdutoById(id);
-
-        return ResponseEntity.ok(getProdutoResponse(produto));
+        return ResponseEntity.ok(getProdutoResponse(getProdutoById(id)));
     }
 
     public ResponseEntity<ProdutoResponse> getBy(String categoria, String subCategoria, String marca, String menorPreco, String maiorPreco) {
@@ -72,16 +71,15 @@ public class ProdutoService {
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
         verificarRegraDeNegocioCreate(produtoRequest);
 
-        Fornecedor fornecedor = getFornecedor(produtoRequest);
+        Produto produto = produtoRepository.save(new Produto(
+            produtoRequest,
+            getFabricante(produtoRequest.fabricante()),
+            getSubCategoria(produtoRequest.subCategoria()),
+            getImagemPrincipal(produtoRequest),
+            getDesconto(produtoRequest.desconto())
+        ));
 
-            Produto produto = produtoRepository.save(new Produto(
-                    produtoRequest,
-                    getFabricante(produtoRequest.fabricante()),
-                    getSubCategoria(produtoRequest.subCategoria()),
-                    getImagemPrincipal(produtoRequest),
-                    getDesconto(produtoRequest.desconto())
-            ));
-
+        Fornecedor fornecedor = fornecedorRepository.findByNome(produtoRequest.fornecedor()).orElseThrow(FornecedorNotFoundException::new);
         dataForneceRepository.save(new DataFornece(fornecedor, produto));
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -112,7 +110,7 @@ public class ProdutoService {
         Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNotFoundException::new);
         Produto produto = getProdutoById(idProd);
 
-        if(cliente.getProdutosFavoritos().remove(produto)) throw new RuntimeException("O produto já está favoritado");
+        if(cliente.getProdutosFavoritos().remove(produto)) throw new ProdutoAlreadyFavoritoException("O produto já está favoritado");
 
         cliente.getProdutosFavoritos().add(produto);
         clienteRepository.save(cliente);
@@ -140,7 +138,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> avaliar(String idProduto, Double valorAvaliacao) {
-        if(valorAvaliacao < 1.0 || valorAvaliacao > 5.0) throw new RuntimeException("Valor da avaliação inválido, entre 1 a 5!");
+        if(valorAvaliacao < 1.0 || valorAvaliacao > 5.0) throw new AvaliacaoNotValidException("A avaliação precisa estar entre 1.0 e 5.0");
         avaliacaoRepository.save(new Avaliacao(getProdutoById(idProduto), arredondarValor(valorAvaliacao)));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -261,20 +259,6 @@ public class ProdutoService {
         }
     }
 
-    private Double calcularPorcentagem(Produto produto){
-        Double porcentagem = produto.getValor() * (Double.parseDouble(produto.getDesconto().getValorDesconto()) / 100);
-        return produto.getValor() - porcentagem;
-    }
-    private Double calcularAvaliacao(Produto produto) {
-        List<Avaliacao> avaliacoes = avaliacaoRepository.findAllByProduto(produto);
-        Double media = 0.0;
-        for(Avaliacao avaliacao : avaliacoes) media += avaliacao.getAvaliacao();
-        media /= avaliacoes.size();
-        return arredondarValor(media);
-    }
-
-    private Double arredondarValor(Double valor) { return Math.round(valor * 2) / 2.0; }
-
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
@@ -304,9 +288,20 @@ public class ProdutoService {
                 avaliacaoRepository.findAllByProduto(produto).size()
         );
     }
-    private Fornecedor getFornecedor(ProdutoRequest produtoRequest) {
-        return fornecedorRepository.findByNome(produtoRequest.fornecedor()).orElseThrow(FornecedorNotFoundException::new);
+
+    private Double calcularPorcentagem(Produto produto){
+        Double porcentagem = produto.getValor() * (Double.parseDouble(produto.getDesconto().getValorDesconto()) / 100);
+        return produto.getValor() - porcentagem;
     }
+    private Double calcularAvaliacao(Produto produto) {
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findAllByProduto(produto);
+        Double media = 0.0;
+        for(Avaliacao avaliacao : avaliacoes) media += avaliacao.getAvaliacao();
+        media /= avaliacoes.size();
+        return arredondarValor(media);
+    }
+    private Double arredondarValor(Double valor) { return Math.round(valor * 2) / 2.0; }
+
     private Fabricante getFabricante(String fabricante) {
         Optional<Fabricante> fabricanteOptional = fabricanteRepository.findByFabricante(fabricante);
         return fabricanteOptional.orElseGet(() -> fabricanteRepository.save(new Fabricante(fabricante)));
