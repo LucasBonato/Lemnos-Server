@@ -62,7 +62,7 @@ public class UtilEndereco {
         throw new EnderecoNotValidException(Codigo.CEP ,"Cep não existe!");
     }
 
-    private ViaCepDTO getViaCepObject(String cep){
+    protected ViaCepDTO getViaCepObject(String cep){
         try {
             ViaCep viaCep = restTemplate.getForObject("https://viacep.com.br/ws/{cep}/json", ViaCep.class, cep);
             if(viaCep == null) return null;
@@ -89,7 +89,7 @@ public class UtilEndereco {
         Endereco endereco = new Endereco(viaCep, cidade, estado);
         return enderecoRepository.save(endereco);
     }
-    private void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
+    protected void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
         if(enderecoRequest.numeroLogradouro() == null){
             throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO, "O campo de número logradouro é obrigatório!");
         }
