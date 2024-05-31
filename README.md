@@ -20,10 +20,12 @@
 - [Erros](#Erros)
 - [Exemplos](#Exemplos)
   - [Cadastro](#Cadastro)
+    - [Verificação](#Verificar-Cadastro)
   - [Cliente](#Cliente)
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
   - [Endereço](#Endereço)
+    - [Verificação](#Verificar-Endereço)
   - [Produto](#Produto)
 
 
@@ -47,13 +49,14 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                                             | **Body**                                                                                       |                                         Descrição                                          |
-|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)                         | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
-| /cliente      | /{id}<br/>/endereco                       | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                            | [Cliente](#body-put-cliente)<br/>[Endereço](#body-endereço)                                    |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | /{id}<br/>/endereco                       | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                    | [Funcionário](#body-put-funcionário)<br/>[Endereço](#body-endereço)                            |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | /{id}<br/>/endereco                       | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                      | [Fornecedor](#body-put-fornecedor)<br/>[Endereço](#body-endereço)                              |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
-| /produto      | /{id}<br/>/fav<br/>/desconto/{id}         | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
+| **EndPoints** | **Sub Endpoints**                                          | **Exemplos**                                                                                                                            | **Body**                                                                                       |                                         Descrição                                          |
+|---------------|------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
+| /cliente      | /{id}<br/>/endereco                                        | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                           | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /{id}<br/>/endereco                                        | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                   | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /{id}<br/>/endereco                                        | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                     | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /endereco     | /verificar                                                 | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                            | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
+| /produto      | /{id}<br/>/fav<br/>/desconto/{id}                          | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)                | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 
 ---
 
@@ -116,6 +119,9 @@ Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sen
 "email": "emailDeSuaEscolha@email.com",
 "senha": "SenhaDoCliente"
 ```
+##### Verificar Cadastro:
+###### Se quiser verificar se está tudo correto sem cadastrar uma entidade diretamente é só utitlizar o mesmo corpo, mas com "/verificar" depois do "/${entidade}", se der 200 está tudo correto e pode cadastrar.
+
 
 #### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
@@ -1029,6 +1035,9 @@ o Fornecedor só pode possui um endereço. Utilizando uma API externa para consu
 "entidade": "(cliente ou funcionario ou fornecedor)"
 ```
 ###### Se nada for passado em "entidade" será cadastrado para o cliente.
+##### Verificar Endereço:
+###### Se quiser verificar se está tudo correto sem cadastrar em uma entidade é só utitlizar o mesmo e parâmetros, mas com "/verificar" depois do "/endereço", se der 200 está tudo correto e pode cadastrar.
+
 ### Parâmetros:
 | Key | Tipo | Descrição                                              |
 |-----|------|--------------------------------------------------------|
