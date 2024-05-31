@@ -70,6 +70,9 @@ public class Produto {
     @JoinColumn(name = "Id_Desconto")
     private Desconto desconto;
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Avaliacao> avaliacoes;
+
     public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto){
         this.nomeProduto = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();

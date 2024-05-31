@@ -6,10 +6,7 @@ import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
-import com.lemnos.server.models.produto.DataFornece;
-import com.lemnos.server.models.produto.Desconto;
-import com.lemnos.server.models.produto.Fabricante;
-import com.lemnos.server.models.produto.Produto;
+import com.lemnos.server.models.produto.*;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
@@ -19,6 +16,7 @@ import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
+import com.lemnos.server.repositories.produto.AvaliacaoRepository;
 import com.lemnos.server.repositories.produto.DescontoRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.repositories.entidades.FabricanteRepository;
@@ -47,6 +45,7 @@ public class ProdutoService {
     @Autowired private ImagemPrincipalRepository imagemPrincipalRepository;
     @Autowired private ImagemRepository imagemRepository;
     @Autowired private DescontoRepository descontoRepository;
+    @Autowired private AvaliacaoRepository avaliacaoRepository;
 
     @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
@@ -138,6 +137,12 @@ public class ProdutoService {
         produto.setDesconto(getDesconto(null));
         produtoRepository.save(produto);
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> avaliar(String idProduto, Double valorAvaliacao) {
+        if(valorAvaliacao < 1.0 || valorAvaliacao > 5.0) throw new RuntimeException("Valor da avaliação inválido, entre 1 a 5!");
+        avaliacaoRepository.save(new Avaliacao(getProdutoById(idProduto), arredondarValor(valorAvaliacao)));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     private void verificarRegraDeNegocioCreate(ProdutoRequest produtoRequest) {
@@ -260,6 +265,15 @@ public class ProdutoService {
         Double porcentagem = produto.getValor() * (Double.parseDouble(produto.getDesconto().getValorDesconto()) / 100);
         return produto.getValor() - porcentagem;
     }
+    private Double calcularAvaliacao(Produto produto) {
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findAllByProduto(produto);
+        Double media = 0.0;
+        for(Avaliacao avaliacao : avaliacoes) media += avaliacao.getAvaliacao();
+        media /= avaliacoes.size();
+        return arredondarValor(media);
+    }
+
+    private Double arredondarValor(Double valor) { return Math.round(valor * 2) / 2.0; }
 
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
@@ -285,7 +299,9 @@ public class ProdutoService {
                 produto.getSubCategoria().getSubCategoria(),
                 produto.getImagemPrincipal().getImagemPrincipal(),
                 imagens,
-                produto.getDesconto().getValorDesconto()
+                produto.getDesconto().getValorDesconto(),
+                calcularAvaliacao(produto),
+                avaliacaoRepository.findAllByProduto(produto).size()
         );
     }
     private Fornecedor getFornecedor(ProdutoRequest produtoRequest) {

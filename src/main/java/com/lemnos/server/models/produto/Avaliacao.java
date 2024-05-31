@@ -25,5 +25,11 @@ public class Avaliacao {
     private Double avaliacao;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_Produto", nullable = false)
     private Produto produto;
+
+    public Avaliacao(Produto produto, Double avaliacao) {
+        this.produto = produto;
+        this.avaliacao = avaliacao;
+    }
 }

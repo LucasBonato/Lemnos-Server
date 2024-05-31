@@ -1,15 +1,15 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.models.dtos.requests.AvaliacaoRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
-import com.lemnos.server.models.produto.Produto;
+import com.lemnos.server.models.produto.Avaliacao;
 import com.lemnos.server.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/produto")
@@ -59,4 +59,9 @@ public class ProdutoController {
 
     @DeleteMapping("/desconto/{id}")
     public ResponseEntity<Void> retirarDesconto(@PathVariable String id) { return produtoService.retirarPorcentagem(id);}
+
+    @PostMapping("/avaliar/{id}")
+    public ResponseEntity<Void> avaliar(@PathVariable String id, @RequestBody AvaliacaoRequest avaliacaoRequest) {
+        return produtoService.avaliar(id, avaliacaoRequest.avaliacao());
+    }
 }
