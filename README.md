@@ -1025,8 +1025,10 @@ o Fornecedor só pode possui um endereço. Utilizando uma API externa para consu
 ``` JSON
 "cep": "11111222",
 "numeroLogradouro": 0001,
-"complemento": "Apto x bloco y/ casa x"
+"complemento": "Apto x bloco y/ casa x",
+"entidade": "(cliente ou funcionario ou fornecedor)"
 ```
+###### Se nada for passado em "entidade" será cadastrado para o cliente.
 ### Parâmetros:
 | Key | Tipo | Descrição                                              |
 |-----|------|--------------------------------------------------------|
@@ -1035,11 +1037,7 @@ o Fornecedor só pode possui um endereço. Utilizando uma API externa para consu
 #### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/cliente/endereco?id=`
-
-> `{{baseUri}}/funcionario/endereco?id=`
-
-> `{{baseUri}}/fornecedor/endereco?id=`
+> `{{baseUri}}/endereco?id=`
 
 JavaScript
 ~~~ javascript
@@ -1048,19 +1046,20 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function cadastrarEndereco(idEntidade, endereco) {
+function cadastrarEndereco(idEntidade, endereco, entidade) {
     
     endereco = tratarDados(endereco);
     
     axios({
       baseURL: baseUri,
       method: "POST",
-      url: "/entidade/endereco",
+      url: "/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         cep: endereco.cep,
         numeroLogradouro: endereco.numLogradouro,
-        complemento: endereco.complemento
+        complemento: endereco.complemento,
+        entidade: entidade
       },
       params: {
         id: idEntidade
@@ -1080,16 +1079,17 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> cadastrarEndereco(int idEntidade, Endereco endereco) async{
+    Future<dynamic> cadastrarEndereco(int idEntidade, Endereco endereco, String entidade) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/entidade/endereco?id=$idEntidade"),
+            Uri.parse(baseUri + "/endereco?id=$idEntidade"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             },
             body: jsonEncode({
                 cep: endereco.cep,
                 numeroLogradouro: endereco.numLogradouro,
-                complemento: endereco.complemento
+                complemento: endereco.complemento,
+                entidade: entidade
             })
         );
     }
@@ -1117,8 +1117,11 @@ O campo cep tem que ser de um endereço já existente, só sendo possível alter
 ``` JSON
 "cep": "11111222",
 "numeroLogradouro": 0001,
-"complemento": "Apto x bloco y/ casa x"
+"complemento": "Apto x bloco y/ casa x",
+"entidade": "(cliente ou funcionario ou fornecedor)"
 ```
+###### Se nada for passado em "entidade" será cadastrado para o cliente.
+
 ### Parâmetros:
 | Key | Tipo | Descrição                                         |
 |-----|------|---------------------------------------------------|
@@ -1127,11 +1130,7 @@ O campo cep tem que ser de um endereço já existente, só sendo possível alter
 #### Exemplos:
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/cliente/endereco?id=`
-
-> `{{baseUri}}/funcionario/endereco?id=`
-
-> `{{baseUri}}/fornecedor/endereco?id=`
+> `{{baseUri}}/endereco?id=`
 
 JavaScript
 ~~~ javascript
@@ -1140,19 +1139,20 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function updateEndereco(idEntidade, endereco) {
+function updateEndereco(idEntidade, endereco, entidade) {
     
     endereco = tratarDados(endereco);
     
     axios({
       baseURL: baseUri,
       method: "PUT",
-      url: "/entidade/endereco",
+      url: "/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         cep: endereco.cep,
         numeroLogradouro: endereco.numLogradouro,
-        complemento: endereco.complemento
+        complemento: endereco.complemento,
+        entidade: entidade
       },
       params: {
         id: idEntidade
@@ -1172,16 +1172,17 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco) async{
+    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco, String entidade) async{
         var response = await client.put(
-            Uri.parse("$baseUri/entidade/endereco?id=$idEntidade"),
+            Uri.parse("$baseUri/endereco?id=$idEntidade"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             },
             body: jsonEncode({
               cep: endereco.cep,
               numeroLogradouro: endereco.numLogradouro,
-              complemento: endereco.complemento
+              complemento: endereco.complemento,
+              entidade: entidade
             })
         );
     }
@@ -1204,19 +1205,17 @@ Class Api{
 Possíbilita remover o endereço de uma entidade
 
 ### Parâmetros:
-|  Key  |  Tipo  |                     Descrição                     |
-|:-----:|:------:|:-------------------------------------------------:|
-|  id   |  int   |  Id da entidade que se deseja remover o Endereço  |
-|  cep  | String |          Cep do endereço a ser removido           |
+| Key |  Tipo  |                    Descrição                    |
+|:---:|:------:|:-----------------------------------------------:|
+| id  |  int   | Id da entidade que se deseja remover o Endereço |
+| cep | String |         Cep do endereço a ser removido          |
+|  e  | String |    A entidade que se quer remover o Endereço    |
+###### O parâmetro "e" aceita três valores, "cliente", "funcionario" ou "fornecedor", e se nada for passado será removido de um cliente
 
 #### Exemplos:
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
-> `{{baseUri}}/cliente/endereco?id=&cep=`
-
-> `{{baseUri}}/funcionario/endereco?id=&cep=`
-
-> `{{baseUri}}/fornecedor/endereco?id=&cep=`
+> `{{baseUri}}/endereco?id=&cep=&e`
 
 JavaScript
 ~~~ javascript
@@ -1225,18 +1224,19 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function updateEndereco(idEntidade, endereco) {
+function updateEndereco(idEntidade, endereco, entidade) {
     
     endereco = tratarDados(endereco);
     
     axios({
       baseURL: baseUri,
       method: "DELETE",
-      url: "/entidade/endereco",
+      url: "/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       params: {
         id: idEntidade,
-        cep: endereco.cep
+        cep: endereco.cep,
+        e: entidade
       }
     })
       .then((response) => console.log(response.data))
@@ -1253,9 +1253,9 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco) async{
+    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco, String entidade) async{
         var response = await client.delete(
-            Uri.parse("$baseUri/entidade/endereco?id=$idEntidade&cep=${endereco.cep}"),
+            Uri.parse("$baseUri/endereco?id=$idEntidade&cep=${endereco.cep}&e=$entidade"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             }
