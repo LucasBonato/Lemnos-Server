@@ -1,6 +1,7 @@
 package com.lemnos.server.models.produto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemnos.server.models.carrinho.ItensCarrinho;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.produto.categoria.SubCategoria;
@@ -71,7 +72,7 @@ public class Produto {
     private Desconto desconto;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Avaliacao> avaliacoes;
+    private List<Avaliacao> avaliacoes;
 
     public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto){
         this.nomeProduto = produtoRequest.nome();
