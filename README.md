@@ -20,9 +20,13 @@
 - [Erros](#Erros)
 - [Exemplos](#Exemplos)
   - [Cadastro](#Cadastro)
+    - [Verificação](#Verificar-Cadastro)
   - [Cliente](#Cliente)
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
+  - [Endereço](#Endereço)
+    - [Verificação](#Verificar-Endereço)
+  - [Produto](#Produto)
 
 
 # Como utilizar a API
@@ -45,12 +49,14 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                         | **Exemplos**                                                                                     | **Body**                                                                                       |
-|---------------|-------------------------------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |
-| /cliente      | /{id}                                     | [cliente](#Cliente)                                                                              | [cliente](#body-put-cliente)                                                                   |
-| /funcionario  | /{id}                                     | [funcionario](#Funcionário)                                                                      | [funcionario](#body-put-funcionário)                                                           |
-| /fornecedor   | /{id}                                     | [fornecedor](#Fornecedor)                                                                        | [fornecedor](#body-put-fornecedor)                                                             |
+| **EndPoints** | **Sub Endpoints**                                             | **Exemplos**                                                                                                                                                                           | **Body**                                                                                       |                                         Descrição                                          |
+|---------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar    | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                                                | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
+| /cliente      | /{id}<br/>/endereco                                           | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /{id}<br/>/endereco                                           | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /{id}<br/>/endereco                                           | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
+| /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 
 ---
 
@@ -67,18 +73,40 @@ O que é o Id? Bem, é um identificador para saber sobre qual campo o erro se tr
 "universais" na API, ou seja, se o id for igual a 1 representa que deu algum problema no campo de Email. 
 Segue a tabela de valores: 
 
-| Id |  Campo que representa   |
-|----|:-----------------------:|
-| 0  | Não implementado/Global |
-| 1  |          Email          |
-| 2  |          Senha          |
-| 3  |          Nome           |
-| 4  |        Telefone         |
-| 5  |     dataNascimento      |
-| 6  |      dataAdmissão       |
-| 7  |           CPF           |
-| 8  |          CNPJ           |
-| 9  |           CEP           |
+| Id |        Campo representado         |
+|----|:---------------------------------:|
+| 0  | Não implementado/Mais de um campo |
+| 1  |               Email               |
+| 2  |               Senha               |
+| 3  |               Nome                |
+| 4  |             Telefone              |
+| 5  |          dataNascimento           |
+| 6  |           dataAdmissão            |
+| 7  |                CPF                |
+| 8  |               CNPJ                |
+| 9  |                CEP                |
+| 10 |            Logradouro             |
+| 11 |              Cidade               |
+| 12 |              Bairro               |
+| 13 |                UF                 |
+| 14 |       Número do Logradouro        |
+| 15 |            Complemento            |
+| 16 |             Descrição             |
+| 17 |                Cor                |
+| 18 |               Valor               |
+| 19 |              Modelo               |
+| 20 |               Peso                |
+| 21 |              Altura               |
+| 22 |            Comprimento            |
+| 23 |              Largura              |
+| 24 |            Fabricante             |
+| 25 |           SubCategoria            |
+| 26 |         Imagem Principal          |
+| 27 |        Imagens Secundárias        | 
+| 28 |             Desconto              |
+| 29 |             Avaliação             |
+| 30 |             Favorito              |
+---
 
 # Exemplos
 
@@ -93,6 +121,9 @@ Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sen
 "email": "emailDeSuaEscolha@email.com",
 "senha": "SenhaDoCliente"
 ```
+##### Verificar Cadastro:
+###### Se quiser verificar se está tudo correto sem cadastrar uma entidade diretamente é só utitlizar o mesmo corpo, mas com "/verificar" depois do "/${entidade}", se der 200 está tudo correto e pode cadastrar.
+
 
 #### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
@@ -128,14 +159,18 @@ const axios = require("axios");
 function cadastrarCliente(cliente) {
     
     cliente = tratarDados(cliente);
-    
-    axios.post(baseUri + "/cadastro/cliente", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/cadastro/cliente",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
         nome: cliente.nome,
-        telefone: cliente.telefone,
         cpf: cliente.cpf,
         email: cliente.email,
         senha: cliente.senha
-      })
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -171,9 +206,9 @@ Class Api{
 #### Responses:
 | Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -205,7 +240,12 @@ function cadastrarFuncionario(cliente) {
     
     cliente = tratarDados(cliente);
     
-    axios.post(baseUri + "/cadastro/funcionario", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/cadastro/funcionario",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         telefone: funcionario.telefone,
@@ -213,7 +253,8 @@ function cadastrarFuncionario(cliente) {
         dataAdmissao: funcionario.dataAdmissao,
         email: funcionario.email,
         senha: funcionario.senha
-      })
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -249,11 +290,11 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
+| Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                   
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -283,13 +324,19 @@ function cadastrarFornecedor(fornecedor) {
     
     fornecedor = tratarDados(fornecedor);
     
-    axios.post(baseUri + "/cadastro/fornecedor", {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/cadastro/fornecedor",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone,
         numeroLogradouro: fornecedor.numeroLogradouro,
         email: fornecedor.email
-      })
+      }
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -325,11 +372,11 @@ Class Api{
 ---
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
+| Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |                      
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -349,7 +396,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getClientes() {
-    axios.get(baseUri + "/cliente")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/cliente"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -397,9 +448,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getCliente(id) {
-    axios.get(baseUri + "/cliente/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/cliente/${id}`
+    })
       .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error)); 
+     
 }
 ~~~
 
@@ -451,9 +507,15 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarCliente(cliente) {
-    axios.put(baseUri + "/cliente/${cliente.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/cliente/${cliente.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
         nome: cliente.nome,
-        cpf: cliente.cpf,
+        cpf: cliente.cpf
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -514,9 +576,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirCliente(id) {
-    axios.delete(baseUri + "/cliente/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/cliente/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -564,7 +631,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFuncionarios() {
-    axios.get(baseUri + "/funcionario")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/funcionario"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -612,7 +683,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFuncionario(id) {
-    axios.get(baseUri + "/funcionario/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/funcionario/${id}`
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -669,12 +744,18 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarFuncionario(funcionario) {
-    axios.put(baseUri + "/funcionario/${funcionario.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/funcionario/${funcionario.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         dataNascimento: funcionario.dtNasc,
         dataAdmissao: funcionario.dtAdmi,
         telefone: funcionario.telefone
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -738,9 +819,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirFuncionario(id) {
-    axios.delete(baseUri + "/funcionario/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/funcionario/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -788,7 +874,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFornecedores() {
-    axios.get(baseUri + "/fornecedor")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/fornecedor"
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -836,7 +926,11 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function getFornecedor(id) {
-    axios.get(baseUri + "/fornecedor/${id}")
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/fornecedor/${id}`
+    })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -891,10 +985,16 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function alterarFornecedor(fornecedor) {
-    axios.put(baseUri + "/fornecedor/${fornecedor.id}", {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/fornecedor/${fornecedor.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -956,9 +1056,14 @@ const axios = require("axios");
 let baseUri = "https://localhost:8080/api";
 
 function excluirFornecedor(id) {
-    axios.delete(baseUri + "/fornecedor/${id}")
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/fornecedor/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -991,6 +1096,1032 @@ Class Api{
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
+
+## Endereço
+
+Permite o cadastro de novos endereços ou alteração de endereços já existentes, o método mostrado a seguir funciona 
+com as entidade, Cliente, Funcionário e Fornecedor, Cliente e Funcionário podem possuir mais de um endereço, 
+o Fornecedor só pode possui um endereço. Utilizando uma API externa para consulta de cep: [ViaCep](https://viacep.com.br/)
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/endereco`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getEndereco(endereco) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/endereco",
+      params: {
+        cep: endereco.cep
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Endereco> getEndereco(String cep) async{
+        var uri = Uri.parse(baseUri + "/endereco?cep=$cep");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes);
+        var jsonResponse = json.decode(responseBodyUtf8);
+        Endereco endereco = jsonResponse.map((json) => Endereco.fromJson(json));
+        return endereco;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |       Meaning       |                 Why?                  |
+|-------------|:-------------------:|:-------------------------------------:|
+| 200         |         OK          |          Retornou os valores          |
+| 404         |      NOT FOUND      | A entidade buscada não foi encontrada |
+| 500         |   INTERNAL SERVER   | A entidade buscada não foi encontrada |
+| 503         | SERVICE UNAVAILABLE |   A API ViaCep não está disponivel    |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Body Endereço:
+``` JSON
+"cep": "11111222",
+"numeroLogradouro": 0001,
+"complemento": "Apto x bloco y/ casa x",
+"entidade": "(cliente ou funcionario ou fornecedor)"
+```
+###### Se nada for passado em "entidade" será cadastrado para o cliente.
+##### Verificar Endereço:
+###### Se quiser verificar se está tudo correto sem cadastrar em uma entidade é só utitlizar o mesmo e parâmetros, mas com "/verificar" depois do "/endereço", se der 200 está tudo correto e pode cadastrar.
+
+### Parâmetros:
+| Key | Tipo | Descrição                                              |
+|-----|------|--------------------------------------------------------|
+| id  | int  | Id da entidade que se deseja adicionar o Endereço novo |
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/endereco?id=`
+
+JavaScript
+~~~ javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function cadastrarEndereco(idEntidade, endereco, entidade) {
+    
+    endereco = tratarDados(endereco);
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/endereco",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
+        cep: endereco.cep,
+        numeroLogradouro: endereco.numLogradouro,
+        complemento: endereco.complemento,
+        entidade: entidade
+      },
+      params: {
+        id: idEntidade
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarEndereco(int idEntidade, Endereco endereco, String entidade) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/endereco?id=$idEntidade"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                cep: endereco.cep,
+                numeroLogradouro: endereco.numLogradouro,
+                complemento: endereco.complemento,
+                entidade: entidade
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |     Significado     |               Por quê?                |
+|-------------|:-------------------:|:-------------------------------------:|
+| 201         |       CREATED       |         Cadastrou com sucesso         |                 
+| 400         |     BAD REQUEST     | Alguma informação foi enviada errada  |               
+| 404         |      NOT FOUND      | A entidade buscada não foi encontrada |
+| 500         |   INTERNAL SERVER   | A entidade buscada não foi encontrada |
+| 503         | SERVICE UNAVAILABLE |   A API ViaCep não está disponivel    |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Alterar um Endereço
+
+O campo cep tem que ser de um endereço já existente, só sendo possível alterar os campos complemento e numero de Logradouro
+
+### Body Put Endereço:
+``` JSON
+"cep": "11111222",
+"numeroLogradouro": 0001,
+"complemento": "Apto x bloco y/ casa x",
+"entidade": "(cliente ou funcionario ou fornecedor)"
+```
+###### Se nada for passado em "entidade" será cadastrado para o cliente.
+
+### Parâmetros:
+| Key | Tipo | Descrição                                         |
+|-----|------|---------------------------------------------------|
+| id  | int  | Id da entidade que se deseja atualizar o Endereço |
+
+#### Exemplos:
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
+> `{{baseUri}}/endereco?id=`
+
+JavaScript
+~~~ javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function updateEndereco(idEntidade, endereco, entidade) {
+    
+    endereco = tratarDados(endereco);
+    
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: "/endereco",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
+        cep: endereco.cep,
+        numeroLogradouro: endereco.numLogradouro,
+        complemento: endereco.complemento,
+        entidade: entidade
+      },
+      params: {
+        id: idEntidade
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco, String entidade) async{
+        var response = await client.put(
+            Uri.parse("$baseUri/endereco?id=$idEntidade"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+              cep: endereco.cep,
+              numeroLogradouro: endereco.numLogradouro,
+              complemento: endereco.complemento,
+              entidade: entidade
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |        Atualizado com sucesso         |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada  |               
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Remover um Endereço
+
+Possíbilita remover o endereço de uma entidade
+
+### Parâmetros:
+| Key |  Tipo  |                    Descrição                    |
+|:---:|:------:|:-----------------------------------------------:|
+| id  |  int   | Id da entidade que se deseja remover o Endereço |
+| cep | String |         Cep do endereço a ser removido          |
+|  e  | String |    A entidade que se quer remover o Endereço    |
+###### O parâmetro "e" aceita três valores, "cliente", "funcionario" ou "fornecedor", e se nada for passado será removido de um cliente
+
+#### Exemplos:
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/endereco?id=&cep=&e`
+
+JavaScript
+~~~ javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function updateEndereco(idEntidade, endereco, entidade) {
+    
+    endereco = tratarDados(endereco);
+    
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/endereco",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      params: {
+        id: idEntidade,
+        cep: endereco.cep,
+        e: entidade
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco, String entidade) async{
+        var response = await client.delete(
+            Uri.parse("$baseUri/endereco?id=$idEntidade&cep=${endereco.cep}&e=$entidade"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |        Atualizado com sucesso         |            
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Produto
+
+### Body Produto:
+
+``` JSON
+"nome": "Nome do Produto",
+"descricao": "Descrição do Produto",
+"Cor": "Qualquer cor",
+"valor": 9999.99,
+"modelo": "Modelo do Produto",
+"peso": 1.0,
+"altura": 1.0,
+"comprimento": 1.0,
+"largura": 1.0,
+"fabricante": "Nome do Fabricante",
+"fornecedor": "Nome do Fornecedor",
+"subCategoria": "Subcategoria do Produto",
+"imagemPrincipal": "linkDeUmaImagem",
+"imagens": [
+     "linkDeUmaImagem",
+     "linkDeUmaImagem",
+     ...
+]
+```
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function cadastrarProduto(produto){
+    tratarDados(produto);
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/produto",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
+        nome: produto.nome,
+        descricao: produto.descricao,
+        cor: produto.cor,
+        valor: produto.valor,
+        modelo: produto.modelo,
+        peso: produto.peso,
+        altura: produto.altura,
+        comprimento: produto.comprimento,
+        largura: produto.largura,
+        fabricante: produto.fabricante,
+        fornecedor: produto.fornecedor,
+        subCategoria: produto.subCategoria,
+        desconto: produto.desconto, //Opcional
+        imagemPrincipal: produto.imgPrinc,
+        imagens: produto.imagens
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> cadastrarProduto(Produto produto) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/produto"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "nome": produto.nome,
+                "descricao": produto.descricao,
+                "cor": produto.cor,
+                "valor": produto.valor,
+                "modelo": produto.modelo,
+                "peso": produto.peso,
+                "altura": produto.altura,
+                "comprimento": produto.comprimento,
+                "largura": produto.largura,
+                "fabricante": produto.fabricante,
+                "fornecedor": produto.fornecedor,
+                "subCategoria": produto.subCategoria,
+                "ImagemPrincipal": produto.imgPrinc,
+                "imagens": produto.imagens
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?               |
+|-------------|:-----------:|:------------------------------------:|
+| 201         |   CREATED   |        Cadastrou com sucesso         |                 
+| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |    
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutos() {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/produto"
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProduto() async{
+        var uri = Uri.parse(baseUri + "/produto");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Produto produto = jsonResponse.map((json) => produto.fromJson(json));
+        return produto;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |     Por quê?     |
+|-------------|:-----------:|:----------------:|
+| 200         |     OK      | Retornou o valor |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Filtro Produto
+
+Nenhum dos campos são obrigatórios, todos são opcionais, sendo que o único que é em conjunto são os de menor e maior Preço, se passado só o maiorPreço o menorPreço será 0 por padrão, o contrário não acontecerá.
+
+``` JSON
+  "categoria": "",
+  "subCategoria": "",
+  "marca": "",
+  "menorPreco": 0.0,
+  "maiorPreco": 0.0
+```
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto/find`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutosFilter(filtro) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/produto/find",
+      data: {
+        categoria: filtro.categoria,
+        subCategoria: filtro.subCategoria,
+        marca: filtro.marca,
+        menorPreco: filtro.menorPreco,
+        maiorPreco: filtro.maiorPreco
+      },
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProdutoFilter(ProdutoFiltro filtro) async{
+        var uri = Uri.parse(baseUri + "/produto/find");
+        var response = await client.get(uri, 
+        body: jsonEnconde({
+          "categoria": filtro.categoria,
+          "subCategoria": filtro.subCategoria,
+          "marca": filtro.marca,
+          "menorPreco": filtro.menorPreco,
+          "maiorPreco": filtro.maiorPreco
+        }));
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Produto> produtos = jsonResponse.map((json) => produto.fromJson(json)).toList();
+        return produtos;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |     Por quê?     |
+|-------------|:-----------:|:----------------:|
+| 200         |     OK      | Retornou o valor |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutos(id) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/produto/${id}`
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProduto(int id) async{
+        var uri = Uri.parse(baseUri + "/produto/$id");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Produto produto = jsonResponse.map((json) => Produto.fromJson(json));
+        return produto;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |           Retornou o valor            |            
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Body Put Produto:
+
+O body do put só precisa ter pelo menos uma campo, se não houver ele mantem os dados que já estavam anteriormente.
+
+``` JSON
+"nome": "Nome do Produto",
+"descricao": "Descrição do Produto",
+"Cor": "Qualquer cor",
+"valor": 999,99,
+"modelo": "Modelo do Produto",
+"peso": 1.0,
+"altura": 1.0,
+"comprimento": 1.0,
+"largura": 1.0,
+"fabricante": "Nome do Fabricante",
+"fornecedor": "Nome do Fornecedor",
+"subCategoria": "Subcategoria do Produto",
+"imagemPrincipal": "linkDeUmaImagem",
+"imagens": [
+     "linkDeUmaImagem",
+     "linkDeUmaImagem",
+     ...
+]
+```
+
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)  
+
+>`{{baseUri}}/produto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function alterarProduto(produto, id) {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: `/produto/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      data: {
+        nome: produto.nome,
+        valor: produto.valor
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> alterarProduto(Produto produto, int id) async{
+        var response = await client.put(
+          Uri.parse("$baseUri/produto/${id}"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+                "nome": produto.nome,
+                "valor": produto.valor
+          }),
+        );
+        if(response.statusCode != 200){
+          dynamic body = jsonDecode(utf8.decode(response.body.runes.toList()));
+          return body;
+        }
+        return null;
+      }
+    }
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                           Why?                           |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                   Alterou com sucesso                    |
+| 209         |  CONFLICT   |         Algum dado único já foi cadastrado antes         |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |          O objeto procurado não foi encontrado           |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+>`{{baseUri}}/produto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function excluirProduto(id) {
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/produto/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> excluirProduto(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/produto/${id}"));
+        if(response.statusCode != 200){
+          return "Produto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |     Excluiu o objeto com sucesso      |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Favoritar Produtos
+
+### Favoritar:
+
+### Parâmetros:
+| Key        |     Tipo      | Descrição                      |
+|------------|:-------------:|--------------------------------|
+| id_cliente |      int      | Id do cliente                  |
+| id_prod    |  UUID/String  | Id do Produto a ser favoritado |
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto/fav?id_cliente=&id_prod=`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function adicionarFavorito(produto, cliente){
+
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/produto/fav",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      params: {
+        id_cliente: cliente.id,
+        id_prod: produto.id
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> favoritarProduto(Cliente cliente, Produto produto) async{
+        var response = await client.post(
+            Uri.parse(baseUri + "/produto/fav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                Por quê?                 |
+|-------------|:-----------:|:---------------------------------------:|
+| 201         |   CREATED   |          Cadastrou com sucesso          |                 
+| 209         |  CONFLICT   |   Algum dado único já foi cadastrado    |                 
+| 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
+| 404         |  NOT FOUND  | Alguma das entidades não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Desfavoritar:
+
+### Parâmetros:
+| Key        |     Tipo      | Descrição                               |
+|------------|:-------------:|-----------------------------------------|
+| id_cliente |      int      | Id do cliente                           |
+| id_prod    |  UUID/String  | Id do Produto a se retirar o favoritado |
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/produto/fav?id_cliente=&id_prod=`
+
+JavaScript
+~~~javascript
+import axios from "axios";
+const axios = require(axios);
+
+let baseUri = "http://localhost:8080/api";
+
+function dasfavoritarProduto(produto, cliente){
+
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/produto/fav",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      params: {
+        id_cliente: cliente.id,
+        id_prod: produto.id
+      }
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> desfavoritarProduto(Cliente cliente, Produto produto) async{
+        var response = await client.delete(
+            Uri.parse(baseUri + "/produto/fav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            })
+        );
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                Por quê?                 |
+|-------------|:-----------:|:---------------------------------------:|
+| 200         |     OK      |          Deletado com sucesso           |
+| 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
+| 404         |  NOT FOUND  | Alguma das entidades não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Retirar Desconto
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+>`{{baseUri}}/produto/desconto/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function retirarDesconto(id) {
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: `/produto/desconto/${id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    })
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> retirarDesconto(int id) async{
+        var response = await client.delete(Uri.parse("$baseUri/produto/desconto/${id}"));
+        if(response.statusCode != 200){
+          return "Produto não encontrado";
+        }
+        return null;
+      }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |  Meaning  |                 Why?                  |
+|-------------|:---------:|:-------------------------------------:|
+| 200         |    OK     |    Retirou o desconto com sucesso     |
+| 404         | NOT FOUND | O objeto procurado não foi encontrado |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Avaliar Produto:
+
+``` JSON
+"avaliacao": 1.0
+```
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+>`{{baseUri}}/produto/avaliar/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function avaliarProduto(produto, valorAvaliacao) {
+   axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: `/produto/avaliar/${produto.id}`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      data: {
+        avaliacao: valorAvaliacao,
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<dynamic> alterarProduto(Produto produto, double valorAvaliacao) async{
+        var response = await client.post(
+          Uri.parse("$baseUri/produto/avaliacao/{$produto.id}"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode({
+                "avaliacao": valorAvaliacao
+          }),
+        );
+        if(response.statusCode != 200){
+          dynamic body = jsonDecode(utf8.decode(response.body.runes.toList()));
+          return body;
+        }
+        return null;
+      }
+    }
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                           Why?                           |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                   Alterou com sucesso                    |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |          O objeto procurado não foi encontrado           |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
 
 Nada de importante
 
