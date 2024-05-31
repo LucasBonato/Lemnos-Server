@@ -104,6 +104,8 @@ Segue a tabela de valores:
 | 26 |         Imagem Principal          |
 | 27 |        Imagens Secundárias        | 
 | 28 |             Desconto              |
+| 29 |             Avaliação             |
+| 30 |             Favorito              |
 ---
 
 # Exemplos
