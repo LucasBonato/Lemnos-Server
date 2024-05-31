@@ -13,7 +13,6 @@ import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.entidades.FuncionarioRepository;
-import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,6 @@ public class CadastroService extends Util {
     @Autowired private FuncionarioRepository funcionarioRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private CadastroRepository cadastroRepository;
-    @Autowired private ProdutoRepository produtoRepository;
 
     public ResponseEntity<Void> cadastrarCliente(ClienteRequest clienteRequest) {
         Cliente cliente = verificarRegraDeNegocio(clienteRequest);
@@ -164,5 +162,20 @@ public class CadastroService extends Util {
         if(OptionalCnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
         return new Fornecedor(fornecedorRequest);
+    }
+
+    public ResponseEntity<Void> verificarCliente(ClienteRequest clienteRequest) {
+        verificarRegraDeNegocio(clienteRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> verificarFuncionario(FuncionarioRequest funcionarioRequest) {
+        verificarRegraDeNegocio(funcionarioRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> verificarFornecedor(FornecedorRequest fornecedorRequest) {
+        verificarRegraDeNegocio(fornecedorRequest);
+        return ResponseEntity.ok().build();
     }
 }

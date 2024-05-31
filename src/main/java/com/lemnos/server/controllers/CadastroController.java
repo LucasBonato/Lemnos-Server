@@ -23,6 +23,7 @@ public class CadastroController {
         return cadastroService.cadastrarCliente(clienteRequest);
     }
 
+
     @PostMapping("/funcionario")
     public ResponseEntity<Void> cadastrarFuncionario(@RequestBody FuncionarioRequest funcionarioRequest){
         return cadastroService.cadastrarFuncionario(funcionarioRequest);
@@ -31,5 +32,20 @@ public class CadastroController {
     @PostMapping("/fornecedor")
     public ResponseEntity<Void> cadastrarFornecedor(@RequestBody FornecedorRequest fornecedorRequest){
         return cadastroService.cadastrarFornecedor(fornecedorRequest);
+    }
+
+    @PostMapping("/cliente/verificar")
+    public ResponseEntity<Void> verificarCliente(@RequestBody ClienteRequest clienteRequest){
+        return cadastroService.verificarCliente(clienteRequest);
+    }
+
+    @PostMapping("/funcionario/verificar")
+    public ResponseEntity<Void> verificarFuncionario(@RequestBody FuncionarioRequest funcionarioRequest){
+        return cadastroService.verificarFuncionario(funcionarioRequest);
+    }
+
+    @PostMapping("/fornecedor/verificar")
+    public ResponseEntity<Void> verificarFornecedor(@RequestBody FornecedorRequest fornecedorRequest){
+        return cadastroService.verificarFornecedor(fornecedorRequest);
     }
 }
