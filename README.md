@@ -49,14 +49,14 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                                          | **Exemplos**                                                                                                                                             | **Body**                                                                                       |                                         Descrição                                          |
-|---------------|------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                  | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
-| /cliente      | /{id}<br/>/endereco                                        | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                            | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | /{id}<br/>/endereco                                        | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                    | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | /{id}<br/>/endereco                                        | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                      | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
-| /endereco     | /verificar                                                 | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                             | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
-| /produto      | /{id}<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id}        | [produto](#body-produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
+| **EndPoints** | **Sub Endpoints**                                             | **Exemplos**                                                                                                                                                                           | **Body**                                                                                       |                                         Descrição                                          |
+|---------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar    | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                                                | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
+| /cliente      | /{id}<br/>/endereco                                           | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /{id}<br/>/endereco                                           | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /{id}<br/>/endereco                                           | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
+| /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 
 ---
 
@@ -1477,6 +1477,84 @@ Class Api{
         dynamic jsonResponse = json.decode(responseBodyUtf8);
         Produto produto = jsonResponse.map((json) => produto.fromJson(json));
         return produto;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |     Por quê?     |
+|-------------|:-----------:|:----------------:|
+| 200         |     OK      | Retornou o valor |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Filtro Produto
+
+Nenhum dos campos são obrigatórios, todos são opcionais, sendo que o único que é em conjunto são os de menor e maior Preço, se passado só o maiorPreço o menorPreço será 0 por padrão, o contrário não acontecerá.
+
+``` JSON
+  "categoria": "",
+  "subCategoria": "",
+  "marca": "",
+  "menorPreco": 0.0,
+  "maiorPreco": 0.0
+```
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto/find`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutosFilter(filtro) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/produto/find",
+      data: {
+        categoria: filtro.categoria,
+        subCategoria: filtro.subCategoria,
+        marca: filtro.marca,
+        menorPreco: filtro.menorPreco,
+        maiorPreco: filtro.maiorPreco
+      },
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProdutoFilter(ProdutoFiltro filtro) async{
+        var uri = Uri.parse(baseUri + "/produto/find");
+        var response = await client.get(uri, 
+        body: jsonEnconde({
+          "categoria": filtro.categoria,
+          "subCategoria": filtro.subCategoria,
+          "marca": filtro.marca,
+          "menorPreco": filtro.menorPreco,
+          "maiorPreco": filtro.maiorPreco
+        }));
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Produto> produtos = jsonResponse.map((json) => produto.fromJson(json)).toList();
+        return produtos;
     }
 }
 ~~~
