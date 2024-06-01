@@ -1,6 +1,5 @@
 package com.lemnos.server.controllers;
 
-import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
 import com.lemnos.server.models.dtos.responses.IdResponse;

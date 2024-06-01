@@ -3,7 +3,9 @@ package com.lemnos.server.controllers;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
+import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.services.ClienteService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,11 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponse> getOneById(@PathVariable Integer id){
         return clienteService.getOneById(id);
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<IdResponse> getOneById(@PathParam(value = "email") String email){
+        return clienteService.getByEmail(email);
     }
 
     @PutMapping("/{id}")

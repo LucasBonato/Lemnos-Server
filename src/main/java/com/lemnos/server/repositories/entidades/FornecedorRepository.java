@@ -1,5 +1,6 @@
 package com.lemnos.server.repositories.entidades;
 
+import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.entidades.Fornecedor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +14,6 @@ public interface FornecedorRepository extends JpaRepository<Fornecedor, Integer>
     Optional<Fornecedor> findByEmail(String email);
 
     Optional<Fornecedor> findByNome(String fornecedor);
+
+    Optional<Fornecedor> findByCadastro(Cadastro cadastro);
 }

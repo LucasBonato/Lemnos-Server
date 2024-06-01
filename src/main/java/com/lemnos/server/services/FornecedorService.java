@@ -2,14 +2,11 @@ package com.lemnos.server.services;
 
 import com.lemnos.server.exceptions.cadastro.CadastroCnpjAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
-import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
-import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
-import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.endereco.Endereco;
+import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Fornecedor;
@@ -19,7 +16,6 @@ import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +56,12 @@ public class FornecedorService extends Util {
                 getEnderecoRecords(fornecedor)
         );
         return ResponseEntity.ok(record);
+    }
+
+
+    public ResponseEntity<IdResponse> getByEmail(String email) {
+        Fornecedor fornecedor = fornecedorRepository.findByEmail(email).orElseThrow(FornecedorNotFoundException::new);
+        return ResponseEntity.ok(new IdResponse(fornecedor.getId()));
     }
 
     public ResponseEntity<Void> updateFornecedor(Integer id, FornecedorRequest fornecedorRequest) {
