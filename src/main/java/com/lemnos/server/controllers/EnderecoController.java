@@ -19,22 +19,22 @@ public class EnderecoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
-        return enderecoService.createEndereco(id, enderecoRequest);
+    public ResponseEntity<Void> create(@RequestBody EnderecoRequest enderecoRequest){
+        return enderecoService.createEndereco(enderecoRequest);
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
-        return enderecoService.updateEndereco(id, enderecoRequest);
+    public ResponseEntity<Void> update(@RequestBody EnderecoRequest enderecoRequest){
+        return enderecoService.updateEndereco(enderecoRequest);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestParam(value = "id") Integer id, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade){
+    public ResponseEntity<Void> remove(@RequestParam(value = "id") String id, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade){
         return enderecoService.removeEndereco(id, cep, entidade);
     }
 
     @PostMapping("/verificar")
-    public ResponseEntity<Void> verificarCampos(@RequestParam(value = "id") Integer id, @RequestBody EnderecoRequest enderecoRequest){
-        return enderecoService.verificarCampos(id, enderecoRequest);
+    public ResponseEntity<Void> verificarCampos(@RequestBody EnderecoRequest enderecoRequest){
+        return enderecoService.verificarCampos(enderecoRequest);
     }
 }
