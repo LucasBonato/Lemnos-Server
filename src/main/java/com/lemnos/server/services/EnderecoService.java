@@ -155,7 +155,7 @@ public class EnderecoService extends UtilEndereco {
         funcionarioPossuiEnderecoRepository.delete(fpe);
     }
 
-    public ResponseEntity<Void> verificarCampos(Integer id, EnderecoRequest enderecoRequest) {
+    public ResponseEntity<Void> verificarCampos(EnderecoRequest enderecoRequest) {
         verificarCamposEndereco(enderecoRequest);
 
         ViaCepDTO via = getViaCepObject(enderecoRequest.cep());
@@ -163,14 +163,14 @@ public class EnderecoService extends UtilEndereco {
 
         switch (enderecoRequest.entidade()){
             case "funcionario":
-                Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), id);
+                Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), enderecoRequest.id());
                 if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
                 break;
             case "fornecedor":
-                if(getOneFornecedorById(id).getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
+                if(getOneFornecedorById(enderecoRequest.id()).getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
                 break;
             default:
-                Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), id);
+                Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), enderecoRequest.id());
                 if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
         }
         return ResponseEntity.ok().build();
