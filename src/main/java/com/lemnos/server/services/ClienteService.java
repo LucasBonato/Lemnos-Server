@@ -69,9 +69,8 @@ public class ClienteService extends Util {
     private static ClienteResponse getClienteResponse(Cliente cliente) {
         return new ClienteResponse(
                 cliente.getNome(),
-                cliente.getCpf(),
                 cliente.getCadastro().getEmail(),
-                cliente.getCadastro().getSenha(),
+                cliente.getSituacao().toString(),
                 getProdutosFavoritos(cliente),
                 getEnderecoRecords(cliente)
         );

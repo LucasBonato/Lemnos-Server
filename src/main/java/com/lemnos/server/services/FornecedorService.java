@@ -38,6 +38,7 @@ public class FornecedorService extends Util {
                     fornecedor.getCnpj(),
                     fornecedor.getTelefone(),
                     fornecedor.getEmail(),
+                    fornecedor.getSituacao().toString(),
                     getEnderecoRecords(fornecedor)
             ));
         }
@@ -52,6 +53,7 @@ public class FornecedorService extends Util {
                 fornecedor.getCnpj(),
                 fornecedor.getTelefone(),
                 fornecedor.getEmail(),
+                fornecedor.getSituacao().toString(),
                 getEnderecoRecords(fornecedor)
         );
         return ResponseEntity.ok(record);
