@@ -53,7 +53,7 @@ gerenciamento de carrinho.
 |---------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
 | /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar    | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                                                | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
 | /cliente      | /{id}<br/>/endereco                                           | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | /{id}<br/>/endereco                                           | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /funcionario  | ?<br/>/endereco                                               | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
 | /fornecedor   | /{id}<br/>/endereco                                           | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
 | /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
 | /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
@@ -671,9 +671,15 @@ Class Api{
 
 ---
 
+
+### Parâmetros:
+| Key   | Tipo   | Descrição                                            |
+|-------|--------|------------------------------------------------------|
+| email | String | Email da entidade que se deseja pegar as informações |
+
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/funcionario/{id}`
+> `{{baseUri}}/funcionario?email=`
 
 JavaScript
 ~~~javascript
@@ -682,11 +688,14 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function getFuncionario(id) {
+function getFuncionario(funcionario) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: `/funcionario/${id}`
+      url: `/funcionario`,
+      params: {
+        email: funcionario.email
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -732,9 +741,14 @@ Class Api{
 "telefone": "11912345678"
 ```
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                               |
+|-------|--------|-----------------------------------------|
+| email | String | Email da entidade que se deseja alterar |
+
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/funcionario/{id}`
+> `{{baseUri}}/funcionario?email=`
 
 JavaScript
 ~~~javascript
@@ -755,6 +769,9 @@ function alterarFuncionario(funcionario) {
         dataNascimento: funcionario.dtNasc,
         dataAdmissao: funcionario.dtAdmi,
         telefone: funcionario.telefone
+      },
+      params: {
+        email: funcionario.email
       }
     })
       .then((response) => console.log(response.data))
@@ -807,9 +824,14 @@ Class Api{
 
 ---
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                               |
+|-------|--------|---------------------------------------------------------|
+| email | String | email da entidade que se deseja inativar                |
+
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
-> `{{baseUri}}/funcionario/{id}`
+> `{{baseUri}}/funcionario?email=`
 
 JavaScript
 ~~~javascript
@@ -818,12 +840,15 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function excluirFuncionario(id) {
+function excluirFuncionario(email) {
     axios({
       baseURL: baseUri,
       method: "DELETE",
-      url: `/funcionario/${id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      url: `/funcionario`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      params: {
+        email: email
+      }
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));

@@ -23,8 +23,8 @@ class FuncionarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FuncionarioResponse> getOneById(@PathVariable Integer id){
-        return funcionarioService.getOneById(id);
+    public ResponseEntity<FuncionarioResponse> getOneByEmail(@PathParam(value = "email") String email){
+        return funcionarioService.getOneByEmail(email);
     }
 
     @GetMapping("/find")
@@ -32,13 +32,13 @@ class FuncionarioController {
         return funcionarioService.getByEmail(email);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateFuncionario(@PathVariable Integer id, @RequestBody @Valid FuncionarioRequest funcionarioRequest){
-        return funcionarioService.updateFuncionario(id, funcionarioRequest);
+    @PutMapping
+    public ResponseEntity<Void> updateFuncionario(@PathParam(value = "email") String email, @RequestBody @Valid FuncionarioRequest funcionarioRequest){
+        return funcionarioService.updateFuncionario(email, funcionarioRequest);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
-        return funcionarioService.deleteById(id);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email){
+        return funcionarioService.deleteById(email);
     }
 }

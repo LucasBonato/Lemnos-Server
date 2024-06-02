@@ -39,8 +39,8 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<FuncionarioResponse> getOneById(Integer id) {
-        Funcionario funcionario = getOneFuncionarioById(id);
+    public ResponseEntity<FuncionarioResponse> getOneByEmail(String email) {
+        Funcionario funcionario = getOneFuncionarioByEmail(email);
         FuncionarioResponse record = getFuncionarioResponse(funcionario);
         return ResponseEntity.ok(record);
     }
@@ -51,15 +51,15 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(new IdResponse(funcionario.getId()));
     }
 
-    public ResponseEntity<Void> updateFuncionario(Integer id, FuncionarioRequest funcionarioRequest){
-        Funcionario updatedFuncionario = insertData(id, funcionarioRequest);
+    public ResponseEntity<Void> updateFuncionario(String email, FuncionarioRequest funcionarioRequest){
+        Funcionario updatedFuncionario = insertData(email, funcionarioRequest);
         funcionarioRepository.save(updatedFuncionario);
 
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteById(Integer id){
-        Funcionario funcionarioDeletado = getOneFuncionarioById(id);
+    public ResponseEntity<Void> deleteById(String email){
+        Funcionario funcionarioDeletado = getOneFuncionarioByEmail(email);
 
         if(funcionarioDeletado.getSituacao() == Situacao.ATIVO) {
             funcionarioDeletado.setSituacao(Situacao.INATIVO);
@@ -76,13 +76,15 @@ public class FuncionarioService extends Util {
                 funcionario.getDataAdmissao(),
                 funcionario.getTelefone(),
                 funcionario.getCadastro().getEmail(),
-                funcionario.getCadastro().getSenha(),
+                funcionario.getSituacao().toString(),
                 getEnderecoRecords(funcionario)
         );
     }
 
-    private Funcionario getOneFuncionarioById(Integer id) {
-        return funcionarioRepository.findById(id).orElseThrow(FuncionarioNotFoundException::new);
+    private Funcionario getOneFuncionarioByEmail(String email) {
+        return funcionarioRepository.findByCadastro(
+                cadastroRepository.findByEmail(email).orElseThrow(FuncionarioNotFoundException::new)
+        ).orElseThrow(FuncionarioNotFoundException::new);
     }
     private static List<EnderecoResponse> getEnderecoRecords(Funcionario funcionario) {
         List<EnderecoResponse> enderecoResponses = new ArrayList<>();
@@ -99,8 +101,8 @@ public class FuncionarioService extends Util {
         }
         return enderecoResponses;
     }
-    private Funcionario insertData(Integer id, FuncionarioRequest funcionarioEnviado) {
-        Funcionario funcionarioEncontrado = getOneFuncionarioById(id);
+    private Funcionario insertData(String email, FuncionarioRequest funcionarioEnviado) {
+        Funcionario funcionarioEncontrado = getOneFuncionarioByEmail(email);
 
         Date dataNasc;
         Date dataAdmi;
@@ -131,10 +133,10 @@ public class FuncionarioService extends Util {
         Long telefone = convertStringToLong(funcionarioEnviado.telefone(), Codigo.TELEFONE);
 
         Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(cpf);
-        if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
+        if(funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), funcionarioEncontrado.getId())) throw new CadastroCpfAlreadyInUseException();
 
         Funcionario updatedFuncionario = new Funcionario();
-        updatedFuncionario.setId(id);
+        updatedFuncionario.setId(funcionarioEncontrado.getId());
         updatedFuncionario.setNome(funcionarioEnviado.nome());
         updatedFuncionario.setCpf(cpf);
         updatedFuncionario.setDataNascimento(dataNasc);
