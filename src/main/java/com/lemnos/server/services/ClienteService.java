@@ -3,19 +3,11 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
-import com.lemnos.server.exceptions.endereco.EnderecoNotFoundException;
-import com.lemnos.server.exceptions.endereco.EntityAlreadyHasEnderecoException;
-import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
-import com.lemnos.server.models.cadastro.Cadastro;
-import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
-import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
-import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
@@ -26,7 +18,6 @@ import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -56,13 +47,6 @@ public class ClienteService extends Util {
         Cliente cliente = getOneClienteByEmail(email);
         ClienteResponse record = getClienteResponse(cliente);
         return ResponseEntity.ok(record);
-    }
-
-
-    public ResponseEntity<IdResponse> getByEmail(String email) {
-        Cadastro cadastro = cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new);
-        Cliente cliente = clienteRepository.findByCadastro(cadastro).orElseThrow(ClienteNotFoundException::new);
-        return ResponseEntity.ok(new IdResponse(cliente.getId()));
     }
 
     public ResponseEntity<Void> updateCliente(String email, ClienteRequest clienteDTO){

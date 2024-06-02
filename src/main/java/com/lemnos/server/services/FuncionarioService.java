@@ -3,10 +3,8 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
-import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
@@ -43,12 +41,6 @@ public class FuncionarioService extends Util {
         Funcionario funcionario = getOneFuncionarioByEmail(email);
         FuncionarioResponse record = getFuncionarioResponse(funcionario);
         return ResponseEntity.ok(record);
-    }
-
-    public ResponseEntity<IdResponse> getByEmail(String email) {
-        Cadastro cadastro = cadastroRepository.findByEmail(email).orElseThrow(FuncionarioNotFoundException::new);
-        Funcionario funcionario = funcionarioRepository.findByCadastro(cadastro).orElseThrow(FuncionarioNotFoundException::new);
-        return ResponseEntity.ok(new IdResponse(funcionario.getId()));
     }
 
     public ResponseEntity<Void> updateFuncionario(String email, FuncionarioRequest funcionarioRequest){

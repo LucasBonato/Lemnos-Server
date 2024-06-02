@@ -443,7 +443,7 @@ Class Api{
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/cliente?email=`
+> `{{baseUri}}/cliente/find?email=`
 
 JavaScript
 ~~~javascript
@@ -456,7 +456,7 @@ function getCliente(email) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: `/cliente`,
+      url: `/cliente/find`,
       params: {
         email: email
       }
@@ -702,7 +702,7 @@ Class Api{
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/funcionario?email=`
+> `{{baseUri}}/funcionario/find?email=`
 
 JavaScript
 ~~~javascript
@@ -715,7 +715,7 @@ function getFuncionario(funcionario) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: `/funcionario`,
+      url: `/funcionario/find`,
       params: {
         email: funcionario.email
       }
@@ -969,7 +969,7 @@ Class Api{
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/fornecedor?email=`
+> `{{baseUri}}/fornecedor/find?email=`
 
 JavaScript
 ~~~javascript
@@ -982,7 +982,7 @@ function getFornecedor(email) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: `/fornecedor`,
+      url: `/fornecedor/find`,
       params: {
         email: email
       }
@@ -1036,7 +1036,7 @@ Class Api{
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/fornecedor?email`
+> `{{baseUri}}/fornecedor/find?email`
 
 JavaScript
 ~~~javascript
@@ -1049,7 +1049,7 @@ function alterarFornecedor(fornecedor) {
     axios({
       baseURL: baseUri,
       method: "PUT",
-      url: `/fornecedor`,
+      url: `/fornecedor/find`,
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         nome: fornecedor.nome,

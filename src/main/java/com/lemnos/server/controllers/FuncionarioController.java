@@ -2,7 +2,6 @@ package com.lemnos.server.controllers;
 
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
-import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.services.FuncionarioService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -22,14 +21,9 @@ class FuncionarioController {
         return funcionarioService.getAll();
     }
 
-    @GetMapping
+    @GetMapping("/find")
     public ResponseEntity<FuncionarioResponse> getOneByEmail(@PathParam(value = "email") String email){
         return funcionarioService.getOneByEmail(email);
-    }
-
-    @GetMapping("/find")
-    public ResponseEntity<IdResponse> getOneById(@PathParam(value = "email") String email){
-        return funcionarioService.getByEmail(email);
     }
 
     @PutMapping

@@ -6,7 +6,6 @@ import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundExcep
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Fornecedor;
@@ -56,11 +55,6 @@ public class FornecedorService extends Util {
                 getEnderecoRecords(fornecedor)
         );
         return ResponseEntity.ok(record);
-    }
-
-    public ResponseEntity<IdResponse> getByEmail(String email) {
-        Fornecedor fornecedor = fornecedorRepository.findByEmail(email).orElseThrow(FornecedorNotFoundException::new);
-        return ResponseEntity.ok(new IdResponse(fornecedor.getId()));
     }
 
     public ResponseEntity<Void> updateFornecedor(String email, FornecedorRequest fornecedorRequest) {

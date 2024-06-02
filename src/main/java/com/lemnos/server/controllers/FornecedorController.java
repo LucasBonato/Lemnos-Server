@@ -1,9 +1,7 @@
 package com.lemnos.server.controllers;
 
-import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
 import com.lemnos.server.models.dtos.responses.FornecedorResponse;
-import com.lemnos.server.models.dtos.responses.IdResponse;
 import com.lemnos.server.services.FornecedorService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +20,9 @@ public class FornecedorController {
         return fornecedorService.getAll();
     }
 
-    @GetMapping
+    @GetMapping("/find")
     public ResponseEntity<FornecedorResponse> getOneByEmail(@PathParam(value = "email") String email){
         return fornecedorService.getOneByEmail(email);
-    }
-
-    @GetMapping("/find")
-    public ResponseEntity<IdResponse> getOneById(@PathParam(value = "email") String email){
-        return fornecedorService.getByEmail(email);
     }
 
     @PutMapping
