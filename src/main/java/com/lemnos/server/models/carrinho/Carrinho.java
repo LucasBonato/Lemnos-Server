@@ -32,4 +32,10 @@ public class Carrinho {
     public Carrinho(Cadastro cadastro) {
         this.cadastro = cadastro;
     }
+
+    public void setAll(List<ItensCarrinho> itens, Double valorTotal, Integer quantidadeProdutos) {
+        this.itens = itens;
+        this.valor = valorTotal;
+        this.quantidadeProdutos = quantidadeProdutos;
+    }
 }
