@@ -31,7 +31,8 @@ public enum Codigo {
     IMAGENS(27),
     DESCONTO(28),
     AVALIACAO(29),
-    FAVORITO(30);
+    FAVORITO(30),
+    CARRINHO(31);
 
     Codigo(Integer i){}
 }

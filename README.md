@@ -27,6 +27,7 @@
   - [Endereço](#Endereço)
     - [Verificação](#Verificar-Endereço)
   - [Produto](#Produto)
+  - [Carrinho](#Carrinho)
 
 
 # Como utilizar a API
@@ -52,11 +53,12 @@ gerenciamento de carrinho.
 | **EndPoints** | **Sub Endpoints**                                             | **Exemplos**                                                                                                                                                                           | **Body**                                                                                       |                                         Descrição                                          |
 |---------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
 | /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar    | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                                                | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
-| /cliente      | /{id}<br/>/endereco                                           | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | ?<br/>/endereco                                               | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | /{id}<br/>/endereco                                           | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /cliente      | ?email=<br/>/endereco                                         | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | ?email=<br/>/endereco                                         | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | ?email=<br/>/endereco                                         | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
 | /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
 | /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
+| /carrinho     | ?email=                                                       | [carrinho](#Carrinho)                                                                                                                                                                  | [Carrinho](#Carrinho-Body)                                                                     |                    Permite a criação, inserção e remoção de um carrinho                    |
 
 ---
 
@@ -106,6 +108,7 @@ Segue a tabela de valores:
 | 28 |             Desconto              |
 | 29 |             Avaliação             |
 | 30 |             Favorito              |
+| 31 |             Carrinho              |
 ---
 
 # Exemplos
@@ -145,7 +148,6 @@ function cadastrarCliente(cliente){
         },
         body: JSON.stringify({
             nome: cliente.nome,
-            telefone: cliente.telefone,
             cpf: cliente.cpf,
             email: cliente.email,
             senha: cliente.senha
@@ -784,7 +786,7 @@ function alterarFuncionario(funcionario) {
     axios({
       baseURL: baseUri,
       method: "PUT",
-      url: `/funcionario/${funcionario.id}`,
+      url: `/funcionario`,
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         nome: funcionario.nome,
@@ -1496,7 +1498,7 @@ Class Api{
 ``` JSON
 "nome": "Nome do Produto",
 "descricao": "Descrição do Produto",
-"Cor": "Qualquer cor",
+"cor": "Qualquer cor",
 "valor": 9999.99,
 "modelo": "Modelo do Produto",
 "peso": 1.0,
@@ -1792,7 +1794,7 @@ O body do put só precisa ter pelo menos uma campo, se não houver ele mantem os
 ``` JSON
 "nome": "Nome do Produto",
 "descricao": "Descrição do Produto",
-"Cor": "Qualquer cor",
+"cor": "Qualquer cor",
 "valor": 999,99,
 "modelo": "Modelo do Produto",
 "peso": 1.0,
@@ -2194,8 +2196,268 @@ Class Api{
 
 ---
 
+## Carrinho
 
-Nada de importante
+### Parâmetros:
+| Key   | Tipo   | Descrição                                                        |
+|-------|--------|------------------------------------------------------------------|
+| email | String | Email da entidade que se deseja pegar as informações do carrinho |
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/carrinho?email=`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getCarrinho(email) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/carrinho",
+      params: {
+        email: email
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Carrinho> getCarrinho(email) async{
+        var uri = Uri.parse(baseUri + "/carrinho?email=${email}");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Carrinho carrinho = jsonResponse.map((json) => Carrinho.fromJson(json));
+        return carrinho;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Carrinho Body:
+
+``` JSON
+"id": "idDoProdutoASeInserirNoCarrinho",
+"email": "emailDaEntidade@email.com",
+"quantidade": 1 // Se não for passado será 1 por padrão
+```
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/carrinho`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function adicionarProdutoCarrinho(produto, entidade, qntd) {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/carrinho",
+      data: {
+        id: produto.id,
+        email: entidade.email,
+        quantidade: qntd
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Void> adicionarProdutoCarrinho(Entidade entidade, Produto produto, int qntd) async{
+        var uri = Uri.parse(baseUri + "/carrinho");
+        var response = await client.post(uri, body: jsonEncode({
+                "id": produto.id,
+                "email": cliente.email,
+                "quantidade": qntd
+            }));
+        
+        if(response.statusCode != 200) {
+          return null;
+        }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Cadastrou o item                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Carrinho Body Delete:
+
+Remove um tipo de produto ou certa quantidade desse produto
+
+``` JSON
+"id": "idDoProdutoASeRetirarDoCarrinho",
+"email": "emailDaEntidade@email.com",
+"quantidade": 1 // Se não for passado será 1 por padrão
+```
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/carrinho`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function removerProdutoCarrinho(produto, entidade, qntd) {
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/carrinho",
+      data: {
+        id: produto.id,
+        email: entidade.email,
+        quantidade: qntd
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Void> removerProdutoCarrinho(Entidade entidade, Produto produto, int qntd) async{
+        var uri = Uri.parse(baseUri + "/carrinho");
+        var response = await client.delete(uri, body: jsonEncode({
+                "id": produto.id,
+                "email": cliente.email,
+                "quantidade": qntd
+            }));
+        
+        if(response.statusCode != 200) {
+          return null;
+        }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Deu certo a ação                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+Com essa requisição o carrinho será deletado por completo
+
+![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
+
+> `{{baseUri}}/carrinho/tudo`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function apagarCarrinho() {
+    axios({
+      baseURL: baseUri,
+      method: "DELETE",
+      url: "/carrinho/tudo"
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Void> apagarCarrinho() async{
+        var uri = Uri.parse(baseUri + "/carrinho/tudo");
+        var response = await client.delete(uri);
+        
+        if(response.statusCode != 200) {
+          return null;
+        }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Deu certo a ação                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+Props:
 
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)

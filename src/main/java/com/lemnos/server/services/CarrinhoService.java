@@ -1,5 +1,6 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.carrinho.CarrinhoVazioException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.models.cadastro.Cadastro;
@@ -98,7 +99,7 @@ public class CarrinhoService {
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
     private Carrinho getCarrinhoByCadastro(Cadastro cadastro) {
-        return carrinhoRepository.findByCadastro(cadastro).orElseThrow(() -> new RuntimeException("Carrinho já está vazio"));
+        return carrinhoRepository.findByCadastro(cadastro).orElseThrow(CarrinhoVazioException::new);
     }
     private Carrinho criarNovoCarrinho(Cadastro cadastro, Produto produto, Integer quantidade) {
         Carrinho carrinho = new Carrinho(cadastro);
