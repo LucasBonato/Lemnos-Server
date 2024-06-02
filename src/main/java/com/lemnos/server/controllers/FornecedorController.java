@@ -22,9 +22,9 @@ public class FornecedorController {
         return fornecedorService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FornecedorResponse> getOneById(@PathVariable Integer id){
-        return fornecedorService.getOneById(id);
+    @GetMapping
+    public ResponseEntity<FornecedorResponse> getOneByEmail(@PathParam(value = "email") String email){
+        return fornecedorService.getOneByEmail(email);
     }
 
     @GetMapping("/find")
@@ -32,13 +32,13 @@ public class FornecedorController {
         return fornecedorService.getByEmail(email);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody FornecedorRequest fornecedorRequest) {
-        return fornecedorService.updateFornecedor(id, fornecedorRequest);
+    @PutMapping
+    public ResponseEntity<Void> update(@PathParam(value = "email") String email, @RequestBody FornecedorRequest fornecedorRequest) {
+        return fornecedorService.updateFornecedor(email, fornecedorRequest);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
-        return fornecedorService.deleteById(id);
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@PathParam(value = "email") String email){
+        return fornecedorService.deleteByEmail(email);
     }
 }

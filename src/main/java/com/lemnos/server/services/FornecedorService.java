@@ -46,8 +46,8 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<FornecedorResponse> getOneById(Integer id) {
-        Fornecedor fornecedor = getOneFornecedorById(id);
+    public ResponseEntity<FornecedorResponse> getOneByEmail(String email) {
+        Fornecedor fornecedor = getOneFornecedorByEmail(email);
         FornecedorResponse record = new FornecedorResponse(
                 fornecedor.getNome(),
                 fornecedor.getCnpj(),
@@ -58,20 +58,19 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok(record);
     }
 
-
     public ResponseEntity<IdResponse> getByEmail(String email) {
         Fornecedor fornecedor = fornecedorRepository.findByEmail(email).orElseThrow(FornecedorNotFoundException::new);
         return ResponseEntity.ok(new IdResponse(fornecedor.getId()));
     }
 
-    public ResponseEntity<Void> updateFornecedor(Integer id, FornecedorRequest fornecedorRequest) {
-        Fornecedor updatedFornecedor = insertData(id, fornecedorRequest);
+    public ResponseEntity<Void> updateFornecedor(String email, FornecedorRequest fornecedorRequest) {
+        Fornecedor updatedFornecedor = insertData(email, fornecedorRequest);
         fornecedorRepository.save(updatedFornecedor);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteById(Integer id) {
-        Fornecedor fornecedorDeletado = getOneFornecedorById(id);
+    public ResponseEntity<Void> deleteByEmail(String email) {
+        Fornecedor fornecedorDeletado = getOneFornecedorByEmail(email);
 
         if(fornecedorDeletado.getSituacao() == Situacao.ATIVO) {
             fornecedorDeletado.setSituacao(Situacao.INATIVO);
@@ -80,8 +79,8 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok().build();
     }
 
-    private Fornecedor getOneFornecedorById(Integer id) {
-        return fornecedorRepository.findById(id).orElseThrow(FornecedorNotFoundException::new);
+    private Fornecedor getOneFornecedorByEmail(String email) {
+        return fornecedorRepository.findByEmail(email).orElseThrow(FornecedorNotFoundException::new);
     }
     private static EnderecoResponse getEnderecoRecords(Fornecedor fornecedor) {
         if(fornecedor.getEndereco() == null) return null;
@@ -95,8 +94,8 @@ public class FornecedorService extends Util {
                 fornecedor.getEndereco().getEstado().getUf()
         );
     }
-    private Fornecedor insertData(Integer id, FornecedorRequest fornecedorEnviado){
-        Fornecedor fornecedorEncontrado = getOneFornecedorById(id);
+    private Fornecedor insertData(String email, FornecedorRequest fornecedorEnviado){
+        Fornecedor fornecedorEncontrado = getOneFornecedorByEmail(email);
 
         if(StringUtils.isBlank(fornecedorEnviado.nome()) && StringUtils.isBlank(fornecedorEnviado.telefone()) && StringUtils.isBlank(fornecedorEnviado.cnpj())){
             throw new UpdateNotValidException("Fornecedor");
@@ -120,10 +119,10 @@ public class FornecedorService extends Util {
         Long cpnj = Long.parseLong(fornecedorEnviado.cnpj());
 
         Optional<Fornecedor> cnpj = fornecedorRepository.findByCnpj(cpnj);
-        if(cnpj.isPresent() && !Objects.equals(cnpj.get().getId(), id)) throw new CadastroCnpjAlreadyInUseException();
+        if(cnpj.isPresent() && !Objects.equals(cnpj.get().getId(), fornecedorEncontrado.getId())) throw new CadastroCnpjAlreadyInUseException();
 
         Fornecedor fornecedor = new Fornecedor();
-        fornecedor.setId(id);
+        fornecedor.setId(fornecedorEncontrado.getId());
         fornecedor.setNome(fornecedorEnviado.nome());
         fornecedor.setTelefone(telefone);
         fornecedor.setCnpj(cpnj);

@@ -962,9 +962,14 @@ Class Api{
 
 ---
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                            |
+|-------|--------|------------------------------------------------------|
+| email | String | Email da entidade que se deseja pegar as informações |
+
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/fornecedor/{id}`
+> `{{baseUri}}/fornecedor?email=`
 
 JavaScript
 ~~~javascript
@@ -973,11 +978,14 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function getFornecedor(id) {
+function getFornecedor(email) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: `/fornecedor/${id}`
+      url: `/fornecedor`,
+      params: {
+        email: email
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -1021,9 +1029,14 @@ Class Api{
 "telefone": "11912345678"
 ```
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                              |
+|-------|--------|--------------------------------------------------------|
+| email | String | Email da entidade que se deseja alterar as informações |
+
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/fornecedor/{id}`
+> `{{baseUri}}/fornecedor?email`
 
 JavaScript
 ~~~javascript
@@ -1036,12 +1049,15 @@ function alterarFornecedor(fornecedor) {
     axios({
       baseURL: baseUri,
       method: "PUT",
-      url: `/fornecedor/${fornecedor.id}`,
+      url: `/fornecedor`,
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone
+      },
+      params: {
+        email: fornecedor.email
       }
     })
       .then((response) => console.log(response.data))
@@ -1092,9 +1108,14 @@ Class Api{
 
 ---
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                              |
+|-------|--------|--------------------------------------------------------|
+| email | String | Email da entidade que se deseja inativar               |
+
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
-> `{{baseUri}}/fornecedor/{id}`
+> `{{baseUri}}/fornecedor?email=`
 
 JavaScript
 ~~~javascript
@@ -1103,12 +1124,15 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function excluirFornecedor(id) {
+function excluirFornecedor(email) {
     axios({
       baseURL: baseUri,
       method: "DELETE",
-      url: `/fornecedor/${id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      url: `/fornecedor`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      params: {
+        email: email
+      }
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));
