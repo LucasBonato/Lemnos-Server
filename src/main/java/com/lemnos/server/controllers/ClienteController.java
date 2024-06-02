@@ -23,8 +23,8 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponse> getOneById(@PathVariable Integer id){
-        return clienteService.getOneById(id);
+    public ResponseEntity<ClienteResponse> getOneByEmail(@PathParam(value = "email") String email){
+        return clienteService.getOneByEmail(email);
     }
 
     @GetMapping("/find")
@@ -32,13 +32,13 @@ public class ClienteController {
         return clienteService.getByEmail(email);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateById(@PathVariable Integer id, @RequestBody ClienteRequest clienteRequest){
-        return clienteService.updateCliente(id, clienteRequest);
+    @PutMapping
+    public ResponseEntity<Void> updateById(@PathParam(value = "email") String email, @RequestBody ClienteRequest clienteRequest){
+        return clienteService.updateCliente(email, clienteRequest);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
-        return clienteService.deleteById(id);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email){
+        return clienteService.deleteByEmail(email);
     }
 }

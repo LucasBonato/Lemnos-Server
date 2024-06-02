@@ -436,9 +436,14 @@ Class Api{
 
 ---
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                            |
+|-------|--------|------------------------------------------------------|
+| email | String | Email da entidade que se deseja pegar as informações |
+
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/cliente/{id}`
+> `{{baseUri}}/cliente?email=`
 
 JavaScript
 ~~~javascript
@@ -447,11 +452,14 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function getCliente(id) {
+function getCliente(email) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: `/cliente/${id}`
+      url: `/cliente`,
+      params: {
+        email: email
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error)); 
@@ -495,9 +503,14 @@ Class Api{
 "cpf": "11122233311",
 ```
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                              |
+|-------|--------|--------------------------------------------------------|
+| email | String | Email da entidade que se deseja alterar as informações |
+
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/cliente/{id}`
+> `{{baseUri}}/cliente?email=`
 
 JavaScript
 ~~~javascript
@@ -510,11 +523,14 @@ function alterarCliente(cliente) {
     axios({
       baseURL: baseUri,
       method: "PUT",
-      url: `/cliente/${cliente.id}`,
+      url: `/cliente`,
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
         nome: cliente.nome,
         cpf: cliente.cpf
+      },
+      params: {
+        email: cliente.email
       }
     })
       .then((response) => console.log(response.data))
@@ -564,9 +580,14 @@ Class Api{
 
 ---
 
+### Parâmetros:
+| Key   | Tipo   | Descrição                                               |
+|-------|--------|---------------------------------------------------------|
+| email | String | Email da entidade que se deseja inativar as informações |
+
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
-> `{{baseUri}}/cliente/{id}`
+> `{{baseUri}}/cliente?email`
 
 JavaScript
 ~~~javascript
@@ -575,12 +596,15 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function excluirCliente(id) {
+function excluirCliente(email) {
     axios({
       baseURL: baseUri,
       method: "DELETE",
-      url: `/cliente/${id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      url: `/cliente`,
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      params: {
+        email: email
+      }
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));
@@ -670,7 +694,6 @@ Class Api{
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
-
 
 ### Parâmetros:
 | Key   | Tipo   | Descrição                                            |

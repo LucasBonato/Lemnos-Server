@@ -52,8 +52,8 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<ClienteResponse> getOneById(Integer id) {
-        Cliente cliente = getOneClienteById(id);
+    public ResponseEntity<ClienteResponse> getOneByEmail(String email) {
+        Cliente cliente = getOneClienteByEmail(email);
         ClienteResponse record = getClienteResponse(cliente);
         return ResponseEntity.ok(record);
     }
@@ -65,15 +65,15 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(new IdResponse(cliente.getId()));
     }
 
-    public ResponseEntity<Void> updateCliente(Integer id, ClienteRequest clienteDTO){
-        Cliente updatedCliente = insertData(id, clienteDTO);
+    public ResponseEntity<Void> updateCliente(String email, ClienteRequest clienteDTO){
+        Cliente updatedCliente = insertData(email, clienteDTO);
         clienteRepository.save(updatedCliente);
 
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteById(Integer id){
-        Cliente clienteDeletado = getOneClienteById(id);
+    public ResponseEntity<Void> deleteByEmail(String email){
+        Cliente clienteDeletado = getOneClienteByEmail(email);
 
         if(clienteDeletado.getSituacao() == Situacao.ATIVO) {
             clienteDeletado.setSituacao(Situacao.INATIVO);
@@ -102,8 +102,10 @@ public class ClienteService extends Util {
         return produtosFavoritos;
     }
 
-    private Cliente getOneClienteById(Integer id) {
-        return clienteRepository.findById(id).orElseThrow(ClienteNotFoundException::new);
+    private Cliente getOneClienteByEmail(String email) {
+        return clienteRepository.findByCadastro(
+                cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new)
+        ).orElseThrow(ClienteNotFoundException::new);
     }
     private static List<EnderecoResponse> getEnderecoRecords(Cliente cliente) {
         List<EnderecoResponse> enderecoResponses = new ArrayList<>();
@@ -120,8 +122,8 @@ public class ClienteService extends Util {
         }
         return enderecoResponses;
     }
-    private Cliente insertData(Integer id, ClienteRequest clienteEnviado) {
-        Cliente clienteEncontrado = getOneClienteById(id);
+    private Cliente insertData(String email, ClienteRequest clienteEnviado) {
+        Cliente clienteEncontrado = getOneClienteByEmail(email);
 
         if(StringUtils.isBlank(clienteEnviado.nome()) && (clienteEnviado.cpf() == null || clienteEnviado.cpf().isBlank())){
             throw new UpdateNotValidException("Cliente");
@@ -138,10 +140,10 @@ public class ClienteService extends Util {
         Long cpf = convertStringToLong(clienteEnviado.cpf(), Codigo.CPF);
 
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
-        if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), id)) throw new CadastroCpfAlreadyInUseException();
+        if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), clienteEncontrado.getId())) throw new CadastroCpfAlreadyInUseException();
 
         Cliente updatedCliente = new Cliente();
-        updatedCliente.setId(id);
+        updatedCliente.setId(clienteEncontrado.getId());
         updatedCliente.setNome(clienteEnviado.nome());
         updatedCliente.setCpf(cpf);
         updatedCliente.setCadastro(clienteEncontrado.getCadastro());

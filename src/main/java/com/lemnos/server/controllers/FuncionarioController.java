@@ -22,7 +22,7 @@ class FuncionarioController {
         return funcionarioService.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<FuncionarioResponse> getOneByEmail(@PathParam(value = "email") String email){
         return funcionarioService.getOneByEmail(email);
     }
@@ -39,6 +39,6 @@ class FuncionarioController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email){
-        return funcionarioService.deleteById(email);
+        return funcionarioService.deleteByEmail(email);
     }
 }

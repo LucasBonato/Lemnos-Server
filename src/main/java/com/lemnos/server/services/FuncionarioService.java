@@ -58,7 +58,7 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteById(String email){
+    public ResponseEntity<Void> deleteByEmail(String email){
         Funcionario funcionarioDeletado = getOneFuncionarioByEmail(email);
 
         if(funcionarioDeletado.getSituacao() == Situacao.ATIVO) {
@@ -71,7 +71,6 @@ public class FuncionarioService extends Util {
     private static FuncionarioResponse getFuncionarioResponse(Funcionario funcionario) {
         return new FuncionarioResponse(
                 funcionario.getNome(),
-                funcionario.getCpf(),
                 funcionario.getDataNascimento(),
                 funcionario.getDataAdmissao(),
                 funcionario.getTelefone(),
