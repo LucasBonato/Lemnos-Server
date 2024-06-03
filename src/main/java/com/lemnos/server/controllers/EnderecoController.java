@@ -29,8 +29,8 @@ public class EnderecoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestParam(value = "id") String id, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade){
-        return enderecoService.removeEndereco(id, cep, entidade);
+    public ResponseEntity<Void> remove(@RequestParam(value = "email") String email, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade){
+        return enderecoService.removeEndereco(email, cep, entidade);
     }
 
     @PostMapping("/verificar")

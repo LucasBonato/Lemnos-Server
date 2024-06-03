@@ -18,6 +18,7 @@ import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.viacep.ViaCep;
 import com.lemnos.server.models.viacep.ViaCepDTO;
+import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.endereco.CidadeRepository;
 import com.lemnos.server.repositories.endereco.EnderecoRepository;
 import com.lemnos.server.repositories.endereco.EstadoRepository;
@@ -38,15 +39,16 @@ public class UtilEndereco {
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private FuncionarioRepository funcionarioRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
+    @Autowired private CadastroRepository cadastroRepository;
 
-    protected Cliente getOneClienteById(Integer id) {
-        return clienteRepository.findById(id).orElseThrow(ClienteNotFoundException::new);
+    protected Cliente getOneClienteByEmail(String email) {
+        return clienteRepository.findByCadastro(cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
     }
-    protected Funcionario getOneFuncionarioById(Integer id) {
-        return funcionarioRepository.findById(id).orElseThrow(FuncionarioNotFoundException::new);
+    protected Funcionario getOneFuncionarioByEmail(String email) {
+        return funcionarioRepository.findByCadastro(cadastroRepository.findByEmail(email).orElseThrow(FuncionarioNotFoundException::new)).orElseThrow(FuncionarioNotFoundException::new);
     }
-    protected Fornecedor getOneFornecedorById(Integer id) {
-        return fornecedorRepository.findById(id).orElseThrow(FornecedorNotFoundException::new);
+    protected Fornecedor getOneFornecedorByEmail(String email) {
+        return fornecedorRepository.findByEmail(email).orElseThrow(FornecedorNotFoundException::new);
     }
 
     protected Endereco getEndereco(EnderecoRequest enderecoRequest) {

@@ -1237,6 +1237,7 @@ Class Api{
 
 ### Body Endereço:
 ``` JSON
+"email": "emailDaEntidade@email.com"
 "cep": "11111222",
 "numeroLogradouro": 0001,
 "complemento": "Apto x bloco y/ casa x",
@@ -1246,15 +1247,10 @@ Class Api{
 ##### Verificar Endereço:
 ###### Se quiser verificar se está tudo correto sem cadastrar em uma entidade é só utitlizar o mesmo e parâmetros, mas com "/verificar" depois do "/endereço", se der 200 está tudo correto e pode cadastrar.
 
-### Parâmetros:
-| Key | Tipo | Descrição                                              |
-|-----|------|--------------------------------------------------------|
-| id  | int  | Id da entidade que se deseja adicionar o Endereço novo |
-
 #### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/endereco?id=`
+> `{{baseUri}}/endereco`
 
 JavaScript
 ~~~ javascript
@@ -1263,7 +1259,7 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function cadastrarEndereco(idEntidade, endereco, entidade) {
+function cadastrarEndereco(emailEntidade, endereco, entidade) {
     
     endereco = tratarDados(endereco);
     
@@ -1273,13 +1269,11 @@ function cadastrarEndereco(idEntidade, endereco, entidade) {
       url: "/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
+        email: emailEntidade
         cep: endereco.cep,
         numeroLogradouro: endereco.numLogradouro,
         complemento: endereco.complemento,
         entidade: entidade
-      },
-      params: {
-        id: idEntidade
       }
     })
       .then((response) => console.log(response.data))
@@ -1296,13 +1290,14 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> cadastrarEndereco(int idEntidade, Endereco endereco, String entidade) async{
+    Future<dynamic> cadastrarEndereco(String emailEntidade, Endereco endereco, String entidade) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/endereco?id=$idEntidade"),
+            Uri.parse(baseUri + "/endereco"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             },
             body: jsonEncode({
+                email: emailEntidade,
                 cep: endereco.cep,
                 numeroLogradouro: endereco.numLogradouro,
                 complemento: endereco.complemento,
@@ -1332,6 +1327,7 @@ O campo cep tem que ser de um endereço já existente, só sendo possível alter
 
 ### Body Put Endereço:
 ``` JSON
+"email": "emailDaEntidade@email.com"
 "cep": "11111222",
 "numeroLogradouro": 0001,
 "complemento": "Apto x bloco y/ casa x",
@@ -1339,15 +1335,10 @@ O campo cep tem que ser de um endereço já existente, só sendo possível alter
 ```
 ###### Se nada for passado em "entidade" será cadastrado para o cliente.
 
-### Parâmetros:
-| Key | Tipo | Descrição                                         |
-|-----|------|---------------------------------------------------|
-| id  | int  | Id da entidade que se deseja atualizar o Endereço |
-
 #### Exemplos:
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/endereco?id=`
+> `{{baseUri}}/endereco`
 
 JavaScript
 ~~~ javascript
@@ -1356,7 +1347,7 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function updateEndereco(idEntidade, endereco, entidade) {
+function updateEndereco(emailEntidade, endereco, entidade) {
     
     endereco = tratarDados(endereco);
     
@@ -1366,13 +1357,11 @@ function updateEndereco(idEntidade, endereco, entidade) {
       url: "/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       data: {
+        email: emailEntidade
         cep: endereco.cep,
         numeroLogradouro: endereco.numLogradouro,
         complemento: endereco.complemento,
         entidade: entidade
-      },
-      params: {
-        id: idEntidade
       }
     })
       .then((response) => console.log(response.data))
@@ -1389,13 +1378,14 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco, String entidade) async{
+    Future<dynamic> updateEndereco(String emailEntidade, Endereco endereco, String entidade) async{
         var response = await client.put(
-            Uri.parse("$baseUri/endereco?id=$idEntidade"),
+            Uri.parse("$baseUri/endereco"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+              "Content-type": "application/json; charset=UTF-8"
             },
             body: jsonEncode({
+              email: emailEntidade
               cep: endereco.cep,
               numeroLogradouro: endereco.numLogradouro,
               complemento: endereco.complemento,
@@ -1422,17 +1412,17 @@ Class Api{
 Possíbilita remover o endereço de uma entidade
 
 ### Parâmetros:
-| Key |  Tipo  |                    Descrição                    |
-|:---:|:------:|:-----------------------------------------------:|
-| id  |  int   | Id da entidade que se deseja remover o Endereço |
-| cep | String |         Cep do endereço a ser removido          |
-|  e  | String |    A entidade que se quer remover o Endereço    |
+|  Key  |  Tipo  |                     Descrição                      |
+|:-----:|:------:|:--------------------------------------------------:|
+| email | String | email da entidade que se deseja remover o Endereço |
+|  cep  | String |           Cep do endereço a ser removido           |
+|   e   | String |     A entidade que se quer remover o Endereço      |
 ###### O parâmetro "e" aceita três valores, "cliente", "funcionario" ou "fornecedor", e se nada for passado será removido de um cliente
 
 #### Exemplos:
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
-> `{{baseUri}}/endereco?id=&cep=&e`
+> `{{baseUri}}/endereco?email=&cep=&e`
 
 JavaScript
 ~~~ javascript
@@ -1441,7 +1431,7 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function updateEndereco(idEntidade, endereco, entidade) {
+function updateEndereco(emailEntidade, endereco, entidade) {
     
     endereco = tratarDados(endereco);
     
@@ -1451,7 +1441,7 @@ function updateEndereco(idEntidade, endereco, entidade) {
       url: "/endereco",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       params: {
-        id: idEntidade,
+        email: emailEntidade,
         cep: endereco.cep,
         e: entidade
       }
@@ -1470,9 +1460,9 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> updateEndereco(int idEntidade, Endereco endereco, String entidade) async{
+    Future<dynamic> updateEndereco(String emailEntidade, Endereco endereco, String entidade) async{
         var response = await client.delete(
-            Uri.parse("$baseUri/endereco?id=$idEntidade&cep=${endereco.cep}&e=$entidade"),
+            Uri.parse("$baseUri/endereco?email=${emailEntidade}&cep=${endereco.cep}&e=${entidade}"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             }

@@ -1,7 +1,7 @@
 package com.lemnos.server.models.dtos.requests;
 
 public record EnderecoRequest(
-        Integer id,
+        String email,
         String cep,
         Integer numeroLogradouro,
         String complemento,
