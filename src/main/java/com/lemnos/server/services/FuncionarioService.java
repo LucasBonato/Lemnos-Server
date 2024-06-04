@@ -74,7 +74,7 @@ public class FuncionarioService extends Util {
 
     private Funcionario getOneFuncionarioByEmail(String email) {
         return funcionarioRepository.findByCadastro(
-                cadastroRepository.findByEmail(email).orElseThrow(FuncionarioNotFoundException::new)
+                cadastroRepository.findByEmail(email.replace('%40', '@')).orElseThrow(FuncionarioNotFoundException::new)
         ).orElseThrow(FuncionarioNotFoundException::new);
     }
     private static List<EnderecoResponse> getEnderecoRecords(Funcionario funcionario) {
