@@ -87,7 +87,7 @@ public class ClienteService extends Util {
 
     private Cliente getOneClienteByEmail(String email) {
         return clienteRepository.findByCadastro(
-                cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new)
+                cadastroRepository.findByEmail(email.replace('%40', '@')).orElseThrow(ClienteNotFoundException::new)
         ).orElseThrow(ClienteNotFoundException::new);
     }
     private static List<EnderecoResponse> getEnderecoRecords(Cliente cliente) {
