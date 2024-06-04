@@ -338,7 +338,7 @@ public class ProdutoService {
     private ImagemPrincipal getImagemPrincipal(ProdutoRequest produtoRequest) {
         List<Imagem> imagens = new ArrayList<>();
         ImagemPrincipal imagemPrincipal = new ImagemPrincipal(produtoRequest.imagemPrincipal());
-
+        imagemPrincipalRepository.save(imagemPrincipal);
         for (String imagemRequest : produtoRequest.imagens()) {
             Imagem imagem = imagemRepository.save(new Imagem(imagemRequest, imagemPrincipal));
             imagens.add(imagem);
