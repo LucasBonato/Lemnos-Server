@@ -76,7 +76,7 @@ public class FornecedorService extends Util {
     }
 
     private Fornecedor getOneFornecedorByEmail(String email) {
-        return fornecedorRepository.findByEmail(email).orElseThrow(FornecedorNotFoundException::new);
+        return fornecedorRepository.findByEmail(email.replace('%40', '@')).orElseThrow(FornecedorNotFoundException::new);
     }
     private static EnderecoResponse getEnderecoRecords(Fornecedor fornecedor) {
         if(fornecedor.getEndereco() == null) return null;
