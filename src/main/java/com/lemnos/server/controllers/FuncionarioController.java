@@ -31,6 +31,11 @@ class FuncionarioController {
         return funcionarioService.updateFuncionario(email, funcionarioRequest);
     }
 
+    @PutMapping("/situacao")
+    public ResponseEntity<Void> ativarOuDesativar(@RequestBody List<String> emails) {
+        return funcionarioService.ativarOuDesativar(emails);
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email){
         return funcionarioService.deleteByEmail(email);

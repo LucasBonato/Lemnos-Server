@@ -50,6 +50,15 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> ativarOuDesativar(List<String> emails) {
+        for(String email : emails) {
+            Funcionario funcionario = getOneFuncionarioByEmail(email);
+            funcionario.setSituacao((funcionario.getSituacao().getSituacao().equals(Situacao.ATIVO.getSituacao())) ? Situacao.INATIVO : Situacao.ATIVO);
+            funcionarioRepository.save(funcionario);
+        }
+        return ResponseEntity.ok().build();
+    }
+
     public ResponseEntity<Void> deleteByEmail(String email){
         Funcionario funcionarioDeletado = getOneFuncionarioByEmail(email);
 
