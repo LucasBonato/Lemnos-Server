@@ -49,13 +49,13 @@ public class ProdutoController {
     }
 
     @PostMapping("/fav")
-    public ResponseEntity<Void> favoritar(@RequestParam(name = "id_cliente") Integer idCliente, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.favoritar(idCliente, idProd);
+    public ResponseEntity<Void> favoritar(@RequestParam(name = "email") String email, @RequestParam(name = "id_prod") String idProd) {
+        return produtoService.favoritar(email, idProd);
     }
 
     @DeleteMapping("/fav")
-    public ResponseEntity<Void> desfavoritar(@RequestParam(name = "id_cliente") Integer idCliente, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.desfavoritar(idCliente, idProd);
+    public ResponseEntity<Void> desfavoritar(@RequestParam(name = "email") String email, @RequestParam(name = "id_prod") String idProd) {
+        return produtoService.desfavoritar(email, idProd);
     }
 
     @DeleteMapping("/desconto/{id}")

@@ -16,6 +16,7 @@ import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.produto.categoria.SubCategoria;
 import com.lemnos.server.models.produto.imagens.Imagem;
 import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
+import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
@@ -41,6 +42,7 @@ public class ProdutoService {
 
     @Autowired private ProdutoRepository produtoRepository;
     @Autowired private ClienteRepository clienteRepository;
+    @Autowired private CadastroRepository cadastroRepository;
     @Autowired private AvaliacaoRepository avaliacaoRepository;
     @Autowired private FabricanteRepository fabricanteRepository;
     @Autowired private DataForneceRepository dataForneceRepository;
@@ -129,8 +131,8 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> favoritar(Integer idCliente, String idProd) {
-        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNotFoundException::new);
+    public ResponseEntity<Void> favoritar(String email, String idProd) {
+        Cliente cliente = getClienteByEmail(email);
         Produto produto = getProdutoById(idProd);
 
         if(cliente.getProdutosFavoritos().remove(produto)) throw new ProdutoAlreadyFavoritoException("O produto já está favoritado");
@@ -141,13 +143,13 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> desfavoritar(Integer idCliente, String idProd) {
-        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNotFoundException::new);
+    public ResponseEntity<Void> desfavoritar(String email, String idProd) {
+        Cliente cliente = getClienteByEmail(email);
         List<Produto> novosProdutosFavoritos = new ArrayList<>();
-        for (Produto produto : cliente.getProdutosFavoritos()) {
-            if(produto.getId().toString().equals(idProd)) continue;
-            novosProdutosFavoritos.add(produto);
-        }
+        cliente.getProdutosFavoritos()
+                .stream()
+                .filter(produto -> !produto.getId().toString().equals(idProd))
+                .forEach(novosProdutosFavoritos::add);
         cliente.setProdutosFavoritos(novosProdutosFavoritos);
         clienteRepository.save(cliente);
         return ResponseEntity.ok().build();
@@ -282,6 +284,9 @@ public class ProdutoService {
         }
     }
 
+    private Cliente getClienteByEmail(String email) {
+        return clienteRepository.findByCadastro(cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
+    }
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
