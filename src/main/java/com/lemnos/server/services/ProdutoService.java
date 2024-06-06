@@ -7,6 +7,7 @@ import com.lemnos.server.exceptions.produto.AvaliacaoNotValidException;
 import com.lemnos.server.exceptions.produto.ProdutoAlreadyFavoritoException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
 import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
+import com.lemnos.server.models.dtos.responses.FavoritoResponse;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.*;
@@ -30,6 +31,9 @@ import com.lemnos.server.repositories.produto.imagens.ImagemRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,25 +72,30 @@ public class ProdutoService {
         return ResponseEntity.ok(getProdutoResponse(getProdutoById(id)));
     }
 
-    public ResponseEntity<List<ProdutoResponse>> getBy(ProdutoFiltroRequest filtroRequest) {
+    public ResponseEntity<List<ProdutoResponse>> getBy(ProdutoFiltroRequest filtro) {
         Specification<Produto> specification = Specification.where(null);
 
-        if (filtroRequest.categoria() != null) {
-            specification = specification.and(ProdutoSpecifications.hasCategoria(filtroRequest.categoria()));
+        if(StringUtils.isNotBlank(filtro.nome())) {
+            specification = specification.and(ProdutoSpecifications.hasNome(filtro.nome()));
         }
-        if (filtroRequest.subCategoria() != null) {
-            specification = specification.and(ProdutoSpecifications.hasSubCategoria(filtroRequest.subCategoria()));
+        if (StringUtils.isNotBlank(filtro.categoria())) {
+            specification = specification.and(ProdutoSpecifications.hasCategoria(filtro.categoria()));
         }
-        if (filtroRequest.marca() != null) {
-            specification = specification.and(ProdutoSpecifications.hasFabricante(filtroRequest.marca()));
+        if (StringUtils.isNotBlank(filtro.subCategoria())) {
+            specification = specification.and(ProdutoSpecifications.hasSubCategoria(filtro.subCategoria()));
         }
-        if (filtroRequest.menorPreco() != null && filtroRequest.maiorPreco() != null) {
-            specification = specification.and(ProdutoSpecifications.isPrecoBetween(filtroRequest.menorPreco(), filtroRequest.maiorPreco()));
-        } else if (filtroRequest.menorPreco() == null && filtroRequest.maiorPreco() != null) {
-            specification = specification.and(ProdutoSpecifications.isPrecoBetween(0.0, filtroRequest.maiorPreco()));
+        if (StringUtils.isNotBlank(filtro.marca())) {
+            specification = specification.and(ProdutoSpecifications.hasFabricante(filtro.marca()));
+        }
+        if ((filtro.menorPreco() != null && filtro.menorPreco() >= 0) && (filtro.maiorPreco() != null && filtro.maiorPreco() >= 0)) {
+            specification = specification.and(ProdutoSpecifications.isPrecoBetween(filtro.menorPreco(), filtro.maiorPreco()));
+        } else if (filtro.menorPreco() == null && (filtro.maiorPreco() != null && filtro.maiorPreco() >= 0)) {
+            specification = specification.and(ProdutoSpecifications.isPrecoBetween(0.0, filtro.maiorPreco()));
         }
 
-        List<Produto> produtos = produtoRepository.findAll(specification);
+        Pageable page = PageRequest.of(0, 10);
+
+        Page<Produto> produtos = produtoRepository.findAll(specification, page);
         List<ProdutoResponse> produtoResponses = new ArrayList<>();
         for (Produto produto : produtos) { produtoResponses.add(getProdutoResponse(produto)); }
 
@@ -129,6 +138,13 @@ public class ProdutoService {
     public ResponseEntity<Void> delete(String id){
         produtoRepository.delete(getProdutoById(id));
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<List<FavoritoResponse>> getFavoritos(String email) {
+        Cliente cliente = getClienteByEmail(email);
+        List<FavoritoResponse> response = new ArrayList<>();
+        cliente.getProdutosFavoritos().forEach(produto -> response.add(new FavoritoResponse(produto.getId().toString())));
+        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<Void> favoritar(String email, String idProd) {

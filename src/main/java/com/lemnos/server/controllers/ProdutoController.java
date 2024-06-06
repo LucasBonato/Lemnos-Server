@@ -3,6 +3,7 @@ package com.lemnos.server.controllers;
 import com.lemnos.server.models.dtos.requests.AvaliacaoRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
+import com.lemnos.server.models.dtos.responses.FavoritoResponse;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.produto.Avaliacao;
 import com.lemnos.server.services.ProdutoService;
@@ -23,7 +24,7 @@ public class ProdutoController {
         return produtoService.getAll();
     }
 
-    @GetMapping("/find")
+    @PostMapping("/find")
     public ResponseEntity<List<ProdutoResponse>> getBy(@RequestBody ProdutoFiltroRequest filtroRequest) {
         return produtoService.getBy(filtroRequest);
     }
@@ -46,6 +47,11 @@ public class ProdutoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         return produtoService.delete(id);
+    }
+
+    @GetMapping("/fav")
+    public ResponseEntity<List<FavoritoResponse>> getFavoritos(@RequestBody String email) {
+        return produtoService.getFavoritos(email);
     }
 
     @PostMapping("/fav")

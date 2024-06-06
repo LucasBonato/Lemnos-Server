@@ -4,12 +4,16 @@ import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProdutoSpecifications {
+    public static Specification<Produto> hasNome(String nome) {
+        return (root, query, cb) -> cb.like(root.get("nomeProduto"), "%" + nome + "%");
+    }
+
     public static Specification<Produto> hasCategoria(String categoria) {
         return (root, query, cb) -> cb.equal(root.join("subCategoria", JoinType.INNER).join("categoria", JoinType.INNER).get("nome"), categoria);
     }
 
     public static Specification<Produto> hasSubCategoria(String subCategoria) {
-        return (root, query, cb) -> cb.equal(root.join("subCategoria", JoinType.INNER).get("nome"), subCategoria);
+        return (root, query, cb) -> cb.equal(root.join("subCategoria", JoinType.INNER).get("subCategoria"), subCategoria);
     }
 
     public static Specification<Produto> hasFabricante(String fabricante) {
