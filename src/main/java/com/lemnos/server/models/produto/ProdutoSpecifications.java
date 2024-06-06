@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ProdutoSpecifications {
     public static Specification<Produto> hasNome(String nome) {
-        return (root, query, cb) -> cb.like(root.get("nomeProduto"), "%" + nome + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("nomeProduto")), "%" + nome.toLowerCase() + "%");
     }
 
     public static Specification<Produto> hasCategoria(String categoria) {

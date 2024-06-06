@@ -1771,14 +1771,17 @@ Class Api{
 Nenhum dos campos são obrigatórios, todos são opcionais, sendo que o único que é em conjunto são os de menor e maior Preço, se passado só o maiorPreço o menorPreço será 0 por padrão, o contrário não acontecerá.
 
 ``` JSON
+  "nome": ""
   "categoria": "",
   "subCategoria": "",
   "marca": "",
   "menorPreco": 0.0,
-  "maiorPreco": 0.0
+  "maiorPreco": 0.0,
+  "page": 0 // Número da página, padrão é 0
+  "size": 10 // Quantidade de itens na página, padrão é 10
 ```
 
-![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
 > `{{baseUri}}/produto/find`
 
@@ -1795,11 +1798,14 @@ function getProdutosFilter(filtro) {
       method: "GET",
       url: "/produto/find",
       data: {
+        nome: filtro.nome
         categoria: filtro.categoria,
         subCategoria: filtro.subCategoria,
         marca: filtro.marca,
         menorPreco: filtro.menorPreco,
-        maiorPreco: filtro.maiorPreco
+        maiorPreco: filtro.maiorPreco,
+        page: filtro.page,
+        size: filtro.size
       },
     })
       .then((response) => console.log(response.data))
@@ -1820,11 +1826,14 @@ Class Api{
         var uri = Uri.parse(baseUri + "/produto/find");
         var response = await client.get(uri, 
         body: jsonEnconde({
+          "nome": filtro.nome,
           "categoria": filtro.categoria,
           "subCategoria": filtro.subCategoria,
           "marca": filtro.marca,
           "menorPreco": filtro.menorPreco,
-          "maiorPreco": filtro.maiorPreco
+          "maiorPreco": filtro.maiorPreco,
+          "page": filtro.page,
+          "size": filtro.size
         }));
     
         var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
@@ -2108,6 +2117,69 @@ Class Api{
 | 209         |  CONFLICT   |   Algum dado único já foi cadastrado    |                 
 | 400         | BAD REQUEST |  Alguma informação foi enviada errada   |
 | 404         |  NOT FOUND  | Alguma das entidades não foi encontrada |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Pegar os favoritos
+
+### Parâmetros:
+| Key     |    Tipo     | Descrição                      |
+|---------|:-----------:|--------------------------------|
+| email   |   String    | email do cliente               |
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto/fav?email=`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutosFavoritos(email) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/produto/fav`,
+      params: {
+        email: email
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<String>> getProdutosFavoritos(String email) async{
+        var uri = Uri.parse(baseUri + "/produto/fav?email=${email}");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        List<String> ids = jsonResponse.map((json) => String.fromJson(json));
+        return ids;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?                |
+|-------------|:-----------:|:-------------------------------------:|
+| 200         |     OK      |           Retornou o valor            |            
+| 404         |  NOT FOUND  | A entidade buscada não foi encontrada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
