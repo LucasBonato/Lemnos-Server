@@ -302,7 +302,7 @@ public class ProdutoService {
     }
 
     private Cliente getClienteByEmail(String email) {
-        return clienteRepository.findByCadastro(cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
+        return clienteRepository.findByCadastro(cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
     }
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);

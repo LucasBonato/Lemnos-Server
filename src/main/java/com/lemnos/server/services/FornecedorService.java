@@ -15,6 +15,7 @@ import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +34,7 @@ public class FornecedorService extends Util {
         List<Fornecedor> fornecedores = fornecedorRepository.findAll();
         List<FornecedorResponse> dto = new ArrayList<>();
         for(Fornecedor fornecedor : fornecedores){
-            dto.add(new FornecedorResponse(
-                    fornecedor.getNome(),
-                    fornecedor.getCnpj(),
-                    fornecedor.getTelefone(),
-                    fornecedor.getEmail(),
-                    fornecedor.getSituacao().toString(),
-                    getEnderecoRecords(fornecedor)
-            ));
+            dto.add(getFornecedorResponse(fornecedor));
         }
 
         return ResponseEntity.ok(dto);
@@ -48,15 +42,14 @@ public class FornecedorService extends Util {
 
     public ResponseEntity<FornecedorResponse> getOneByEmail(String email) {
         Fornecedor fornecedor = getOneFornecedorByEmail(email);
-        FornecedorResponse record = new FornecedorResponse(
-                fornecedor.getNome(),
-                fornecedor.getCnpj(),
-                fornecedor.getTelefone(),
-                fornecedor.getEmail(),
-                fornecedor.getSituacao().toString(),
-                getEnderecoRecords(fornecedor)
-        );
+        FornecedorResponse record = getFornecedorResponse(fornecedor);
         return ResponseEntity.ok(record);
+    }
+
+    public ResponseEntity<List<String>> getBy(String nome) {
+        List<String> response = new ArrayList<>();
+        fornecedorRepository.findByNomeContainingIgnoreCase(nome).forEach(fornecedor -> response.add(fornecedor.getNome()));
+        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<Void> updateFornecedor(String email, FornecedorRequest fornecedorRequest) {
@@ -75,6 +68,17 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok().build();
     }
 
+
+    private static FornecedorResponse getFornecedorResponse(Fornecedor fornecedor) {
+        return new FornecedorResponse(
+                fornecedor.getNome(),
+                fornecedor.getCnpj(),
+                fornecedor.getTelefone(),
+                fornecedor.getEmail(),
+                fornecedor.getSituacao().toString(),
+                getEnderecoRecords(fornecedor)
+        );
+    }
     private Fornecedor getOneFornecedorByEmail(String email) {
         return fornecedorRepository.findByEmail(email.replace("%40", "@")).orElseThrow(FornecedorNotFoundException::new);
     }

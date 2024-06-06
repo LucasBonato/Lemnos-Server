@@ -50,7 +50,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/fav")
-    public ResponseEntity<List<FavoritoResponse>> getFavoritos(@RequestBody String email) {
+    public ResponseEntity<List<FavoritoResponse>> getFavoritos(@RequestParam(name = "email") String email) {
         return produtoService.getFavoritos(email);
     }
 

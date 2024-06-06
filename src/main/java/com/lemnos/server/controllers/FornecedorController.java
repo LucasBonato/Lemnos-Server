@@ -25,6 +25,11 @@ public class FornecedorController {
         return fornecedorService.getOneByEmail(email);
     }
 
+    @GetMapping("/by")
+    public ResponseEntity<List<String>> getBy(@RequestParam(value = "nome") String nome) {
+        return fornecedorService.getBy(nome);
+    }
+
     @PutMapping
     public ResponseEntity<Void> update(@PathParam(value = "email") String email, @RequestBody FornecedorRequest fornecedorRequest) {
         return fornecedorService.updateFornecedor(email, fornecedorRequest);
