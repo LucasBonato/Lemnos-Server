@@ -53,9 +53,9 @@ gerenciamento de carrinho.
 | **EndPoints** | **Sub Endpoints**                                             | **Exemplos**                                                                                                                                                                           | **Body**                                                                                       |                                         Descrição                                          |
 |---------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
 | /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar    | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                                                | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
-| /cliente      | ?email=<br/>/endereco                                         | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | ?email=<br/>/endereco                                         | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | ?email=<br/>/endereco                                         | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /cliente      | /find?email=<br/>/endereco                                    | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /find?email=<br/>/endereco<br/>/by?nome=                      | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /find?email=<br/>/endereco<br/>/by?nome=                      | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
 | /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
 | /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 | /carrinho     | ?email=                                                       | [carrinho](#Carrinho)                                                                                                                                                                  | [Carrinho](#Carrinho-Body)                                                                     |                    Permite a criação, inserção e remoção de um carrinho                    |
@@ -757,6 +757,66 @@ Class Api{
 
 ---
 
+### Parâmetros:
+| Key  | Tipo   | Descrição                                     |
+|------|--------|-----------------------------------------------|
+| nome | String | Nome da entidade que se deseja pegar os nomes |
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/funcionario/by?nome=`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getFuncionariosByNome(nome) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/funcionario/by",
+      params: {
+        nome: nome
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<Funcionario>> getFuncionariosByNome(String nome) async{
+        var uri = Uri.parse(baseUri + "/funcionario/by?nome=${nome}");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Funcionario> funcionarios = jsonResponse.map((json) => Funcionario.fromJson(json)).toList();
+        return funcionarios;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |         Retornou os valores          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
 ### Body Put Funcionário:
 ``` JSON
 "nome": "Qualquer Nome",
@@ -1019,6 +1079,66 @@ Class Api{
 | Status Code |   Meaning   |               Why?                |
 |-------------|:-----------:|:---------------------------------:|
 | 200         |     OK      |         Retornou o valor          |                 
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Parâmetros:
+| Key  | Tipo   | Descrição                                     |
+|------|--------|-----------------------------------------------|
+| nome | String | Nome da entidade que se deseja pegar os nomes |
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/fornecedor/by?nome=`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getFornecedoresByNome(nome) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/fornecedor/by",
+      params: {
+        nome: nome
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<Fornecedor>> getFornecedoresByNome(String nome) async{
+        var uri = Uri.parse(baseUri + "/fornecedor/by?nome=${nome}");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
+        List<Funcionario> funcionarios = jsonResponse.map((json) => Funcionario.fromJson(json)).toList();
+        return funcionarios;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code |   Meaning   |                 Why?                 |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |         Retornou os valores          |                 
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
