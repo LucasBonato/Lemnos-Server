@@ -6,5 +6,7 @@ public record ProdutoFiltroRequest(
     String subCategoria,
     String marca,
     Double menorPreco,
-    Double maiorPreco
+    Double maiorPreco,
+    Integer page,
+    Integer size
 ) { }

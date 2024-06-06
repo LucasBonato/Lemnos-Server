@@ -92,12 +92,13 @@ public class ProdutoService {
         } else if (filtro.menorPreco() == null && (filtro.maiorPreco() != null && filtro.maiorPreco() >= 0)) {
             specification = specification.and(ProdutoSpecifications.isPrecoBetween(0.0, filtro.maiorPreco()));
         }
+        int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
+        int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 10;
+        Pageable pageble = PageRequest.of(page, size);
 
-        Pageable page = PageRequest.of(0, 10);
-
-        Page<Produto> produtos = produtoRepository.findAll(specification, page);
         List<ProdutoResponse> produtoResponses = new ArrayList<>();
-        for (Produto produto : produtos) { produtoResponses.add(getProdutoResponse(produto)); }
+        produtoRepository.findAll(specification, pageble)
+                .forEach(produto -> produtoResponses.add(getProdutoResponse(produto)));
 
         return ResponseEntity.ok(produtoResponses);
     }
