@@ -43,6 +43,12 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(record);
     }
 
+    public ResponseEntity<List<String>> getBy(String nome) {
+        List<String> response = new ArrayList<>();
+        funcionarioRepository.findByNomeContainingIgnoreCase(nome).forEach(funcionario -> response.add(funcionario.getNome()));
+        return ResponseEntity.ok(response);
+    }
+
     public ResponseEntity<Void> updateFuncionario(String email, FuncionarioRequest funcionarioRequest){
         Funcionario updatedFuncionario = insertData(email, funcionarioRequest);
         funcionarioRepository.save(updatedFuncionario);

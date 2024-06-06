@@ -26,6 +26,11 @@ class FuncionarioController {
         return funcionarioService.getOneByEmail(email);
     }
 
+    @GetMapping("/by")
+    public ResponseEntity<List<String>> getBy(@RequestParam(value = "nome") String nome) {
+        return funcionarioService.getBy(nome);
+    }
+
     @PutMapping
     public ResponseEntity<Void> updateFuncionario(@PathParam(value = "email") String email, @RequestBody @Valid FuncionarioRequest funcionarioRequest){
         return funcionarioService.updateFuncionario(email, funcionarioRequest);
