@@ -1928,14 +1928,14 @@ Class Api{
 ### Favoritar:
 
 ### Parâmetros:
-| Key        |     Tipo      | Descrição                      |
-|------------|:-------------:|--------------------------------|
-| id_cliente |      int      | Id do cliente                  |
-| id_prod    |  UUID/String  | Id do Produto a ser favoritado |
+| Key     |    Tipo     | Descrição                      |
+|---------|:-----------:|--------------------------------|
+| email   |   String    | email do cliente               |
+| id_prod | UUID/String | Id do Produto a ser favoritado |
 
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/produto/fav?id_cliente=&id_prod=`
+> `{{baseUri}}/produto/fav?email=&id_prod=`
 
 JavaScript
 ~~~javascript
@@ -1952,7 +1952,7 @@ function adicionarFavorito(produto, cliente){
       url: "/produto/fav",
       headers: {'Content-Type': 'application/json; charset=UTF-8'}
       params: {
-        id_cliente: cliente.id,
+        email: cliente.email,
         id_prod: produto.id
       }
     })
@@ -1972,7 +1972,7 @@ Class Api{
     
     Future<dynamic> favoritarProduto(Cliente cliente, Produto produto) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/produto/fav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            Uri.parse(baseUri + "/produto/fav?email=${cliente.email}&id_prod=${Produto.id}"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             })
@@ -1996,14 +1996,14 @@ Class Api{
 ### Desfavoritar:
 
 ### Parâmetros:
-| Key        |     Tipo      | Descrição                               |
-|------------|:-------------:|-----------------------------------------|
-| id_cliente |      int      | Id do cliente                           |
-| id_prod    |  UUID/String  | Id do Produto a se retirar o favoritado |
+| Key     |    Tipo     | Descrição                               |
+|---------|:-----------:|-----------------------------------------|
+| email   |   String    | email do cliente                        |
+| id_prod | UUID/String | Id do Produto a se retirar o favoritado |
 
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/produto/fav?id_cliente=&id_prod=`
+> `{{baseUri}}/produto/fav?email=&id_prod=`
 
 JavaScript
 ~~~javascript
@@ -2020,7 +2020,7 @@ function dasfavoritarProduto(produto, cliente){
       url: "/produto/fav",
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       params: {
-        id_cliente: cliente.id,
+        email: cliente.email,
         id_prod: produto.id
       }
     })
@@ -2040,7 +2040,7 @@ Class Api{
     
     Future<dynamic> desfavoritarProduto(Cliente cliente, Produto produto) async{
         var response = await client.delete(
-            Uri.parse(baseUri + "/produto/fav?id_cliente=${cliente.id}&id_prod=${Produto.id}"),
+            Uri.parse(baseUri + "/produto/fav?email=${cliente.email}&id_prod=${Produto.id}"),
             headers: <String, String>{
                 "Content-type": "application/json; charset=UTF-8"
             })
