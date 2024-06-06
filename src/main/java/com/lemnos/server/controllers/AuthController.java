@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.models.dtos.requests.FireBaseLoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
@@ -19,6 +20,11 @@ public class AuthController {
     @PostMapping("/login")
     private ResponseEntity<LoginReponse> login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
+    }
+
+    @PostMapping("/login-firebase")
+    private ResponseEntity<LoginReponse> loginFirebase(@RequestBody FireBaseLoginRequest fbLoginRequest) {
+        return authService.loginFirebase(fbLoginRequest);
     }
 
     @PostMapping("/register")

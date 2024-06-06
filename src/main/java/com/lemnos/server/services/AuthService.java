@@ -1,7 +1,12 @@
 package com.lemnos.server.services;
 
+import com.google.api.gax.rpc.StatusCode;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.exceptions.cadastro.*;
 import com.lemnos.server.models.cadastro.Cadastro;
+import com.lemnos.server.models.dtos.requests.FireBaseLoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
 import com.lemnos.server.models.dtos.responses.auth.LoginReponse;
 import com.lemnos.server.models.entidades.Cliente;
@@ -18,6 +23,7 @@ import com.lemnos.server.repositories.entidades.FuncionarioRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,20 +49,26 @@ public class AuthService extends Util {
         return ResponseEntity.ok(new LoginReponse(token));
     }
 
-    private UserDetails verificarLogin(LoginRequest loginRequest) {
-        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email());
-        if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(loginRequest, passwordEncoder)) {
-            throw new RuntimeException("Email ou senha inválidos");
+    public ResponseEntity<LoginReponse> loginFirebase(FireBaseLoginRequest fbLoginRequest) {
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(fbLoginRequest.token());
+            UserDetails userDetails = verificarLogin(decodedToken.getEmail(), decodedToken.getUid());
+            if(userDetails == null) {
+                userDetails = newClienteFirebase(decodedToken);
+            }
+            String token = tokenService.generateToken(userDetails);
+            return ResponseEntity.ok(new LoginReponse(token));
+        } catch (FirebaseAuthException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
-        if (clienteOptional.isPresent()) {
-            return clienteOptional.get();
-        }
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
-        if(funcionarioOptional.isPresent()) {
-            return funcionarioOptional.get();
-        }
-        throw new RuntimeException("Usuário não encontrado");
+    }
+
+    private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
+        Cadastro cadastro = cadastroRepository.save(new Cadastro(decodedToken.getEmail(), decodedToken.getUid()));
+        Cliente cliente = new Cliente();
+        cliente.setCadastro(cadastro);
+        cliente.setNome(decodedToken.getName());
+        return clienteRepository.save(cliente);
     }
 
     public ResponseEntity<Void> register(RegisterRequest registerRequest) {
@@ -78,6 +90,34 @@ public class AuthService extends Util {
 
         fornecedorRepository.save(fornecedor);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    private UserDetails verificarLogin(LoginRequest loginRequest) {
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email());
+        if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(loginRequest, passwordEncoder)) {
+            throw new RuntimeException("Email ou senha inválidos");
+        }
+        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
+        if (clienteOptional.isPresent()) {
+            return clienteOptional.get();
+        }
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
+        if(funcionarioOptional.isPresent()) {
+            return funcionarioOptional.get();
+        }
+        throw new RuntimeException("Usuário não encontrado");
+    }
+    private UserDetails verificarLogin(String email, String uid) {
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(email);
+        if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(uid, passwordEncoder)) {
+            throw new RuntimeException("Email ou senha inválidos");
+        }
+        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
+        if (clienteOptional.isPresent()) {
+            return clienteOptional.get();
+        }
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
+        return funcionarioOptional.orElse(null);
     }
 
     private Cliente verificarRegraDeNegocio(RegisterRequest registerRequest) {

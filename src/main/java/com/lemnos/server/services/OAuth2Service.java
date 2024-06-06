@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+//import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,42 +24,42 @@ public class OAuth2Service {
     @Autowired protected ClienteRepository clienteRepository;
     @Autowired protected FuncionarioRepository funcionarioRepository;
 
-    public ResponseEntity<LoginReponse> login(OAuth2AuthenticationToken OAuthToken) {
+    public ResponseEntity<LoginReponse> login() {
         String token = "";
-        if(OAuthToken.getAuthorizedClientRegistrationId().equals("google")){
-            UserDetails userOAuthGoogle = verificarLogin(OAuthToken);
-            token = tokenService.generateToken(userOAuthGoogle);
-        }
+//        if(OAuthToken.getAuthorizedClientRegistrationId().equals("google")){
+//            UserDetails userOAuthGoogle = verificarLogin(OAuthToken);
+//            token = tokenService.generateToken(userOAuthGoogle);
+//        }
 
         return ResponseEntity.ok(new LoginReponse(token));
     }
 
-    private UserDetails verificarLogin(OAuth2AuthenticationToken OAuthToken) {
-        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(OAuthToken.getPrincipal().getAttributes().get("email").toString());
-        cadastroOptional = cadastrarOuVerificarCadastro(OAuthToken, cadastroOptional);
-
-        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
-        if (clienteOptional.isPresent()) {
-            return clienteOptional.get();
-        }
-        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
-        if(funcionarioOptional.isPresent()) {
-            return funcionarioOptional.get();
-        }
+    private UserDetails verificarLogin() {
+//        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(OAuthToken.getPrincipal().getAttributes().get("email").toString());
+//        cadastroOptional = cadastrarOuVerificarCadastro(OAuthToken, cadastroOptional);
+//
+//        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
+//        if (clienteOptional.isPresent()) {
+//            return clienteOptional.get();
+//        }
+//        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
+//        if(funcionarioOptional.isPresent()) {
+//            return funcionarioOptional.get();
+//        }
         throw new RuntimeException("Usuário não encontrado");
     }
 
-    private Optional<Cadastro> cadastrarOuVerificarCadastro(OAuth2AuthenticationToken OAuthToken, Optional<Cadastro> cadastroOptional) {
-        String email = OAuthToken.getPrincipal().getAttributes().get("email").toString();
-        if (cadastroOptional.isEmpty() && (email.equals("lucas.perez.bonato@gmail.com") || email.equals("lucasatdriano@gmail.com") || email.equals("leandrofamiliafox@gmail.com"))) {
-            funcionarioRepository.save(new Funcionario(OAuthToken, passwordEncoder.encode(OAuthToken.getPrincipal().getAttribute("sub"))));
-        } else {
-            clienteRepository.save(new Cliente(OAuthToken, passwordEncoder.encode(OAuthToken.getPrincipal().getAttribute("sub"))));
-        }
-        if (!cadastroOptional.get().isLoginCorrect(OAuthToken.getPrincipal().getAttributes().get("sub").toString(), passwordEncoder)) {
-            throw new RuntimeException("Email ou senha errados!");
-        }
+    private Optional<Cadastro> cadastrarOuVerificarCadastro(Optional<Cadastro> cadastroOptional) {
+//        String email = OAuthToken.getPrincipal().getAttributes().get("email").toString();
+//        if (cadastroOptional.isEmpty() && (email.equals("lucas.perez.bonato@gmail.com") || email.equals("lucasatdriano@gmail.com") || email.equals("leandrofamiliafox@gmail.com"))) {
+//            funcionarioRepository.save(new Funcionario(OAuthToken, passwordEncoder.encode(OAuthToken.getPrincipal().getAttribute("sub"))));
+//        } else {
+//            clienteRepository.save(new Cliente(OAuthToken, passwordEncoder.encode(OAuthToken.getPrincipal().getAttribute("sub"))));
+//        }
+//        if (!cadastroOptional.get().isLoginCorrect(OAuthToken.getPrincipal().getAttributes().get("sub").toString(), passwordEncoder)) {
+//            throw new RuntimeException("Email ou senha errados!");
+//        }
 
-        return cadastroRepository.findByEmail(email);
+        return cadastroRepository.findByEmail("");
     }
 }

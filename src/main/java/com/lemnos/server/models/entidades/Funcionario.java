@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+//import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -70,31 +70,31 @@ public class Funcionario implements UserDetails {
         this.cadastro = new Cadastro(funcionarioRequest);
     }
 
-    public Funcionario(OAuth2AuthenticationToken oAuthToken, String senha) {
-        this.nome = oAuthToken.getPrincipal().getAttribute("given_name");
-        switch (oAuthToken.getPrincipal().getAttribute("email").toString()) {
-            case "lucas.perez.bonato@gmail.com":
-                this.cpf = 11122233301L;
-                this.dataNascimento = Util.convertData("29/08/2006");
-                this.dataAdmissao = Date.from(Instant.now());
-                this.telefone = 11972540380L;
-                break;
-            case "lucasatdriano@gmail.com":
-                this.cpf = 11122233302L;
-                this.dataNascimento = Util.convertData("01/01/2006");
-                this.dataAdmissao = Date.from(Instant.now());
-                this.telefone = 11962891098L;
-                break;
-            case "leandrofamiliafox@gmail.com":
-                this.cpf = 11122233303L;
-                this.dataNascimento = Util.convertData("30/06/2006");
-                this.dataAdmissao = Date.from(Instant.now());
-                this.telefone = 11934485241L;
-                break;
-        }
-        this.role = Roles.ADMIN;
-        this.cadastro = new Cadastro(oAuthToken, senha);
-    }
+//    public Funcionario(OAuth2AuthenticationToken oAuthToken, String senha) {
+//        this.nome = oAuthToken.getPrincipal().getAttribute("given_name");
+//        switch (oAuthToken.getPrincipal().getAttribute("email").toString()) {
+//            case "lucas.perez.bonato@gmail.com":
+//                this.cpf = 11122233301L;
+//                this.dataNascimento = Util.convertData("29/08/2006");
+//                this.dataAdmissao = Date.from(Instant.now());
+//                this.telefone = 11972540380L;
+//                break;
+//            case "lucasatdriano@gmail.com":
+//                this.cpf = 11122233302L;
+//                this.dataNascimento = Util.convertData("01/01/2006");
+//                this.dataAdmissao = Date.from(Instant.now());
+//                this.telefone = 11962891098L;
+//                break;
+//            case "leandrofamiliafox@gmail.com":
+//                this.cpf = 11122233303L;
+//                this.dataNascimento = Util.convertData("30/06/2006");
+//                this.dataAdmissao = Date.from(Instant.now());
+//                this.telefone = 11934485241L;
+//                break;
+//        }
+//        this.role = Roles.ADMIN;
+//        this.cadastro = new Cadastro(oAuthToken, senha);
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

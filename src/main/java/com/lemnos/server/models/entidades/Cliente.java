@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+//import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 import java.util.Collection;
 import java.util.List;
@@ -57,10 +57,10 @@ public class Cliente implements UserDetails {
         this.cadastro = new Cadastro(registerRequest);
     }
 
-    public Cliente(OAuth2AuthenticationToken oAuthToken, String senha) {
-        this.nome = oAuthToken.getPrincipal().getAttribute("given_name");
-        this.cadastro = new Cadastro(oAuthToken, senha);
-    }
+//    public Cliente(OAuth2AuthenticationToken oAuthToken, String senha) {
+//        this.nome = oAuthToken.getPrincipal().getAttribute("given_name");
+//        this.cadastro = new Cadastro(oAuthToken, senha);
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

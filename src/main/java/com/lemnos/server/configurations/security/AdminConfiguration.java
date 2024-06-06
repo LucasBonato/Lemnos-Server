@@ -31,7 +31,7 @@ public class AdminConfiguration implements CommandLineRunner {
                     Funcionario admin = new Funcionario();
                     admin.setCadastro(new Cadastro("admin@gmail.com", passwordEncoder.encode("admin")));
                     admin.setRole(Roles.ADMIN);
-                    admin.setCpf(23504391863L);
+                    admin.setCpf(23504391864L);
                     admin.setTelefone(11972540380L);
                     admin.setNome("admin");
                     admin.setDataAdmissao(Util.convertData("16/05/2024"));
