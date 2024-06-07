@@ -2763,7 +2763,9 @@ Class Api{
 
 ``` JSON
 "email": "emailDaEntidade@email.com",
-"metodoPagamento": ""
+"metodoPagamento": "",
+"valorPagamento": 1.0,
+"valorFrete": 1.0
 ```
 
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)

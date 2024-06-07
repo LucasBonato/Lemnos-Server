@@ -4,6 +4,7 @@ import com.lemnos.server.exceptions.carrinho.CarrinhoVazioException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.pedido.EntregaJaRealizadaException;
 import com.lemnos.server.exceptions.pedido.PedidoNotFoundException;
+import com.lemnos.server.exceptions.pedido.PedidoNotValidException;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.carrinho.Carrinho;
 import com.lemnos.server.models.dtos.requests.AlterarStatusRequest;
@@ -16,6 +17,7 @@ import com.lemnos.server.repositories.CarrinhoRepository;
 import com.lemnos.server.repositories.EntregaRepository;
 import com.lemnos.server.repositories.PedidoRepository;
 import com.lemnos.server.repositories.cadastro.CadastroRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,11 +49,12 @@ public class PedidoService {
     public ResponseEntity<Void> novoPedido(PedidoRequest pedidoRequest) {
         Cadastro cadastro = getCadastroByEmail(pedidoRequest.email());
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElseThrow(CarrinhoVazioException::new);
+        verficarPedido(pedidoRequest);
         pedidoRepository.save(new Pedido(carrinho.getValor(), pedidoRequest.metodoPagamento(), carrinho.getValor(),carrinho.getQuantidadeProdutos(), getDescricao(carrinho),  pedidoRequest.valorFrete(), cadastro));
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
-    
+
     public ResponseEntity<Void> alterarStatus(AlterarStatusRequest request) {
         Pedido pedido = pedidoRepository.findById(request.id()).orElseThrow(PedidoNotFoundException::new);
         Status status = proximoStatus(pedido.getStatus());
@@ -65,6 +68,18 @@ public class PedidoService {
         pedidoRepository.save(pedido);
 
         return ResponseEntity.ok().build();
+    }
+
+    private void verficarPedido(PedidoRequest pedidoRequest) {
+        if(pedidoRequest.valorFrete() < 0) {
+            throw new PedidoNotValidException("O valor do frete não pode ser negativo");
+        }
+        if(pedidoRequest.valorPagamento() < 0) {
+            throw new PedidoNotValidException("O valor do pagamento não pode ser negativo");
+        }
+        if(StringUtils.isBlank(pedidoRequest.metodoPagamento())) {
+            throw new PedidoNotValidException("Selecione um método de pagamento");
+        }
     }
 
     private Status proximoStatus(String status) {
