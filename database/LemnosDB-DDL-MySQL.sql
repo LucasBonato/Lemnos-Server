@@ -75,8 +75,6 @@ CREATE TABLE Sub_Categoria (
 CREATE TABLE Descontos (
 	Id int primary key auto_increment,
 	Valor_Porcentagem varchar(2) NOT NULL,
-	Id_Categoria int,
-	foreign key(Id_Categoria) references Categoria (Id)
 );
 CREATE TABLE Fabricante(
 	Id int primary key auto_increment,
