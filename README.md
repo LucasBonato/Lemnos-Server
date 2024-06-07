@@ -28,6 +28,7 @@
     - [Verificação](#Verificar-Endereço)
   - [Produto](#Produto)
   - [Carrinho](#Carrinho)
+  - [Pedido](#Pedido)
 
 
 # Como utilizar a API
@@ -59,6 +60,7 @@ gerenciamento de carrinho.
 | /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
 | /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
 | /carrinho     | ?email=                                                       | [carrinho](#Carrinho)                                                                                                                                                                  | [Carrinho](#Carrinho-Body)                                                                     |                    Permite a criação, inserção e remoção de um carrinho                    |
+| /pedido       | ?email=<br/>/{id}                                             | [pedido](#Pedido)                                                                                                                                                                      | [Pedido](#Pedido-Body)                                                                         |        Permite a criação de um novo pedido, visualizar os pedidos e alterar status         |
 
 ---
 
@@ -1441,7 +1443,7 @@ Class Api{
 
 ---
 
-## Alterar um Endereço
+### Alterar um Endereço
 
 O campo cep tem que ser de um endereço já existente, só sendo possível alterar os campos complemento e numero de Logradouro
 
@@ -1527,7 +1529,7 @@ Class Api{
 
 ---
 
-## Remover um Endereço
+### Remover um Endereço
 
 Possíbilita remover o endereço de uma entidade
 
@@ -2046,7 +2048,7 @@ Class Api{
 
 ---
 
-## Favoritar Produtos
+### Favoritar Produtos
 
 ### Favoritar:
 
@@ -2626,6 +2628,266 @@ Class Api{
 | Status Code | Significado |                         Por quê?                         |
 |-------------|:-----------:|:--------------------------------------------------------:|
 | 200         |     OK      |                     Deu certo a ação                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Pedido
+
+### Lista de Pedidos
+
+### Parâmetros:
+| Key   | Tipo   | Descrição                                                        |
+|-------|--------|------------------------------------------------------------------|
+| email | String | Email da entidade que se deseja pegar os pedidos                 |
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/pedido?email=`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getPedidos(email) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/pedido",
+      params: {
+        email: email
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<List<Pedido>> getPedidos(email) async{
+        var uri = Uri.parse(baseUri + "/pedido?email=${email}");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        List<Pedido> pedidos = jsonResponse.map((json) => Pedido.fromJson(json)).toList();
+        return pedidos;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Pedido especifico
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/pedido/{id}`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getPedido(pedido) {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: `/pedido/${pedido.id}`
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Pedido> getPedido(Pedido pedido) async{
+        var uri = Uri.parse(baseUri + "/pedido/${pedido.id}");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Pedido pedido = jsonResponse.map((json) => Pedido.fromJson(json));
+        return pedido;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Novo Pedido
+
+### Pedido Body:
+
+``` JSON
+"email": "emailDaEntidade@email.com",
+"metodoPagamento": ""
+```
+
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/pedido`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function novoPedido(pedido, cliente) {
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/pedido",
+      data: {
+        email: cliente.email,
+        metodoPagamento: pedido.metodoPagamento
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Void> novoPedido(Pedido pedido, Cliente cliente) async{
+        var uri = Uri.parse(baseUri + "/pedido");
+        var response = await client.post(uri, body: jsonEncode({
+                "email": cliente.email,
+                "metodoPagamento": pedido.email
+            }));
+        
+        if(response.statusCode != 200) {
+          return null;
+        }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Cadastrou o item                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Atualizar Status do Pedido
+
+### Pedido Body:
+
+``` JSON
+"email": "emailDaEntidade@email.com",
+"id": 0 // Id do Pedido
+```
+
+![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
+
+> `{{baseUri}}/pedido`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function atualizarStatus(pedido, cliente) {
+    axios({
+      baseURL: baseUri,
+      method: "PUT",
+      url: "/pedido",
+      data: {
+        email: cliente.email,
+        id: pedido.id
+      }
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Void> atualizarStatus(Pedido pedido, Cliente cliente) async{
+        var uri = Uri.parse(baseUri + "/pedido");
+        var response = await client.put(uri, body: jsonEncode({
+                "email": cliente.email,
+                "id": pedido.id
+            }));
+        
+        if(response.statusCode != 200) {
+          return null;
+        }
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Cadastrou o item                     |
 | 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
 | 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
 
