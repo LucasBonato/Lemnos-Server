@@ -1922,13 +1922,7 @@ O body do put só precisa ter pelo menos uma campo, se não houver ele mantem os
 "largura": 1.0,
 "fabricante": "Nome do Fabricante",
 "fornecedor": "Nome do Fornecedor",
-"subCategoria": "Subcategoria do Produto",
-"imagemPrincipal": "linkDeUmaImagem",
-"imagens": [
-     "linkDeUmaImagem",
-     "linkDeUmaImagem",
-     ...
-]
+"subCategoria": "Subcategoria do Produto"
 ```
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)  
