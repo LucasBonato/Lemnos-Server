@@ -125,7 +125,7 @@ public class ProdutoService {
 
         Fabricante fabricante = (StringUtils.isBlank(produtoRequest.fabricante())) ? produto.getFabricante() : getFabricante(produtoRequest.fabricante());
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
-        ImagemPrincipal imagemPrincipal = (StringUtils.isBlank(produtoRequest.imagemPrincipal())) ? produto.getImagemPrincipal() : getImagemPrincipal(produtoRequest);
+        ImagemPrincipal imagemPrincipal = produto.getImagemPrincipal();
         Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
 
         produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, desconto);
@@ -361,10 +361,7 @@ public class ProdutoService {
         List<Imagem> imagens = new ArrayList<>();
         ImagemPrincipal imagemPrincipal = new ImagemPrincipal(produtoRequest.imagemPrincipal());
         imagemPrincipalRepository.save(imagemPrincipal);
-        for (String imagemRequest : produtoRequest.imagens()) {
-            Imagem imagem = imagemRepository.save(new Imagem(imagemRequest, imagemPrincipal));
-            imagens.add(imagem);
-        }
+        produtoRequest.imagens().forEach(imagem -> imagens.add(imagemRepository.save(new Imagem(imagem, imagemPrincipal))));
         imagemPrincipal.setImagens(imagens);
         return imagemPrincipalRepository.save(imagemPrincipal);
     }
