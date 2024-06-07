@@ -39,6 +39,9 @@ public class Pedido {
     @Column(name = "Data_Pagamento")
     private Date dataPagamento;
 
+    @Column(name = "Valor_Frete")
+    private Double valorFrete;
+
     @Column(name = "Descricao")
     private String descricao;
 
@@ -49,12 +52,13 @@ public class Pedido {
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
 
-    public Pedido(Double valorPedido, String metodoPagamento, Double valorPagamento, Integer qntdProdutos, String descricao, Cadastro cadastro) {
+    public Pedido(Double valorPedido, String metodoPagamento, Double valorPagamento, Integer qntdProdutos, String descricao, Double valorFrete, Cadastro cadastro) {
         this.valorPedido = valorPedido;
         this.metodoPagamento = metodoPagamento;
         this.valorPagamento = valorPagamento;
         this.qntdProdutos = qntdProdutos;
         this.descricao = descricao;
         this.cadastro = cadastro;
+        this.valorFrete = valorFrete;
     }
 }

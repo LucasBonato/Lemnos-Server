@@ -11,6 +11,7 @@ public record PedidoResponse(
         Integer qtdProdutos,
         Date dataPagamento,
         String descricao,
+        Double valorFrete,
         String status
 ) {
 }

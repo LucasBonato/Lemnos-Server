@@ -47,7 +47,7 @@ public class PedidoService {
     public ResponseEntity<Void> novoPedido(PedidoRequest pedidoRequest) {
         Cadastro cadastro = getCadastroByEmail(pedidoRequest.email());
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElseThrow(CarrinhoVazioException::new);
-        pedidoRepository.save(new Pedido(carrinho.getValor(), pedidoRequest.metodoPagamento(), carrinho.getValor(), carrinho.getQuantidadeProdutos(), getDescricao(carrinho), cadastro));
+        pedidoRepository.save(new Pedido(carrinho.getValor(), pedidoRequest.metodoPagamento(), carrinho.getValor(),carrinho.getQuantidadeProdutos(), getDescricao(carrinho),  pedidoRequest.valorFrete(), cadastro));
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
@@ -100,6 +100,7 @@ public class PedidoService {
                 pedido.getQntdProdutos(),
                 pedido.getDataPagamento(),
                 pedido.getDescricao(),
+                pedido.getValorFrete(),
                 pedido.getStatus()
         );
     }
