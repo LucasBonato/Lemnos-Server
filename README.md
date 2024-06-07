@@ -14,6 +14,8 @@
     <hr />
 </div>
 
+# Súmario
+
 - [Como Utilizar](#Como-utilizar-a-API)
 - [Headers](#Headers)
 - [EndPoints](#Endpoints)
@@ -29,7 +31,6 @@
   - [Produto](#Produto)
   - [Carrinho](#Carrinho)
   - [Pedido](#Pedido)
-
 
 # Como utilizar a API
 
@@ -116,6 +117,8 @@ Segue a tabela de valores:
 # Exemplos
 
 ## Cadastro
+
+### Cadastrar um Cliente
 
 Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sendo que todas as requisições são de *POST*
 
@@ -218,6 +221,8 @@ Class Api{
 
 ---
 
+### Cadastrar um Funcionário
+
 ### Body Funcionario:
 ``` JSON
 "nome": "Qualquer Nome",
@@ -303,6 +308,8 @@ Class Api{
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
+
+### Cadastrar um Fornecedor
 
 ### Body Fornecedor:
 ``` JSON

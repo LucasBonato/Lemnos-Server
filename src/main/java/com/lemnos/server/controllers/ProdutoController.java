@@ -65,7 +65,9 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/desconto/{id}")
-    public ResponseEntity<Void> retirarDesconto(@PathVariable String id) { return produtoService.retirarPorcentagem(id);}
+    public ResponseEntity<Void> retirarDesconto(@PathVariable String id) {
+        return produtoService.retirarPorcentagem(id);
+    }
 
     @PostMapping("/avaliar/{id}")
     public ResponseEntity<Void> avaliar(@PathVariable String id, @RequestBody AvaliacaoRequest avaliacaoRequest) {
