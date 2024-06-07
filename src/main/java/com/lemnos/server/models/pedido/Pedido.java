@@ -1,10 +1,11 @@
 package com.lemnos.server.models.pedido;
 
-import com.lemnos.server.models.carrinho.Carrinho;
-import com.lemnos.server.models.dtos.requests.PedidoRequest;
+import com.lemnos.server.models.cadastro.Cadastro;
+import com.lemnos.server.models.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class Pedido {
     @Column(name = "Metodo_Pagamento")
     private String metodoPagamento;
 
+    @CurrentTimestamp
     @Column(name = "Data_Pedido")
     private Date dataPedido;
 
@@ -31,26 +33,28 @@ public class Pedido {
     private Double valorPagamento;
 
     @Column(name = "Quantidade_Produtos")
-    private Integer qtdProdutos;
+    private Integer qntdProdutos;
 
+    @CurrentTimestamp
     @Column(name = "Data_Pagamento")
     private Date dataPagamento;
 
     @Column(name = "Descricao")
     private String descricao;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Id_Carrinho")
-    private Carrinho carrinho;
+    @Column(name = "Status")
+    private String status = Status.EM_PROCESSAMENTO.getStatus();
 
-    public Pedido(PedidoRequest pedidoRequest, Date dataPedido, Date dataPagamento, Carrinho carrinho){
-        this.valorPedido = pedidoRequest.valorPedido();
-        this.metodoPagamento = pedidoRequest.metodoPagamento();
-        this.dataPedido = dataPedido;
-        this.valorPagamento = pedidoRequest.valorPagamento();
-        this.qtdProdutos = pedidoRequest.qtdProdutos();
-        this.dataPagamento = dataPagamento;
-        this.descricao = pedidoRequest.descricao();
-        this.carrinho = carrinho;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_Cadastro")
+    private Cadastro cadastro;
+
+    public Pedido(Double valorPedido, String metodoPagamento, Double valorPagamento, Integer qntdProdutos, String descricao, Cadastro cadastro) {
+        this.valorPedido = valorPedido;
+        this.metodoPagamento = metodoPagamento;
+        this.valorPagamento = valorPagamento;
+        this.qntdProdutos = qntdProdutos;
+        this.descricao = descricao;
+        this.cadastro = cadastro;
     }
 }

@@ -12,7 +12,7 @@ CREATE DATABASE "LemnosDB"
 CREATE TABLE Cadastro (
     Id SERIAL PRIMARY KEY,
     Email varchar(40) UNIQUE NOT NULL,
-    Senha varchar(16) NOT NULL,
+    Senha varchar(100) NOT NULL,
     CHECK(LENGTH(Senha) > 7)
 );
 CREATE TABLE Cliente (
@@ -53,8 +53,9 @@ CREATE TABLE Pedido (
     Quantidade_Produtos int NOT NULL,
     Data_Pagamento date NOT NULL,
     Descricao varchar(255) NOT NULL,
-    Id_Carrinho int,
-    CONSTRAINT fk_pedido_carrinho FOREIGN KEY(Id_Carrinho) REFERENCES Carrinho(Id),
+    Status varchar(50) NOT NULL,
+    Id_Cadastro int,
+    CONSTRAINT fk_pedido_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(Valor_Pedido > 0 AND Valor_Pagamento > 0 AND Quantidade_Produtos > -1)
 );
 CREATE TABLE Imagem (

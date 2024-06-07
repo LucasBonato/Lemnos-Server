@@ -6,8 +6,8 @@ import com.lemnos.server.exceptions.ExceptionResponse;
 import com.lemnos.server.models.enums.Codigo;
 import org.springframework.http.HttpStatus;
 
-public class PedidoNotFound extends BaseException {
-    public PedidoNotFound(){
+public class PedidoNotFoundException extends BaseException {
+    public PedidoNotFoundException(){
         super(HttpStatus.NOT_FOUND, new ExceptionResponse(Codigo.GLOBAL, "Pedido não encontrado!"));
     }
 }
