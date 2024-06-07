@@ -30,14 +30,24 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorization -> authorization
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login-firebase").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/produto").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/cliente").hasAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET, "/funcionario").hasAuthority("ADMIN")
-                        .requestMatchers("/login", "/oauth2/**").permitAll()
-                        .requestMatchers("/").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/produto", "/produto/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/produto/find", "/auth/login", "/auth/login-firebase", "/auth/register").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.PUT, "/cliente", "/endereco", "/pedido").hasAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE, "/endereco", "/produto/fav", "/carrinho/**").hasAuthority("CLIENTE")
+
+                        .requestMatchers(HttpMethod.GET, "/fornecedor/**").hasAuthority("FUNCIONARIO")
+                        .requestMatchers(HttpMethod.POST, "/produto/**", "/auth/register/fornecedor").hasAuthority("FUNCIONARIO")
+                        .requestMatchers(HttpMethod.PUT, "/produto/**", "/fornecedor").hasAuthority("FUNCIONARIO")
+                        .requestMatchers(HttpMethod.DELETE, "/produto/**", "/fornecedor", "/cliente").hasAuthority("FUNCIONARIO")
+
+                        .requestMatchers(HttpMethod.GET, "/funcionario/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/auth/register/funcionario").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/funcionario/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/funcionario").hasAuthority("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

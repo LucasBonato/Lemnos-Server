@@ -47,12 +47,12 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                                                       | **Exemplos**                                                                                                      | **Body**                                                                                                                    |
-|---------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| /auth         | /login<br/>/register<br/>/register/funcionario<br/>/register/fornecedor | [login](#Login)<br/>[register](#Register)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [login](#body-login)<br/>[register](#body-register)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) |
-| /cliente      | /{id}                                                                   | [cliente](#Cliente)                                                                                               | [cliente](#body-put-cliente)                                                                                                |
-| /funcionario  | /{id}                                                                   | [funcionario](#Funcionário)                                                                                       | [funcionario](#body-put-funcionário)                                                                                        |
-| /fornecedor   | /{id}                                                                   | [fornecedor](#Fornecedor)                                                                                         | [fornecedor](#body-put-fornecedor)                                                                                          |
+| **EndPoints** | **Sub Endpoints**                                                                           | **Exemplos**                                                                                                                                        | **Body**                                                                                                                    |
+|---------------|---------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| /auth         | /login<br/>/login-firebase<br/>/register<br/>/register/funcionario<br/>/register/fornecedor | [login](#Login)<br/>[login google](#Login Google)<br/>[register](#Register)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) | [login](#body-login)<br/>[register](#body-register)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) |
+| /cliente      | /{id}                                                                                       | [cliente](#Cliente)                                                                                                                                 | [cliente](#body-put-cliente)                                                                                                |
+| /funcionario  | /{id}                                                                                       | [funcionario](#Funcionário)                                                                                                                         | [funcionario](#body-put-funcionário)                                                                                        |
+| /fornecedor   | /{id}                                                                                       | [fornecedor](#Fornecedor)                                                                                                                           | [fornecedor](#body-put-fornecedor)                                                                                          |
 
 ---
 
@@ -211,7 +211,7 @@ function login(usuario) {
     axios({
       baseURL: baseUri,
       method: "POST",
-      url: "/auth/login/fav",
+      url: "/auth/login",
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
       body: {
         email: usuario.email,
@@ -259,6 +259,89 @@ Class Api{
 |-------------|:-----------:|:------------------------------------:|
 | 200         |     OK      |          Logado com sucesso          |                 
 | 400         | BAD REQUEST | Alguma informação foi enviada errada |             
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+## Login Google
+
+Quando logado a API irá retornar um token para ser utlizado posteriormente no [Header](#Headers) Authorization.
+Aqui será necessário enviar o accessToken devolvido pelo firebase ao endpoint
+
+### Body Login
+``` JSON
+"token": "acessTokenGoogle"
+```
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/auth/login-firebase`
+
+JavaScript
+~~~ javascript
+let baseUri = "https://localhost:8080/api";
+
+import axios from 'axios';
+const axios = require("axios");
+
+function loginGoogle() {
+    
+    let token = "";
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/auth/login-firebase",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: {
+        token: localStorage.getItem('authTokenGoogle')
+      }
+    })
+    .then((response) => token = response.data)
+    .catch((error) => console.log(error));
+    
+    return token;  
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    static String googleToken;
+    
+    Future<String> loginGoogle() async{
+        String token = "";
+      
+        var response = await client.post(
+            Uri.parse(baseUri + "/auth/login-firebase"),
+            headers: <String, String>{
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: jsonEncode({
+                "email": googleToken 
+            })
+        );
+        
+        token = response.body;
+        return token;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado  |               Por quê?               |
+|-------------|:------------:|:------------------------------------:|
+| 200         |      OK      |          Logado com sucesso          |                 
+| 400         | BAD REQUEST  | Alguma informação foi enviada errada |             
+| 401         | UNAUTHORIZED |       O token enviado expirou        |     
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -344,11 +427,13 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
-|-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| Status Code |   Meaning    |                 Why?                 |
+|-------------|:------------:|:------------------------------------:|
+| 200         |      OK      |        Cadastrou com sucesso         |                 
+| 209         |   CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST  | Alguma informação foi enviada errada |
+| 401         | UNAUTHORIZED |         Não foi autenticado          |
+| 403         |  FORBIDDEN   |         Não possui permissão         |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -430,11 +515,13 @@ Class Api{
 ---
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
-|-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |        Cadastrou com sucesso         |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| Status Code |   Meaning    |                 Why?                 |
+|-------------|:------------:|:------------------------------------:|
+| 200         |      OK      |        Cadastrou com sucesso         |
+| 209         |   CONFLICT   |  Algum dado único já foi cadastrado  |
+| 400         | BAD REQUEST  | Alguma informação foi enviada errada |
+| 401         | UNAUTHORIZED |         Não foi autenticado          |
+| 403         |  FORBIDDEN   |         Não possui permissão         |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -491,9 +578,11 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |                 Why?                 |
-|-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |         Retornou os valores          |                 
+| Status Code |   Meaning    |         Why?         |
+|-------------|:------------:|:--------------------:|
+| 200         |      OK      | Retornou os valores  |
+| 401         | UNAUTHORIZED | Não foi autenticado  |
+| 403         |  FORBIDDEN   | Não possui permissão |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -548,9 +637,11 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code |   Meaning   |               Why?                |
-|-------------|:-----------:|:---------------------------------:|
-| 200         |     OK      |         Retornou o valor          |                 
+| Status Code |   Meaning    |         Why?         |
+|-------------|:------------:|:--------------------:|
+| 200         |      OK      |   Retornou o valor   |
+| 401         | UNAUTHORIZED | Não foi autenticado  |
+| 403         |  FORBIDDEN   | Não possui permissão |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
