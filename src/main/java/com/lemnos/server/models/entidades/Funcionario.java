@@ -1,5 +1,6 @@
 package com.lemnos.server.models.entidades;
 
+import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
@@ -68,6 +69,32 @@ public class Funcionario implements UserDetails {
         this.dataAdmissao = dataAdmissao;
         this.telefone = Long.parseLong(funcionarioRequest.telefone());
         this.cadastro = new Cadastro(funcionarioRequest);
+    }
+
+    public Funcionario(FirebaseToken decodedToken, String senha) {
+        this.nome = decodedToken.getName();
+        switch (decodedToken.getEmail()) {
+            case "lucas.perez.bonato@gmail.com":
+                this.cpf = 11122233301L;
+                this.dataNascimento = Util.convertData("29/08/2006");
+                this.dataAdmissao = Date.from(Instant.now());
+                this.telefone = 11972540380L;
+                break;
+            case "lucasatdriano@gmail.com":
+                this.cpf = 11122233302L;
+                this.dataNascimento = Util.convertData("01/01/2006");
+                this.dataAdmissao = Date.from(Instant.now());
+                this.telefone = 11962891098L;
+                break;
+            case "leandrofamiliafox@gmail.com":
+                this.cpf = 11122233303L;
+                this.dataNascimento = Util.convertData("30/06/2006");
+                this.dataAdmissao = Date.from(Instant.now());
+                this.telefone = 11934485241L;
+                break;
+        }
+        this.role = Roles.ADMIN;
+        this.cadastro = new Cadastro(decodedToken, senha);
     }
 
 //    public Funcionario(OAuth2AuthenticationToken oAuthToken, String senha) {

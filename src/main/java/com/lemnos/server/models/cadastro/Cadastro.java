@@ -1,6 +1,7 @@
 package com.lemnos.server.models.cadastro;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
@@ -46,10 +47,10 @@ public class Cadastro {
         this.senha = senha;
     }
 
-//    public Cadastro(OAuth2AuthenticationToken oAuthToken, String senha) {
-//        this.email = oAuthToken.getPrincipal().getAttribute("email");
-//        this.senha = senha;
-//    }
+    public Cadastro(FirebaseToken decodedToken, String senha) {
+        this.email = decodedToken.getEmail();
+        this.senha = senha;
+    }
 
     public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.senha(), this.senha);

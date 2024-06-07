@@ -18,20 +18,20 @@ public class TokenService {
 
     public String generateToken(UserDetails userDetails) {
         try {
-            String id = "";
+            String email = "";
             String role = "";
 
             if(userDetails instanceof Cliente cliente) {
-                id = cliente.getId().toString();
+                email = cliente.getCadastro().getEmail();
                 role = cliente.getRole().getRole();
             } else if(userDetails instanceof Funcionario funcionario) {
-                id = funcionario.getId().toString();
+                email = funcionario.getCadastro().getEmail();
                 role = funcionario.getRole().getRole();
             }
 
             JwtClaimsSet claims = JwtClaimsSet.builder()
                     .issuer("Lemnos-Server")
-                    .subject(id)
+                    .subject(email)
                     .issuedAt(Instant.now())
                     .expiresAt(generateExpirationDate())
                     .claim("role", role)

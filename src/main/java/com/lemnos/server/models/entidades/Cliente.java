@@ -1,5 +1,6 @@
 package com.lemnos.server.models.entidades;
 
+import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
@@ -10,6 +11,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,10 +59,10 @@ public class Cliente implements UserDetails {
         this.cadastro = new Cadastro(registerRequest);
     }
 
-//    public Cliente(OAuth2AuthenticationToken oAuthToken, String senha) {
-//        this.nome = oAuthToken.getPrincipal().getAttribute("given_name");
-//        this.cadastro = new Cadastro(oAuthToken, senha);
-//    }
+    public Cliente(FirebaseToken decodedToken, String senha) {
+        this.nome = decodedToken.getName();
+        this.cadastro = new Cadastro(decodedToken, senha);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

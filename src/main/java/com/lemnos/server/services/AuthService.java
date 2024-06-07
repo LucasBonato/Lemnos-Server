@@ -64,11 +64,10 @@ public class AuthService extends Util {
     }
 
     private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
-        Cadastro cadastro = cadastroRepository.save(new Cadastro(decodedToken.getEmail(), decodedToken.getUid()));
-        Cliente cliente = new Cliente();
-        cliente.setCadastro(cadastro);
-        cliente.setNome(decodedToken.getName());
-        return clienteRepository.save(cliente);
+        if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
+            return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
+        }
+        return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getEmail())));
     }
 
     public ResponseEntity<Void> register(RegisterRequest registerRequest) {
@@ -110,7 +109,7 @@ public class AuthService extends Util {
     private UserDetails verificarLogin(String email, String uid) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(email);
         if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(uid, passwordEncoder)) {
-            throw new RuntimeException("Email ou senha inválidos");
+            return null;
         }
         Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
         if (clienteOptional.isPresent()) {
