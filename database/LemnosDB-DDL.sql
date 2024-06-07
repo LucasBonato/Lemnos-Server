@@ -11,15 +11,15 @@ CREATE DATABASE "LemnosDB"
 
 CREATE TABLE Cadastro (
     Id SERIAL PRIMARY KEY,
-    Email varchar(40) UNIQUE NOT NULL,
-    Senha varchar(100) NOT NULL,
-    CHECK(LENGTH(Senha) > 7)
+    Email varchar(100) UNIQUE NOT NULL,
+    Senha varchar(100) NOT NULL
 );
 CREATE TABLE Cliente (
     Id SERIAL PRIMARY KEY,
     Nome varchar(40) NOT NULL,
-    CPF numeric(11) UNIQUE NOT NULL,
+    CPF numeric(11) UNIQUE,
     Situacao varchar(7) NOT NULL,
+    Role varChar(15) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_cliente_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -27,11 +27,12 @@ CREATE TABLE Cliente (
 CREATE TABLE Funcionario (
     Id SERIAL PRIMARY KEY,
     Nome varchar(40) NOT NULL,
-    CPF numeric(11) UNIQUE NOT NULL,
+    CPF numeric(11) UNIQUE,
     Data_Nascimento date NOT NULL,
     Data_Admissao date NOT NULL,
     Telefone numeric(11),
     Situacao varchar(7) NOT NULL,
+    Role varChar(15) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_funcionario_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
     CHECK(LENGTH(Nome) > 2)
@@ -48,11 +49,12 @@ CREATE TABLE Pedido (
     Id SERIAL PRIMARY KEY,
     Valor_Pedido numeric(10, 2) NOT NULL,
     Metodo_Pagamento varchar(20) NOT NULL,
+    Valor_Frete numeric(6, 2) NOT NULL,
     Data_Pedido date NOT NULL,
     Valor_Pagamento numeric(10, 2) NOT NULL,
     Quantidade_Produtos int NOT NULL,
     Data_Pagamento date NOT NULL,
-    Descricao varchar(255) NOT NULL,
+    Descricao varchar(1024) NOT NULL,
     Status varchar(50) NOT NULL,
     Id_Cadastro int,
     CONSTRAINT fk_pedido_cadastro FOREIGN KEY(Id_Cadastro) REFERENCES Cadastro(Id),
@@ -86,7 +88,7 @@ CREATE TABLE Desconto (
 );
 CREATE TABLE Fabricante(
     Id SERIAL PRIMARY KEY,
-    Fabricante varchar(50) UNIQUE NOT NULL
+    Fabricante varchar(100) UNIQUE NOT NULL
 );
 CREATE TABLE Produto (
     Id UUID PRIMARY KEY,
