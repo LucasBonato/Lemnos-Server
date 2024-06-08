@@ -11,6 +11,9 @@ import com.lemnos.server.models.dtos.responses.FavoritoResponse;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.*;
+import com.lemnos.server.models.produto.DataFornece;
+import com.lemnos.server.models.produto.Fabricante;
+import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.enums.Codigo;
@@ -31,7 +34,6 @@ import com.lemnos.server.repositories.produto.imagens.ImagemRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,7 +41,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProdutoService {
@@ -136,7 +141,7 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> delete(String id){
+    public ResponseEntity<Void> delete(String id) {
         produtoRepository.delete(getProdutoById(id));
         return ResponseEntity.ok().build();
     }
@@ -260,7 +265,7 @@ public class ProdutoService {
         }
     }
     private void verificarRegraDeNegocioUpdate(Produto produto) {
-        if(produto.getNomeProduto().length() < 5 || produto.getNomeProduto().length() > 50){
+        if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
             throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 50 caracteres!");
         }
         if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
@@ -314,7 +319,7 @@ public class ProdutoService {
         }
         return new ProdutoResponse(
                 produto.getId().toString(),
-                produto.getNomeProduto(),
+                produto.getNome(),
                 produto.getDescricao(),
                 produto.getCor(),
                 produto.getValor(),

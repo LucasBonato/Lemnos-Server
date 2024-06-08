@@ -5,7 +5,6 @@ import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.FavoritoResponse;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
-import com.lemnos.server.models.produto.Avaliacao;
 import com.lemnos.server.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

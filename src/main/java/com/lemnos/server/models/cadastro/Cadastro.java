@@ -1,13 +1,17 @@
 package com.lemnos.server.models.cadastro;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lemnos.server.models.dtos.requests.ClienteRequest;
+import com.google.firebase.auth.FirebaseToken;
+import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
+import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 @Entity
 @Table(name = "Cadastro")
@@ -28,13 +32,30 @@ public class Cadastro {
     @Column(name = "Senha")
     private String senha;
 
-    public Cadastro(ClienteRequest clienteRequest){
-        this.email = clienteRequest.email();
-        this.senha = clienteRequest.senha();
+    public Cadastro(RegisterRequest registerRequest){
+        this.email = registerRequest.getEmail();
+        this.senha = registerRequest.getSenha();
     }
 
     public Cadastro(FuncionarioRequest funcionarioRequest){
         this.email = funcionarioRequest.email();
         this.senha = funcionarioRequest.senha();
+    }
+
+    public Cadastro(String email, String senha) {
+        this.email = email;
+        this.senha = senha;
+    }
+
+    public Cadastro(FirebaseToken decodedToken, String senha) {
+        this.email = decodedToken.getEmail();
+        this.senha = senha;
+    }
+
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.senha(), this.senha);
+    }
+    public boolean isLoginCorrect(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password, this.senha);
     }
 }

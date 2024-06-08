@@ -1,9 +1,15 @@
 package com.lemnos.server.services;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.exceptions.cadastro.*;
 import com.lemnos.server.models.cadastro.Cadastro;
+import com.lemnos.server.models.dtos.requests.FireBaseLoginRequest;
+import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
+import com.lemnos.server.models.dtos.responses.auth.LoginReponse;
 import com.lemnos.server.models.entidades.Cliente;
-import com.lemnos.server.models.dtos.requests.ClienteRequest;
+import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
 import com.lemnos.server.models.enums.Codigo;
@@ -18,70 +24,147 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class CadastroService extends Util {
+public class AuthService extends Util {
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private FuncionarioRepository funcionarioRepository;
     @Autowired private FornecedorRepository fornecedorRepository;
     @Autowired private CadastroRepository cadastroRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private TokenService tokenService;
 
-    public ResponseEntity<Void> cadastrarCliente(ClienteRequest clienteRequest) {
-        Cliente cliente = verificarRegraDeNegocio(clienteRequest);
+    public ResponseEntity<LoginReponse> login(LoginRequest loginRequest) {
+        UserDetails userDetails = verificarLogin(loginRequest);
+        String token = tokenService.generateToken(userDetails);
+
+        return ResponseEntity.ok(new LoginReponse(token));
+    }
+
+    public ResponseEntity<LoginReponse> loginFirebase(FireBaseLoginRequest fbLoginRequest) {
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(fbLoginRequest.token());
+            UserDetails userDetails = verificarLogin(decodedToken.getEmail(), decodedToken.getUid());
+            if(userDetails == null) {
+                userDetails = newClienteFirebase(decodedToken);
+            }
+            String token = tokenService.generateToken(userDetails);
+            return ResponseEntity.ok(new LoginReponse(token));
+        } catch (FirebaseAuthException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
+        if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
+            return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
+        }
+        return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getEmail())));
+    }
+
+    public ResponseEntity<Void> register(RegisterRequest registerRequest) {
+        Cliente cliente = verificarRegraDeNegocio(registerRequest);
 
         clienteRepository.save(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<Void> cadastrarFuncionario(FuncionarioRequest funcionarioRequest) {
+    public ResponseEntity<Void> registerFuncionario(FuncionarioRequest funcionarioRequest) {
         Funcionario funcionario = verificarRegraDeNegocio(funcionarioRequest);
 
         funcionarioRepository.save(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<Void> cadastrarFornecedor(FornecedorRequest fornecedorRequest) {
+    public ResponseEntity<Void> registerFornecedor(FornecedorRequest fornecedorRequest) {
         Fornecedor fornecedor = verificarRegraDeNegocio(fornecedorRequest);
 
         fornecedorRepository.save(fornecedor);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    private Cliente verificarRegraDeNegocio(ClienteRequest clienteRequest) {
+    public ResponseEntity<Void> verificarCliente(RegisterRequest registerRequest) {
+        verificarRegraDeNegocio(registerRequest);
+        return ResponseEntity.ok().build();
+    }
 
-        if(StringUtils.isBlank(clienteRequest.nome())){
+    public ResponseEntity<Void> verificarFuncionario(FuncionarioRequest funcionarioRequest) {
+        verificarRegraDeNegocio(funcionarioRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Void> verificarFornecedor(FornecedorRequest fornecedorRequest) {
+        verificarRegraDeNegocio(fornecedorRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    private UserDetails verificarLogin(LoginRequest loginRequest) {
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email());
+        if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(loginRequest, passwordEncoder)) {
+            throw new RuntimeException("Email ou senha inválidos");
+        }
+        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
+        if (clienteOptional.isPresent()) {
+            return clienteOptional.get();
+        }
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
+        if(funcionarioOptional.isPresent()) {
+            return funcionarioOptional.get();
+        }
+        throw new RuntimeException("Usuário não encontrado");
+    }
+    private UserDetails verificarLogin(String email, String uid) {
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(email);
+        if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(uid, passwordEncoder)) {
+            return null;
+        }
+        Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
+        if (clienteOptional.isPresent()) {
+            return clienteOptional.get();
+        }
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCadastro(cadastroOptional.get());
+        return funcionarioOptional.orElse(null);
+    }
+
+    private Cliente verificarRegraDeNegocio(RegisterRequest registerRequest) {
+
+        if(StringUtils.isBlank(registerRequest.getNome())){
             throw new CadastroNotValidException(Codigo.NOME, "O Nome é obrigatório!");
         }
-        if(clienteRequest.nome().length() < 2 || clienteRequest.nome().length() > 40){
+        if(registerRequest.getNome().length() < 2 || registerRequest.getNome().length() > 40){
             throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(clienteRequest.cpf() == null || clienteRequest.cpf().isBlank()){
+        if(registerRequest.getCpf() == null || registerRequest.getCpf().isBlank()){
             throw new CadastroNotValidException(Codigo.CPF, "O CPF é obrigatório!");
         }
 
-        Long cpf = convertStringToLong(clienteRequest.cpf(), Codigo.CPF);
+        Long cpf = convertStringToLong(registerRequest.getCpf(), Codigo.CPF);
 
-        if(StringUtils.isBlank(clienteRequest.email())){
+        if(StringUtils.isBlank(registerRequest.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
         }
-        if(StringUtils.isBlank(clienteRequest.senha())){
+        if(StringUtils.isBlank(registerRequest.getSenha())){
             throw new CadastroNotValidException(Codigo.SENHA, "A Senha é obrigatória!");
         }
-        if(clienteRequest.senha().length() < 8 || clienteRequest.senha().length() > 16){
+        if(registerRequest.getSenha().length() < 8 || registerRequest.getSenha().length() > 16){
             throw new CadastroNotValidException(Codigo.SENHA, "A Senha precisa ter mínimo 8 caracteres!");
         }
 
-        clienteRequest = clienteRequest.setEmail(clienteRequest.email().toLowerCase());
+        registerRequest.setEmail(registerRequest.getEmail().toLowerCase());
 
-        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(clienteRequest.email());
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(registerRequest.getEmail());
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         if(cadastroOptional.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(clienteOptional.isPresent()) throw new CadastroCpfAlreadyInUseException();
 
-        return new Cliente(clienteRequest);
+        registerRequest.setSenha(passwordEncoder.encode(registerRequest.getSenha()));
+
+        return new Cliente(registerRequest);
     }
     private Funcionario verificarRegraDeNegocio(FuncionarioRequest funcionarioRequest) {
 
@@ -162,20 +245,5 @@ public class CadastroService extends Util {
         if(OptionalCnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
         return new Fornecedor(fornecedorRequest);
-    }
-
-    public ResponseEntity<Void> verificarCliente(ClienteRequest clienteRequest) {
-        verificarRegraDeNegocio(clienteRequest);
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> verificarFuncionario(FuncionarioRequest funcionarioRequest) {
-        verificarRegraDeNegocio(funcionarioRequest);
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> verificarFornecedor(FornecedorRequest fornecedorRequest) {
-        verificarRegraDeNegocio(fornecedorRequest);
-        return ResponseEntity.ok().build();
     }
 }

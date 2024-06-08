@@ -21,8 +21,8 @@
 - [EndPoints](#Endpoints)
 - [Erros](#Erros)
 - [Exemplos](#Exemplos)
-  - [Cadastro](#Cadastro)
-    - [Verificação](#Verificar-Cadastro)
+  - [Auth](#Auth)
+    - [Verificação](#Verificar-Registro)
   - [Cliente](#Cliente)
   - [Funcionário](#Funcionário)
   - [Fornecedor](#Fornecedor)
@@ -44,24 +44,25 @@ gerenciamento de carrinho.
 
 # Headers
 
-|   Headers    | Description                     |
-|:------------:|:--------------------------------|
-| Content-Type | application/json; charset=UTF-8 |
+|    Headers    | Description                     |
+|:-------------:|:--------------------------------|
+| Content-Type  | application/json; charset=UTF-8 |
+| Authorization | token                           |
 
 ---
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                                             | **Exemplos**                                                                                                                                                                           | **Body**                                                                                       |                                         Descrição                                          |
-|---------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
-| /cadastro     | /cliente<br/>/funcionario<br/>/fornecedor<br/>**/verificar    | [cliente](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Cadastro)                                                | [Cliente](#body-cliente)<br>[Funcionario](#body-funcionario)<br>[Fornecedor](#body-fornecedor) |                    Permite realizar o cadastro das entidades do sistema                    |
-| /cliente      | /find?email=<br/>/endereco                                    | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                          | [Cliente](#body-put-cliente)                                                                   |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | /find?email=<br/>/endereco<br/>/by?nome=                      | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                  | [Funcionário](#body-put-funcionário)                                                           |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | /find?email=<br/>/endereco<br/>/by?nome=                      | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                    | [Fornecedor](#body-put-fornecedor)                                                             |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
-| /endereco     | /verificar                                                    | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                           | [Endereço](#body-endereço)                                                                     |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
-| /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id} | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                            | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
-| /carrinho     | ?email=                                                       | [carrinho](#Carrinho)                                                                                                                                                                  | [Carrinho](#Carrinho-Body)                                                                     |                    Permite a criação, inserção e remoção de um carrinho                    |
-| /pedido       | ?email=<br/>/{id}                                             | [pedido](#Pedido)                                                                                                                                                                      | [Pedido](#Pedido-Body)                                                                         |        Permite a criação de um novo pedido, visualizar os pedidos e alterar status         |
+| **EndPoints** | **Sub Endpoints**                                                                                            | **Exemplos**                                                                                                                                                                                        | **Body**                                                                                                                   |                                         Descrição                                          |
+|---------------|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /auth         | /login<br/>/login-firebase<br/>/register<br/>/register/funcionario<br/>/register/fornecedor<br/>**/verificar | [login](#Login)<br/>[login google](#Login-Google)<br/>[register](#Registrar-Cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Registro) | [login](#body-login)<br/>[register](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) |            Permite o login e registro de clientes, funcionários e fornecedores             |
+| /cliente      | /find?email=<br/>/endereco                                                                                   | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                                       | [Cliente](#body-put-cliente)                                                                                               |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /find?email=<br/>/endereco<br/>/by?nome=                                                                     | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                               | [Funcionário](#body-put-funcionário)                                                                                       |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /find?email=<br/>/endereco<br/>/by?nome=                                                                     | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                                 | [Fornecedor](#body-put-fornecedor)                                                                                         |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /endereco     | /verificar                                                                                                   | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                                        | [Endereço](#body-endereço)                                                                                                 |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
+| /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id}                                                | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto)              | [Produto](#produto)                                                                                                        | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
+| /carrinho     | ?email=                                                                                                      | [carrinho](#Carrinho)                                                                                                                                                                               | [Carrinho](#Carrinho-Body)                                                                                                 |                    Permite a criação, inserção e remoção de um carrinho                    |
+| /pedido       | ?email=<br/>/{id}                                                                                            | [pedido](#Pedido)                                                                                                                                                                                   | [Pedido](#Pedido-Body)                                                                                                     |        Permite a criação de um novo pedido, visualizar os pedidos e alterar status         |
 
 ---
 
@@ -116,46 +117,45 @@ Segue a tabela de valores:
 
 # Exemplos
 
-## Cadastro
+## Auth
 
-### Cadastrar um Cliente
+### Registrar Cliente
 
 Insere um único Cadastro por vez, ou de Cliente, Funcionario ou Fornecedor, sendo que todas as requisições são de *POST*
 
-### Body Cliente:
+#### Body Cliente:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": "11122233311",
 "email": "emailDeSuaEscolha@email.com",
 "senha": "SenhaDoCliente"
 ```
-##### Verificar Cadastro:
-###### Se quiser verificar se está tudo correto sem cadastrar uma entidade diretamente é só utitlizar o mesmo corpo, mas com "/verificar" depois do "/${entidade}", se der 200 está tudo correto e pode cadastrar.
-
+##### Verificar Registro:
+###### Se quiser verificar se está tudo correto sem cadastrar uma entidade diretamente é só utitlizar o mesmo corpo, mas com "/verificar" depois do endpoint, se der 200 está tudo correto e pode cadastrar.
 
 #### Exemplos:
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge) 
 
-> `{{baseUri}}/cadastro/cliente`
+> `{{baseUri}}/auth/register`
 
 JavaScript
 ~~~ javascript
 let baseUri = "https://localhost:8080/api";
 
-function cadastrarCliente(cliente){
+function register(usuario){
     
-    cliente = tratarDados(cliente);
+    usuario = tratarDados(usuario);
 
-    fetch(baseUri + "/cadastro/cliente", {
+    fetch(baseUri + "/auth/register", {
         method: "POST",
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         },
         body: JSON.stringify({
-            nome: cliente.nome,
-            cpf: cliente.cpf,
-            email: cliente.email,
-            senha: cliente.senha
+            nome: usuario.nome,
+            cpf: usuario.cpf,
+            email: usuario.email,
+            senha: usuario.senha
         })
     });
 }
@@ -163,21 +163,16 @@ function cadastrarCliente(cliente){
 import axios from 'axios';
 const axios = require("axios");
 
-function cadastrarCliente(cliente) {
+function register(usuario) {
     
-    cliente = tratarDados(cliente);
-    axios({
-      baseURL: baseUri,
-      method: "POST",
-      url: "/cadastro/cliente",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      data: {
-        nome: cliente.nome,
-        cpf: cliente.cpf,
-        email: cliente.email,
-        senha: cliente.senha
-      }
-    })
+    usuario = tratarDados(usuario);
+    
+    axios.post(baseUri + "/auth/register", {
+        nome: usuario.nome,
+        cpf: usuario.cpf,
+        email: usuario.email,
+        senha: usuario.senha
+      })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
 }
@@ -192,18 +187,18 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<dynamic> cadastrarCliente(Cliente cliente) async{
+    Future<dynamic> register(Usuario usuario) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/cadastro/cliente"),
+            Uri.parse(baseUri + "/auth/register"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
-            },
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
+          },
             body: jsonEncode({
-                "nome": cliente.nome,
-                "telefone": cliente.telefone,
-                "cpf": cliente.cpf,
-                "email": cliente.email,
-                "senha": cliente.senha
+                "nome": usuario.nome,
+                "cpf": usuario.cpf,
+                "email": usuario.email,
+                "senha": usuario.senha
             })
         );
     }
@@ -213,17 +208,186 @@ Class Api{
 #### Responses:
 | Status Code | Significado |               Por quê?               |
 |-------------|:-----------:|:------------------------------------:|
-| 201         |   CREATED   |        Cadastrou com sucesso         |                 
+| 200         |     OK      |        Cadastrou com sucesso         |
 | 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
-### Cadastrar um Funcionário
+### Login
 
-### Body Funcionario:
+Quando logado a API irá retornar um token para ser utlizado posteriormente no [Header](#Headers) Authorization.
+
+#### Body Login
+``` JSON
+"email": "emailParaRealizarOLogin@email.com"
+"senha": "senhaParaRealizarLogin"
+```
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/auth/login`
+
+JavaScript
+~~~ javascript
+let baseUri = "https://localhost:8080/api";
+
+import axios from 'axios';
+const axios = require("axios");
+
+function login(usuario) {
+    
+    let token = "";
+    
+    usuario = tratarDados(usuario);
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/auth/login",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: {
+        email: usuario.email,
+        senha: usuario.senha
+      }
+    })
+    .then((response) => token = response.data)
+    .catch((error) => console.log(error));
+    
+    return token;  
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<String> login(Usuario usuario) async{
+        String token = "";
+      
+        var response = await client.post(
+            Uri.parse(baseUri + "/auth/login"),
+            headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
+          },
+            body: jsonEncode({
+                "email": usuario.email,
+                "senha": usuario.senha
+            })
+        );
+        
+        token = response.body;
+        return token;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |               Por quê?               |
+|-------------|:-----------:|:------------------------------------:|
+| 200         |     OK      |          Logado com sucesso          |                 
+| 400         | BAD REQUEST | Alguma informação foi enviada errada |             
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Login Google
+
+Quando logado a API irá retornar um token para ser utlizado posteriormente no [Header](#Headers) Authorization.
+Aqui será necessário enviar o accessToken devolvido pelo firebase ao endpoint
+
+#### Body Login
+``` JSON
+"token": "acessTokenGoogle"
+```
+
+#### Exemplos:
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
+
+> `{{baseUri}}/auth/login-firebase`
+
+JavaScript
+~~~ javascript
+let baseUri = "https://localhost:8080/api";
+
+import axios from 'axios';
+const axios = require("axios");
+
+function loginGoogle() {
+    
+    let token = "";
+    
+    axios({
+      baseURL: baseUri,
+      method: "POST",
+      url: "/auth/login-firebase",
+      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      body: {
+        token: localStorage.getItem('authTokenGoogle')
+      }
+    })
+    .then((response) => token = response.data)
+    .catch((error) => console.log(error));
+    
+    return token;  
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    static String googleToken;
+    
+    Future<String> loginGoogle() async{
+        String token = "";
+      
+        var response = await client.post(
+            Uri.parse(baseUri + "/auth/login-firebase"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': token
+            },
+            body: jsonEncode({
+                "email": googleToken 
+            })
+        );
+        
+        token = response.body;
+        return token;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado  |               Por quê?               |
+|-------------|:------------:|:------------------------------------:|
+| 200         |      OK      |          Logado com sucesso          |                 
+| 400         | BAD REQUEST  | Alguma informação foi enviada errada |             
+| 401         | UNAUTHORIZED |       O token enviado expirou        |     
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Registrar um Funcionário
+
+#### Body Funcionario:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": "11122233344",
@@ -234,9 +398,12 @@ Class Api{
 "senha": "SenhaDeSuaEscolha"
 ```
 
+##### Verificar Registro:
+###### Se quiser verificar se está tudo correto sem cadastrar uma entidade diretamente é só utitlizar o mesmo corpo, mas com "/verificar" depois do endpoint, se der 200 está tudo correto e pode cadastrar.
+
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/cadastro/funcionario`
+> `{{baseUri}}/auth/register/funcionario`
 
 JavaScript
 ~~~javascript
@@ -245,16 +412,19 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function cadastrarFuncionario(cliente) {
+function cadastrarFuncionario(funcionario) {
     
-    cliente = tratarDados(cliente);
+    funcionario = tratarDados(funcionario);
     
     axios({
       baseURL: baseUri,
       method: "POST",
-      url: "/cadastro/funcionario",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      data: {
+      url: "/auth/register/funcionario",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
         telefone: funcionario.telefone,
@@ -264,8 +434,8 @@ function cadastrarFuncionario(cliente) {
         senha: funcionario.senha
       }
     })
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -280,9 +450,10 @@ Class Api{
     
     Future<dynamic> cadastrarFuncionario(Funcionario funcionario) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/cadastro/funcionario"),
+            Uri.parse(baseUri + "/auth/register/funcionario"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": token
             },
             body: jsonEncode({
                 "nome": funcionario.nome,
@@ -299,19 +470,21 @@ Class Api{
 ~~~
 
 #### Responses:
-| Status Code | Significado |               Por quê?               |
-|-------------|:-----------:|:------------------------------------:|
-| 201         |   CREATED   |        Cadastrou com sucesso         |                 
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                   
+| Status Code |   Meaning    |                 Why?                 |
+|-------------|:------------:|:------------------------------------:|
+| 200         |      OK      |        Cadastrou com sucesso         |                 
+| 209         |   CONFLICT   |  Algum dado único já foi cadastrado  |                 
+| 400         | BAD REQUEST  | Alguma informação foi enviada errada |
+| 401         | UNAUTHORIZED |         Não foi autenticado          |
+| 403         |  FORBIDDEN   |         Não possui permissão         |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
 ---
 
-### Cadastrar um Fornecedor
+### Registrar Fornecedor
 
-### Body Fornecedor:
+#### Body Fornecedor:
 ``` JSON
 "nome": "Nome Do Fornecedor",
 "cnpj": "09836719874612",
@@ -320,9 +493,12 @@ Class Api{
 "email": "emailDoFornecedor@gmail.com"
 ```
 
+##### Verificar Registro:
+###### Se quiser verificar se está tudo correto sem cadastrar uma entidade diretamente é só utitlizar o mesmo corpo, mas com "/verificar" depois do endpoint, se der 200 está tudo correto e pode cadastrar.
+
 ![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/cadastro/fornecedor`
+> `{{baseUri}}/auth/register/fornecedor`
 
 JavaScript
 ~~~javascript
@@ -338,9 +514,12 @@ function cadastrarFornecedor(fornecedor) {
     axios({
       baseURL: baseUri,
       method: "POST",
-      url: "/cadastro/fornecedor",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      data: {
+      url: "/auth/register/fornecedor",
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
+      body: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
         telefone: fornecedor.telefone,
@@ -348,8 +527,8 @@ function cadastrarFornecedor(fornecedor) {
         email: fornecedor.email
       }
     })
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
+    .then((response) => console.log(response.data))
+    .catch((error) => console.log(error));
 }
 ~~~
 
@@ -364,9 +543,10 @@ Class Api{
     
     Future<dynamic> cadastrarFornecedor(Fornecedor fornecedor) async{
         var response = await client.post(
-            Uri.parse(baseUri + "/cadastro/fornecedor"),
+            Uri.parse(baseUri + "/auth/register/fornecedor"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": token
             },
             body: jsonEncode({
                 "nome": fornecedor.nome,
@@ -383,11 +563,13 @@ Class Api{
 ---
 
 #### Responses:
-| Status Code | Significado |               Por quê?               |
-|-------------|:-----------:|:------------------------------------:|
-| 201         |   CREATED   |        Cadastrou com sucesso         |                 
-| 209         |  CONFLICT   |  Algum dado único já foi cadastrado  |                 
-| 400         | BAD REQUEST | Alguma informação foi enviada errada |                      
+| Status Code |   Meaning    |                 Why?                 |
+|-------------|:------------:|:------------------------------------:|
+| 200         |      OK      |        Cadastrou com sucesso         |
+| 209         |   CONFLICT   |  Algum dado único já foi cadastrado  |
+| 400         | BAD REQUEST  | Alguma informação foi enviada errada |
+| 401         | UNAUTHORIZED |         Não foi autenticado          |
+| 403         |  FORBIDDEN   |         Não possui permissão         |
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -508,7 +690,7 @@ Class Api{
 
 ---
 
-### Body Put Cliente:
+#### Body Put Cliente:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": "11122233311",
@@ -535,7 +717,10 @@ function alterarCliente(cliente) {
       baseURL: baseUri,
       method: "PUT",
       url: `/cliente`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         nome: cliente.nome,
         cpf: cliente.cpf
@@ -563,6 +748,7 @@ Class Api{
           Uri.parse("$baseUri/${cliente.id}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
           },
           body: jsonEncode({
             "nome": cliente.nome,
@@ -612,7 +798,10 @@ function excluirCliente(email) {
       baseURL: baseUri,
       method: "DELETE",
       url: `/cliente`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       params: {
         email: email
       }
@@ -826,7 +1015,7 @@ Class Api{
 
 ---
 
-### Body Put Funcionário:
+#### Body Put Funcionário:
 ``` JSON
 "nome": "Qualquer Nome",
 "cpf": "11122233311",
@@ -856,7 +1045,10 @@ function alterarFuncionario(funcionario) {
       baseURL: baseUri,
       method: "PUT",
       url: `/funcionario`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         nome: funcionario.nome,
         cpf: funcionario.cpf,
@@ -887,6 +1079,7 @@ Class Api{
           Uri.parse("$baseUri/funcionario/${funcionario.id}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
           },
           body: jsonEncode({
             "nome": funcionario.nome,
@@ -939,7 +1132,10 @@ function excluirFuncionario(email) {
       baseURL: baseUri,
       method: "DELETE",
       url: `/funcionario`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       params: {
         email: email
       }
@@ -1153,7 +1349,7 @@ Class Api{
 
 ---
 
-### Body Put Fornecedor:
+#### Body Put Fornecedor:
 ``` JSON
 "nome": "Qualquer Nome",
 "cnpj": "11222333444455",
@@ -1181,7 +1377,10 @@ function alterarFornecedor(fornecedor) {
       baseURL: baseUri,
       method: "PUT",
       url: `/fornecedor/find`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         nome: fornecedor.nome,
         cnpj: fornecedor.cnpj,
@@ -1210,6 +1409,7 @@ Class Api{
           Uri.parse("$baseUri/fornecedor/${fornecedor.id}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
           },
           body: jsonEncode({
             "nome": fornecedor.nome,
@@ -1260,7 +1460,10 @@ function excluirFornecedor(email) {
       baseURL: baseUri,
       method: "DELETE",
       url: `/fornecedor`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       params: {
         email: email
       }
@@ -1280,7 +1483,12 @@ Class Api{
     String baseUri = "https//localhost:8080/api";
     
     Future<dynamic> excluirFornecedor(int id) async{
-        var response = await client.delete(Uri.parse("$baseUri/fornecedor/${id}"));
+        var response = await client.delete(Uri.parse("$baseUri/fornecedor/${id}", 
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': token
+            },
+        ));
         if(response.statusCode != 200){
           return "Objeto não encontrado";
         }
@@ -1364,7 +1572,7 @@ Class Api{
 
 ---
 
-### Body Endereço:
+#### Body Endereço:
 ``` JSON
 "email": "emailDaEntidade@email.com"
 "cep": "11111222",
@@ -1396,7 +1604,10 @@ function cadastrarEndereco(emailEntidade, endereco, entidade) {
       baseURL: baseUri,
       method: "POST",
       url: "/endereco",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         email: emailEntidade
         cep: endereco.cep,
@@ -1423,7 +1634,8 @@ Class Api{
         var response = await client.post(
             Uri.parse(baseUri + "/endereco"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': token
             },
             body: jsonEncode({
                 email: emailEntidade,
@@ -1454,7 +1666,7 @@ Class Api{
 
 O campo cep tem que ser de um endereço já existente, só sendo possível alterar os campos complemento e numero de Logradouro
 
-### Body Put Endereço:
+#### Body Put Endereço:
 ``` JSON
 "email": "emailDaEntidade@email.com"
 "cep": "11111222",
@@ -1484,7 +1696,10 @@ function updateEndereco(emailEntidade, endereco, entidade) {
       baseURL: baseUri,
       method: "PUT",
       url: "/endereco",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         email: emailEntidade
         cep: endereco.cep,
@@ -1511,7 +1726,8 @@ Class Api{
         var response = await client.put(
             Uri.parse("$baseUri/endereco"),
             headers: <String, String>{
-              "Content-type": "application/json; charset=UTF-8"
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': token
             },
             body: jsonEncode({
               email: emailEntidade
@@ -1568,7 +1784,10 @@ function updateEndereco(emailEntidade, endereco, entidade) {
       baseURL: baseUri,
       method: "DELETE",
       url: "/endereco",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       params: {
         email: emailEntidade,
         cep: endereco.cep,
@@ -1593,8 +1812,9 @@ Class Api{
         var response = await client.delete(
             Uri.parse("$baseUri/endereco?email=${emailEntidade}&cep=${endereco.cep}&e=${entidade}"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
-            }
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': token
+            },
         );
     }
 }
@@ -1612,7 +1832,7 @@ Class Api{
 
 ## Produto
 
-### Body Produto:
+#### Body Produto:
 
 ``` JSON
 "nome": "Nome do Produto",
@@ -1653,7 +1873,10 @@ function cadastrarProduto(produto){
       baseURL: baseUri,
       method: "POST",
       url: "/produto",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         nome: produto.nome,
         descricao: produto.descricao,
@@ -1690,7 +1913,8 @@ Class Api{
         var response = await client.post(
             Uri.parse(baseUri + "/produto"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': token
             },
             body: jsonEncode({
                 "nome": produto.nome,
@@ -1915,7 +2139,7 @@ Class Api{
 
 ---
 
-### Body Put Produto:
+#### Body Put Produto:
 
 O body do put só precisa ter pelo menos uma campo, se não houver ele mantem os dados que já estavam anteriormente.
 
@@ -1950,7 +2174,10 @@ function alterarProduto(produto, id) {
       baseURL: baseUri,
       method: "PUT",
       url: `/produto/${id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         nome: produto.nome,
         valor: produto.valor
@@ -1975,6 +2202,7 @@ Class Api{
           Uri.parse("$baseUri/produto/${id}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
           },
           body: jsonEncode({
                 "nome": produto.nome,
@@ -2018,7 +2246,10 @@ function excluirProduto(id) {
       baseURL: baseUri,
       method: "DELETE",
       url: `/produto/${id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));
@@ -2082,7 +2313,10 @@ function adicionarFavorito(produto, cliente){
       baseURL: baseUri,
       method: "POST",
       url: "/produto/fav",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       params: {
         email: cliente.email,
         id_prod: produto.id
@@ -2106,8 +2340,9 @@ Class Api{
         var response = await client.post(
             Uri.parse(baseUri + "/produto/fav?email=${cliente.email}&id_prod=${Produto.id}"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
-            })
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
+          },)
         );
     }
 }
@@ -2213,7 +2448,10 @@ function dasfavoritarProduto(produto, cliente){
       baseURL: baseUri,
       method: "DELETE",
       url: "/produto/fav",
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       params: {
         email: cliente.email,
         id_prod: produto.id
@@ -2237,8 +2475,9 @@ Class Api{
         var response = await client.delete(
             Uri.parse(baseUri + "/produto/fav?email=${cliente.email}&id_prod=${Produto.id}"),
             headers: <String, String>{
-                "Content-type": "application/json; charset=UTF-8"
-            })
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
+          },)
         );
     }
 }
@@ -2273,7 +2512,10 @@ function retirarDesconto(id) {
       baseURL: baseUri,
       method: "DELETE",
       url: `/produto/desconto/${id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      }
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));
@@ -2332,7 +2574,10 @@ function avaliarProduto(produto, valorAvaliacao) {
       baseURL: baseUri,
       method: "POST",
       url: `/produto/avaliar/${produto.id}`,
-      headers: {'Content-Type': 'application/json; charset=UTF-8'},
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token
+      },
       data: {
         avaliacao: valorAvaliacao,
       }
@@ -2356,6 +2601,7 @@ Class Api{
           Uri.parse("$baseUri/produto/avaliacao/{$produto.id}"),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': token
           },
           body: jsonEncode({
                 "avaliacao": valorAvaliacao
@@ -2709,8 +2955,6 @@ Class Api{
 ---
 
 ### Pedido especifico
-
-![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
 > `{{baseUri}}/pedido/{id}`
 
