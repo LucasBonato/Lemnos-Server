@@ -1,4 +1,9 @@
 @echo off
+
+echo Setting environment variables...
+set POSTGRES_USERNAME=
+set POSTGRES_PASSWORD=
+
 echo Building the project...
 call .\mvnw clean package
 
