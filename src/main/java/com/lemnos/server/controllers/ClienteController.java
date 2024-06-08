@@ -6,6 +6,7 @@ import com.lemnos.server.services.ClienteService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +22,17 @@ public class ClienteController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<ClienteResponse> getOneByEmail(@PathParam(value = "email") String email){
-        return clienteService.getOneByEmail(email);
+    public ResponseEntity<ClienteResponse> getOneByEmail(JwtAuthenticationToken token){
+        return clienteService.getOneByEmail(token.getName());
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateById(@PathParam(value = "email") String email, @RequestBody ClienteRequest clienteRequest){
-        return clienteService.updateCliente(email, clienteRequest);
+    public ResponseEntity<Void> updateById(JwtAuthenticationToken token, @RequestBody ClienteRequest clienteRequest){
+        return clienteService.updateCliente(token.getName(), clienteRequest);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email){
-        return clienteService.deleteByEmail(email);
+    public ResponseEntity<Void> deleteById(JwtAuthenticationToken token){
+        return clienteService.deleteByEmail(token.getName());
     }
 }

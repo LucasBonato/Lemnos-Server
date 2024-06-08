@@ -48,8 +48,8 @@ public class CarrinhoService {
         ));
     }
 
-    public ResponseEntity<Void> adicionarProduto(CarrinhoRequest carrinhoRequest) {
-        Cadastro cadastro = getCadastroByEmail(carrinhoRequest.email());
+    public ResponseEntity<Void> adicionarProduto(String email, CarrinhoRequest carrinhoRequest) {
+        Cadastro cadastro = getCadastroByEmail(email);
         Produto produto = getProdutoById(carrinhoRequest.id());
 
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElse(null);
@@ -64,8 +64,8 @@ public class CarrinhoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> removerProduto(CarrinhoRequest carrinhoRequest) {
-        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(carrinhoRequest.email()));
+    public ResponseEntity<Void> removerProduto(String email, CarrinhoRequest carrinhoRequest) {
+        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(email));
         List<ItensCarrinho> itens = carrinho.getItens();
         for (ItensCarrinho item : itens) {
             if (!item.getProduto().equals(getProdutoById(carrinhoRequest.id()))) continue;
@@ -86,8 +86,8 @@ public class CarrinhoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> removerTodosProdutos(CarrinhoRequest carrinhoRequest) {
-        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(carrinhoRequest.email()));
+    public ResponseEntity<Void> removerTodosProdutos(String email) {
+        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(email));
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
