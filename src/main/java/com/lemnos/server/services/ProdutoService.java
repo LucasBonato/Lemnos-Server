@@ -48,7 +48,6 @@ import java.util.UUID;
 
 @Service
 public class ProdutoService {
-
     @Autowired private ProdutoRepository produtoRepository;
     @Autowired private ClienteRepository clienteRepository;
     @Autowired private CadastroRepository cadastroRepository;
@@ -111,12 +110,15 @@ public class ProdutoService {
     public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
         verificarRegraDeNegocioCreate(produtoRequest);
 
+        Desconto desconto = getDesconto(produtoRequest.desconto());
+
         Produto produto = produtoRepository.save(new Produto(
             produtoRequest,
+            getValorComDesconto(produtoRequest.valor(), desconto),
             getFabricante(produtoRequest.fabricante()),
             getSubCategoria(produtoRequest.subCategoria()),
             getImagemPrincipal(produtoRequest),
-            getDesconto(produtoRequest.desconto())
+            desconto
         ));
 
         Fornecedor fornecedor = fornecedorRepository.findByNome(produtoRequest.fornecedor()).orElseThrow(FornecedorNotFoundException::new);
@@ -132,8 +134,9 @@ public class ProdutoService {
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
         ImagemPrincipal imagemPrincipal = produto.getImagemPrincipal();
         Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
+        Double valorTotal = getValorComDesconto(getValorTotal(produto), desconto);
 
-        produto.setAll(produtoRequest, fabricante, subCategoria, imagemPrincipal, desconto);
+        produto.setAll(produtoRequest, valorTotal,fabricante, subCategoria, imagemPrincipal, desconto);
         verificarRegraDeNegocioUpdate(produto);
 
         produtoRepository.save(produto);
@@ -142,6 +145,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> delete(String id) {
+        dataForneceRepository.delete(dataForneceRepository.findByProduto(getProdutoById(id)));
         produtoRepository.delete(getProdutoById(id));
         return ResponseEntity.ok().build();
     }
@@ -179,6 +183,7 @@ public class ProdutoService {
 
     public ResponseEntity<Void> retirarPorcentagem(String idProduto){
         Produto produto = getProdutoById(idProduto);
+        produto.setValor(getValorTotal(produto));
         produto.setDesconto(getDesconto(null));
         produtoRepository.save(produto);
         return ResponseEntity.ok().build();
@@ -307,23 +312,23 @@ public class ProdutoService {
     }
 
     private Cliente getClienteByEmail(String email) {
-        return clienteRepository.findByCadastro(cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
+        return clienteRepository.findByCadastro(
+                cadastroRepository.findByEmail(email.replace("%40", "@")
+            ).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
     }
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
     private ProdutoResponse getProdutoResponse(Produto produto) {
         List<String> imagens = new ArrayList<>();
-        for (Imagem imagem : produto.getImagemPrincipal().getImagens()) {
-            imagens.add(imagem.getImagem());
-        }
+        produto.getImagemPrincipal().getImagens().forEach(imagem -> imagens.add(imagem.getImagem()));
         return new ProdutoResponse(
                 produto.getId().toString(),
                 produto.getNome(),
                 produto.getDescricao(),
                 produto.getCor(),
+                getValorTotal(produto),
                 produto.getValor(),
-                calcularPorcentagem(produto),
                 produto.getModelo(),
                 produto.getPeso(),
                 produto.getAltura(),
@@ -340,10 +345,15 @@ public class ProdutoService {
         );
     }
 
-    private Double calcularPorcentagem(Produto produto){
-        Double porcentagem = produto.getValor() * (Double.parseDouble(produto.getDesconto().getValorDesconto()) / 100);
-        return produto.getValor() - porcentagem;
+    private Double getValorTotal(Produto produto) {
+        Double valorDesconto =  Double.parseDouble(produto.getDesconto().getValorDesconto());
+        return arredondarValor((100 * produto.getValor()) / (100 - valorDesconto));
     }
+
+    private Double getValorComDesconto(Double valor, Desconto desconto) {
+        return arredondarValor((100 - Double.parseDouble(desconto.getValorDesconto())) * valor / 100);
+    }
+
     private Double calcularAvaliacao(Produto produto) {
         List<Avaliacao> avaliacoes = avaliacaoRepository.findAllByProduto(produto);
         Double media = 0.0;
@@ -351,7 +361,9 @@ public class ProdutoService {
         media /= avaliacoes.size();
         return arredondarValor(media);
     }
-    private Double arredondarValor(Double valor) { return Math.round(valor * 2) / 2.0; }
+    private Double arredondarValor(Double valor) {
+        return Math.round(valor * 2) / 2.0;
+    }
 
     private Fabricante getFabricante(String fabricante) {
         Optional<Fabricante> fabricanteOptional = fabricanteRepository.findByFabricante(fabricante);

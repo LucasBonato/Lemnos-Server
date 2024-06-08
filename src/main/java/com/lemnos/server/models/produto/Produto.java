@@ -73,11 +73,11 @@ public class Produto {
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
 
-    public Produto(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto){
+    public Produto(ProdutoRequest produtoRequest, Double valor, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal,Desconto desconto){
         this.nome = produtoRequest.nome();
         this.descricao = produtoRequest.descricao();
         this.cor = produtoRequest.cor();
-        this.valor = produtoRequest.valor();
+        this.valor = valor;
         this.modelo = produtoRequest.modelo();
         this.peso = produtoRequest.peso();
         this.altura = produtoRequest.altura();
@@ -89,12 +89,12 @@ public class Produto {
         this.desconto = desconto;
     }
 
-    public void setAll(ProdutoRequest produtoRequest, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto) {
+    public void setAll(ProdutoRequest produtoRequest, Double valor, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto) {
         setNome((StringUtils.isNotBlank(produtoRequest.nome())) ? produtoRequest.nome() : this.nome);
         setDescricao((StringUtils.isNotBlank(produtoRequest.descricao())) ? produtoRequest.descricao() : this.descricao);
         setCor((StringUtils.isNotBlank(produtoRequest.cor())) ? produtoRequest.cor() : this.cor);
         setModelo((StringUtils.isNotBlank(produtoRequest.modelo())) ? produtoRequest.modelo() : this.modelo);
-        setValor((produtoRequest.valor() != null) ? produtoRequest.valor() : this.valor);
+        setValor((valor != null) ? produtoRequest.valor() : this.valor);
         setPeso((produtoRequest.peso() != null) ? produtoRequest.peso() : this.peso);
         setAltura((produtoRequest.altura() != null) ? produtoRequest.altura() : this.altura);
         setComprimento((produtoRequest.comprimento() != null) ? produtoRequest.comprimento() : this.comprimento);
