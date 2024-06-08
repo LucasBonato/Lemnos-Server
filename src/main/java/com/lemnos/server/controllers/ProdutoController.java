@@ -8,6 +8,7 @@ import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,18 +50,18 @@ public class ProdutoController {
     }
 
     @GetMapping("/fav")
-    public ResponseEntity<List<FavoritoResponse>> getFavoritos(@RequestParam(name = "email") String email) {
-        return produtoService.getFavoritos(email);
+    public ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token) {
+        return produtoService.getFavoritos(token.getName());
     }
 
     @PostMapping("/fav")
-    public ResponseEntity<Void> favoritar(@RequestParam(name = "email") String email, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.favoritar(email, idProd);
+    public ResponseEntity<Void> favoritar(JwtAuthenticationToken token, @RequestParam(name = "id_prod") String idProd) {
+        return produtoService.favoritar(token.getName(), idProd);
     }
 
     @DeleteMapping("/fav")
-    public ResponseEntity<Void> desfavoritar(@RequestParam(name = "email") String email, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.desfavoritar(email, idProd);
+    public ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, @RequestParam(name = "id_prod") String idProd) {
+        return produtoService.desfavoritar(token.getName(), idProd);
     }
 
     @DeleteMapping("/desconto/{id}")
