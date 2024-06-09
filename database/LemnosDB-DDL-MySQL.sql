@@ -85,7 +85,7 @@ CREATE TABLE Fabricante(
 );
 CREATE TABLE Produto (
 	Id char(36) primary key,
-	Nome varChar(50) NOT NULL,
+	Nome varChar(100) NOT NULL,
 	Descricao varchar(200) NOT NULL,
 	Cor varchar(30),
 	Valor decimal(10,2) NOT NULL,
