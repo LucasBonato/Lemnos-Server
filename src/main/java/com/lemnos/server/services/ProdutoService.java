@@ -199,20 +199,20 @@ public class ProdutoService {
         if(StringUtils.isBlank(produtoRequest.nome())){
             throw new ProdutoNotValidException(Codigo.NOME, "O campo Nome é obrigatório!");
         }
-        if(produtoRequest.nome().length() < 5 || produtoRequest.nome().length() > 50){
-            throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 50 caracteres!");
+        if(produtoRequest.nome().length() < 5 || produtoRequest.nome().length() > 100){
+            throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 100 caracteres!");
         }
         if(StringUtils.isBlank(produtoRequest.descricao())){
             throw new ProdutoNotValidException(Codigo.DESCRICAO, "O campo Descrição é obrigatório!");
         }
-        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 200){
-            throw new ProdutoNotValidException(Codigo.DESCRICAO, "A descrição deve conter entre 5 e 200 caracteres!");
+        if(produtoRequest.descricao().length() < 5 || produtoRequest.descricao().length() > 1024){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO, "A descrição deve conter entre 5 e 1024 caracteres!");
         }
         if(StringUtils.isBlank(produtoRequest.cor())){
             throw new ProdutoNotValidException(Codigo.COR, "O campo Cor é obrigatório!");
         }
-        if(produtoRequest.cor().length() < 4 || produtoRequest.cor().length() > 30){
-            throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 4 e 30 caracteres!");
+        if(produtoRequest.cor().length() < 2 || produtoRequest.cor().length() > 30){
+            throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 2 e 30 caracteres!");
         }
         if(produtoRequest.valor() < 0.00 || produtoRequest.valor() > 99999999.99){
             throw new ProdutoNotValidException(Codigo.VALOR, "O valor deve ser entre R$0.00 e R$99999999.99");
@@ -232,8 +232,8 @@ public class ProdutoService {
         if(produtoRequest.altura() == null) {
             throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura é obrigatório!");
         }
-        if(produtoRequest.altura() < 0 || produtoRequest.altura() > 200) {
-            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura deve ser positivo e menor que 200cm!");
+        if(produtoRequest.altura() < 0 || produtoRequest.altura() > 500) {
+            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura deve ser positivo e menor que 500cm!");
         }
         if(produtoRequest.comprimento() == null) {
             throw new ProdutoNotValidException(Codigo.COMPRIMENTO, "O campo Comprimento é obrigatório!");
@@ -270,14 +270,14 @@ public class ProdutoService {
         }
     }
     private void verificarRegraDeNegocioUpdate(Produto produto) {
-        if(produto.getNome().length() < 5 || produto.getNome().length() > 50){
-            throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 50 caracteres!");
+        if(produto.getNome().length() < 5 || produto.getNome().length() > 100){
+            throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 100 caracteres!");
         }
-        if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 200){
-            throw new ProdutoNotValidException(Codigo.DESCRICAO, "A descrição deve conter entre 5 e 200 caracteres!");
+        if(produto.getDescricao().length() < 5 || produto.getDescricao().length() > 1024){
+            throw new ProdutoNotValidException(Codigo.DESCRICAO, "A descrição deve conter entre 5 e 1024 caracteres!");
         }
-        if(produto.getCor().length() < 4 || produto.getCor().length() > 30){
-            throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 4 e 30 caracteres!");
+        if(produto.getCor().length() < 2 || produto.getCor().length() > 30){
+            throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 2 e 30 caracteres!");
         }
         if(produto.getValor() < 0.00 || produto.getValor() > 99999999.99){
             throw new ProdutoNotValidException(Codigo.VALOR, "O valor deve ser entre R$0.00 e R$99999999.99");
@@ -288,8 +288,8 @@ public class ProdutoService {
         if(produto.getPeso() < 0 || produto.getPeso() > 1000) {
             throw new ProdutoNotValidException(Codigo.PESO, "O campo Peso deve ser positivo e menor que 1000Kg!");
         }
-        if(produto.getAltura() < 0 || produto.getAltura() > 200) {
-            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura deve ser positivo e menor que 200cm!");
+        if(produto.getAltura() < 0 || produto.getAltura() > 500) {
+            throw new ProdutoNotValidException(Codigo.ALTURA, "O campo Altura deve ser positivo e menor que 500cm!");
         }
         if(produto.getComprimento() < 0 || produto.getComprimento() > 500) {
             throw new ProdutoNotValidException(Codigo.COMPRIMENTO, "O campo Comprimento deve ser positivo e menor que 500cm!");
