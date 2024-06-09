@@ -592,7 +592,11 @@ function getClientes() {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: "/cliente"
+      url: "/cliente",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
+      }
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -629,14 +633,9 @@ Class Api{
 
 ---
 
-### Parâmetros:
-| Key   | Tipo   | Descrição                                            |
-|-------|--------|------------------------------------------------------|
-| email | String | Email da entidade que se deseja pegar as informações |
-
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/cliente/find?email=`
+> `{{baseUri}}/cliente/find`
 
 JavaScript
 ~~~javascript
@@ -650,8 +649,9 @@ function getCliente(email) {
       baseURL: baseUri,
       method: "GET",
       url: `/cliente/find`,
-      params: {
-        email: email
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
       }
     })
       .then((response) => console.log(response.data))
@@ -703,7 +703,7 @@ Class Api{
 
 ![PUT](https://img.shields.io/static/v1?label=&message=PUT&color=blue&style=for-the-badge)
 
-> `{{baseUri}}/cliente?email=`
+> `{{baseUri}}/cliente`
 
 JavaScript
 ~~~javascript
@@ -718,15 +718,12 @@ function alterarCliente(cliente) {
       method: "PUT",
       url: `/cliente`,
       headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': token
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
       },
       data: {
         nome: cliente.nome,
         cpf: cliente.cpf
-      },
-      params: {
-        email: cliente.email
       }
     })
       .then((response) => console.log(response.data))
@@ -784,7 +781,7 @@ Class Api{
 
 ![DELETE](https://img.shields.io/static/v1?label=&message=DEL&color=red&style=for-the-badge)
 
-> `{{baseUri}}/cliente?email`
+> `{{baseUri}}/cliente`
 
 JavaScript
 ~~~javascript
@@ -799,12 +796,9 @@ function excluirCliente(email) {
       method: "DELETE",
       url: `/cliente`,
       headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': token
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
       },
-      params: {
-        email: email
-      }
     })
     .then((response) => console.log(response.data))
     .catch((error) => console.log(error));
@@ -2629,14 +2623,9 @@ Class Api{
 
 ## Carrinho
 
-### Parâmetros:
-| Key   | Tipo   | Descrição                                                        |
-|-------|--------|------------------------------------------------------------------|
-| email | String | Email da entidade que se deseja pegar as informações do carrinho |
-
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/carrinho?email=`
+> `{{baseUri}}/carrinho`
 
 JavaScript
 ~~~javascript
@@ -2649,10 +2638,11 @@ function getCarrinho(email) {
     axios({
       baseURL: baseUri,
       method: "GET",
-      url: "/carrinho",
-      params: {
-        email: email
-      }
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
+      },
+      url: "/carrinho"
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -2695,7 +2685,6 @@ Class Api{
 
 ``` JSON
 "id": "idDoProdutoASeInserirNoCarrinho",
-"email": "emailDaEntidade@email.com",
 "quantidade": 1 // Se não for passado será 1 por padrão
 ```
 
@@ -2710,14 +2699,17 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function adicionarProdutoCarrinho(produto, entidade, qntd) {
+function adicionarProdutoCarrinho(produto, qntd) {
     axios({
       baseURL: baseUri,
       method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
+      },
       url: "/carrinho",
       data: {
         id: produto.id,
-        email: entidade.email,
         quantidade: qntd
       }
     })
@@ -2767,7 +2759,6 @@ Remove um tipo de produto ou certa quantidade desse produto
 
 ``` JSON
 "id": "idDoProdutoASeRetirarDoCarrinho",
-"email": "emailDaEntidade@email.com",
 "quantidade": 1 // Se não for passado será 1 por padrão
 ```
 
@@ -2782,14 +2773,17 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function removerProdutoCarrinho(produto, entidade, qntd) {
+function removerProdutoCarrinho(produto, qntd) {
     axios({
       baseURL: baseUri,
       method: "DELETE",
       url: "/carrinho",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
+      },
       data: {
         id: produto.id,
-        email: entidade.email,
         quantidade: qntd
       }
     })
@@ -2811,7 +2805,6 @@ Class Api{
         var uri = Uri.parse(baseUri + "/carrinho");
         var response = await client.delete(uri, body: jsonEncode({
                 "id": produto.id,
-                "email": cliente.email,
                 "quantidade": qntd
             }));
         
@@ -2851,6 +2844,10 @@ function apagarCarrinho() {
       baseURL: baseUri,
       method: "DELETE",
       url: "/carrinho/tudo"
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
+      },
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
