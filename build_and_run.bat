@@ -1,8 +1,11 @@
 @echo off
 echo Setting environment variables...
-set POSTGRES_USERNAME=postgres
-set POSTGRES_PASSWORD=123456
+set POSTGRES_USERNAME=
+set POSTGRES_PASSWORD=
 set FIREBASE_CREDENTIALS=
+set RAILWAY_HOST=
+set RAILWAY_PORT=
+set RAILWAY_DATABASE=
 
 echo Building the project...
 call .\mvnw clean package
