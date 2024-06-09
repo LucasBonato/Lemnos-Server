@@ -67,10 +67,11 @@ public class CarrinhoService {
     public ResponseEntity<Void> removerProduto(String email, CarrinhoRequest carrinhoRequest) {
         Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(email));
         List<ItensCarrinho> itens = carrinho.getItens();
+        Integer quantidade = (carrinhoRequest.quantidade() != null && carrinhoRequest.quantidade() > 0) ? carrinhoRequest.quantidade() : 1;
         for (ItensCarrinho item : itens) {
             if (!item.getProduto().equals(getProdutoById(carrinhoRequest.id()))) continue;
-            if (item.getQuantidade() - 1 != 0) {
-                item.setQuantidade(item.getQuantidade() - 1);
+            if (item.getQuantidade() - quantidade != 0) {
+                item.setQuantidade(item.getQuantidade() - quantidade);
                 break;
             }
             itens.remove(item);
