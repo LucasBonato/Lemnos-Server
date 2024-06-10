@@ -322,12 +322,35 @@ public class ProdutoService {
     private ProdutoResponse getProdutoResponse(Produto produto) {
         List<String> imagens = new ArrayList<>();
         produto.getImagemPrincipal().getImagens().forEach(imagem -> imagens.add(imagem.getImagem()));
+        if(!produto.getDesconto().getValorDesconto().equals("0")) {
+            return new ProdutoResponse(
+                    produto.getId().toString(),
+                    produto.getNome(),
+                    produto.getDescricao(),
+                    produto.getCor(),
+                    getValorTotal(produto),
+                    produto.getValor(),
+                    produto.getModelo(),
+                    produto.getPeso(),
+                    produto.getAltura(),
+                    produto.getComprimento(),
+                    produto.getLargura(),
+                    produto.getFabricante().getFabricante(),
+                    produto.getSubCategoria().getCategoria().getNome(),
+                    produto.getSubCategoria().getSubCategoria(),
+                    produto.getImagemPrincipal().getImagemPrincipal(),
+                    imagens,
+                    produto.getDesconto().getValorDesconto(),
+                    calcularAvaliacao(produto),
+                    avaliacaoRepository.findAllByProduto(produto).size()
+            );
+        }
         return new ProdutoResponse(
                 produto.getId().toString(),
                 produto.getNome(),
                 produto.getDescricao(),
                 produto.getCor(),
-                getValorTotal(produto),
+                produto.getValor(),
                 produto.getValor(),
                 produto.getModelo(),
                 produto.getPeso(),
