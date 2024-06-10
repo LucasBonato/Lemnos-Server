@@ -41,6 +41,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -111,7 +112,6 @@ public class ProdutoService {
         verificarRegraDeNegocioCreate(produtoRequest);
 
         Desconto desconto = getDesconto(produtoRequest.desconto());
-
         Produto produto = produtoRepository.save(new Produto(
             produtoRequest,
             getValorComDesconto(produtoRequest.valor(), desconto),
@@ -346,12 +346,15 @@ public class ProdutoService {
     }
 
     private Double getValorTotal(Produto produto) {
-        Double valorDesconto =  Double.parseDouble(produto.getDesconto().getValorDesconto());
-        return arredondarValor((100 * produto.getValor()) / (100 - valorDesconto));
+        DecimalFormat df = new DecimalFormat("#.00");
+        String resultado = String.format("%s", df.format((100 * produto.getValor()) / (100 - Double.parseDouble(produto.getDesconto().getValorDesconto())))).replace(',', '.');
+        return Double.parseDouble(resultado);
     }
 
     private Double getValorComDesconto(Double valor, Desconto desconto) {
-        return arredondarValor((100 - Double.parseDouble(desconto.getValorDesconto())) * valor / 100);
+        DecimalFormat df = new DecimalFormat("#.00");
+        String resultado = String.format("%s", df.format((100 - Double.parseDouble(desconto.getValorDesconto())) * valor / 100)).replace(',', '.');
+        return Double.parseDouble(resultado);
     }
 
     private Double calcularAvaliacao(Produto produto) {

@@ -93,7 +93,7 @@ CREATE TABLE Fabricante(
 CREATE TABLE Produto (
     Id UUID PRIMARY KEY,
     Nome varChar(100) NOT NULL,
-    Descricao varchar(200) NOT NULL,
+    Descricao varchar(1024) NOT NULL,
     Cor varchar(30),
     Valor numeric(10,2) NOT NULL,
     Modelo varchar(30) NOT NULL,
