@@ -3,6 +3,8 @@ package com.lemnos.server.services;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+import com.lemnos.server.exceptions.auth.AuthNotValidException;
+import com.lemnos.server.exceptions.auth.UsuarioNotFoundException;
 import com.lemnos.server.exceptions.cadastro.*;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FireBaseLoginRequest;
@@ -106,7 +108,7 @@ public class AuthService extends Util {
     private UserDetails verificarLogin(LoginRequest loginRequest) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email());
         if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(loginRequest, passwordEncoder)) {
-            throw new RuntimeException("Email ou senha inválidos");
+            throw new AuthNotValidException("Email ou senha inválidos");
         }
         Optional<Cliente> clienteOptional = clienteRepository.findByCadastro(cadastroOptional.get());
         if (clienteOptional.isPresent()) {
@@ -116,7 +118,7 @@ public class AuthService extends Util {
         if(funcionarioOptional.isPresent()) {
             return funcionarioOptional.get();
         }
-        throw new RuntimeException("Usuário não encontrado");
+        throw new UsuarioNotFoundException();
     }
     private UserDetails verificarLogin(String email, String uid) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(email);

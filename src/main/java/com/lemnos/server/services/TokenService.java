@@ -1,5 +1,6 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.auth.TokenNotCreatedException;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Funcionario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class TokenService {
                     .build();
             return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         } catch (BadJwtException e) {
-            throw new RuntimeException("Erro ao criar token!");
+            throw new TokenNotCreatedException();
         }
     }
 

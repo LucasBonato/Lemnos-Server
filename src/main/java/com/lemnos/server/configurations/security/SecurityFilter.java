@@ -1,5 +1,6 @@
 package com.lemnos.server.configurations.security;
 
+import com.lemnos.server.exceptions.auth.UsuarioNotFoundException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.entidades.Cliente;
@@ -53,7 +54,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(funcionarioOptional.isPresent()) {
             return funcionarioOptional.get();
         }
-        throw new RuntimeException("Usuário não encontrado!");
+        throw new UsuarioNotFoundException();
     }
 
     private Cadastro getCadastro(String email) {
