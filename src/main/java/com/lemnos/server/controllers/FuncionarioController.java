@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,11 @@ class FuncionarioController {
     @GetMapping
     public ResponseEntity<List<FuncionarioResponse>> getAll(){
         return funcionarioService.getAll();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<FuncionarioResponse> getOne(JwtAuthenticationToken token) {
+        return funcionarioService.getOne(token.getName());
     }
 
     @GetMapping("/find")

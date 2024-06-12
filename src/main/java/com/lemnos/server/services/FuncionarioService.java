@@ -4,8 +4,10 @@ import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
+import com.lemnos.server.models.dtos.responses.ClienteResponse;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Funcionario;
@@ -17,6 +19,7 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,6 +38,11 @@ public class FuncionarioService extends Util {
             dto.add(getFuncionarioResponse(funcionario));
         }
         return ResponseEntity.ok(dto);
+    }
+
+    public ResponseEntity<FuncionarioResponse> getOne(String email) {
+        Funcionario funcionario = getOneFuncionarioByEmail(email);
+        return ResponseEntity.ok(getFuncionarioResponse(funcionario));
     }
 
     public ResponseEntity<FuncionarioResponse> getOneByEmail(String email) {

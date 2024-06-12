@@ -60,13 +60,6 @@ public class AuthService extends Util {
         }
     }
 
-    private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
-        if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
-            return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
-        }
-        return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getEmail())));
-    }
-
     public ResponseEntity<Void> register(RegisterRequest registerRequest) {
         Cliente cliente = verificarRegraDeNegocio(registerRequest);
 
@@ -101,6 +94,13 @@ public class AuthService extends Util {
     public ResponseEntity<Void> verificarFornecedor(FornecedorRequest fornecedorRequest) {
         verificarRegraDeNegocio(fornecedorRequest);
         return ResponseEntity.ok().build();
+    }
+
+    private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
+        if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
+            return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
+        }
+        return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getEmail())));
     }
 
     private UserDetails verificarLogin(LoginRequest loginRequest) {
