@@ -41,6 +41,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -386,15 +388,19 @@ public class ProdutoService {
     private Double calcularAvaliacao(Produto produto) {
         List<Avaliacao> avaliacoes = avaliacaoRepository.findAllByProduto(produto);
         Double media = 0.0;
-        for(Avaliacao avaliacao : avaliacoes) media += avaliacao.getAvaliacao();
-        media /= avaliacoes.size();
-        produto.setMediaAvaliacao(arredondarValor(media));
+        if(!avaliacoes.isEmpty()) {
+            for(Avaliacao avaliacao : avaliacoes) media += avaliacao.getAvaliacao();
+            media /= avaliacoes.size();
+        }
+        media = arredondarValor(media);
+        produto.setMediaAvaliacao(media);
         produtoRepository.save(produto);
         return media;
     }
 
     private Double arredondarValor(Double valor) {
-        return Math.round(valor * 2) / 2.0;
+        BigDecimal bd = new BigDecimal(valor).multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(2));
+        return bd.doubleValue();
     }
 
     private Fabricante getFabricante(String fabricante) {
