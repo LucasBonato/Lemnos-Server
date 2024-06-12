@@ -101,6 +101,7 @@ CREATE TABLE Produto (
     Altura numeric(5,2) NOT NULL,
     Comprimento numeric(5,2) NOT NULL,
     Largura numeric(5,2) NOT NULL,
+    MediaAvaliacao decimal(2,1) NOT NULL,
     Id_Fabricante int,
     Id_Imagem int,
     Id_Sub_Categoria int,
