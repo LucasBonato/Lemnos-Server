@@ -97,6 +97,9 @@ public class ProdutoService {
         } else if (filtro.menorPreco() == null && (filtro.maiorPreco() != null && filtro.maiorPreco() >= 0)) {
             specification = specification.and(ProdutoSpecifications.isPrecoBetween(0.0, filtro.maiorPreco()));
         }
+        if(filtro.avaliacao() != null && filtro.avaliacao() >= 0){
+            specification = specification.and(ProdutoSpecifications.hasAvaliacao(filtro.avaliacao()));
+        }
         int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
         int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 10;
         Pageable pageble = PageRequest.of(page, size);
@@ -385,8 +388,11 @@ public class ProdutoService {
         Double media = 0.0;
         for(Avaliacao avaliacao : avaliacoes) media += avaliacao.getAvaliacao();
         media /= avaliacoes.size();
-        return arredondarValor(media);
+        produto.setMediaAvaliacao(arredondarValor(media));
+        produtoRepository.save(produto);
+        return media;
     }
+
     private Double arredondarValor(Double valor) {
         return Math.round(valor * 2) / 2.0;
     }

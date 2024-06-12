@@ -8,5 +8,6 @@ public record ProdutoFiltroRequest(
     Double menorPreco,
     Double maiorPreco,
     Integer page,
-    Integer size
+    Integer size,
+    Double avaliacao
 ) { }

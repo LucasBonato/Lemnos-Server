@@ -23,4 +23,8 @@ public class ProdutoSpecifications {
     public static Specification<Produto> isPrecoBetween(Double menorPreco, Double maiorPreco) {
         return (root, query, cb) -> cb.between(root.get("valor"), menorPreco, maiorPreco);
     }
+
+    public static Specification<Produto> hasAvaliacao(Double avaliacao){
+        return (root, query, cb) -> cb.equal(root.get("mediaAvaliacao"), avaliacao);
+    }
 }
