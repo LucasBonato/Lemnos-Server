@@ -15,21 +15,21 @@ public class CarrinhoController {
 
     @GetMapping
     public ResponseEntity<CarrinhoResponse> getCarrinho(JwtAuthenticationToken token) {
-        return carrinhoService.getCarrinho(token.getName());
+        return carrinhoService.getCarrinho(token);
     }
 
     @PostMapping
     public ResponseEntity<Void> adicionarProduto(JwtAuthenticationToken token, @RequestBody CarrinhoRequest carrinhoRequest) {
-        return carrinhoService.adicionarProduto(token.getName(), carrinhoRequest);
+        return carrinhoService.adicionarProduto(token, carrinhoRequest);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> removerProduto(JwtAuthenticationToken token, @RequestBody CarrinhoRequest carrinhoRequest) {
-        return carrinhoService.removerProduto(token.getName(), carrinhoRequest);
+        return carrinhoService.removerProduto(token, carrinhoRequest);
     }
 
     @DeleteMapping("/tudo")
     public ResponseEntity<Void> removerTodosProdutos(JwtAuthenticationToken token) {
-        return carrinhoService.removerTodosProdutos(token.getName());
+        return carrinhoService.removerTodosProdutos(token);
     }
 }

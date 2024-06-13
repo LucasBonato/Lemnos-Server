@@ -1,5 +1,6 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.auth.TokenNotValidOrExpiredException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
@@ -39,6 +40,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -155,15 +157,17 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<List<FavoritoResponse>> getFavoritos(String email) {
-        Cliente cliente = getClienteByEmail(email);
+    public ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token) {
+        verificarToken(token);
+        Cliente cliente = getClienteByEmail(token.getName());
         List<FavoritoResponse> response = new ArrayList<>();
         cliente.getProdutosFavoritos().forEach(produto -> response.add(new FavoritoResponse(produto.getId().toString())));
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<Void> favoritar(String email, String idProd) {
-        Cliente cliente = getClienteByEmail(email);
+    public ResponseEntity<Void> favoritar(JwtAuthenticationToken token, String idProd) {
+        verificarToken(token);
+        Cliente cliente = getClienteByEmail(token.getName());
         Produto produto = getProdutoById(idProd);
 
         if(cliente.getProdutosFavoritos().remove(produto)) throw new ProdutoAlreadyFavoritoException("O produto já está favoritado");
@@ -174,8 +178,9 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> desfavoritar(String email, String idProd) {
-        Cliente cliente = getClienteByEmail(email);
+    public ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, String idProd) {
+        verificarToken(token);
+        Cliente cliente = getClienteByEmail(token.getName());
         List<Produto> novosProdutosFavoritos = new ArrayList<>();
         cliente.getProdutosFavoritos()
                 .stream()
@@ -200,6 +205,11 @@ public class ProdutoService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    private void verificarToken(JwtAuthenticationToken token) {
+        if(token == null) {
+            throw new TokenNotValidOrExpiredException();
+        }
+    }
     private void verificarRegraDeNegocioCreate(ProdutoRequest produtoRequest) {
         if(StringUtils.isBlank(produtoRequest.nome())){
             throw new ProdutoNotValidException(Codigo.NOME, "O campo Nome é obrigatório!");

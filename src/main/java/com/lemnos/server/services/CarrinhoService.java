@@ -1,5 +1,6 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.auth.TokenNotValidOrExpiredException;
 import com.lemnos.server.exceptions.carrinho.CarrinhoVazioException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
@@ -17,6 +18,7 @@ import com.lemnos.server.repositories.produto.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,8 +30,9 @@ public class CarrinhoService {
     @Autowired private ItensCarrinhoRepository itensCarrinhoRepository;
     @Autowired private ProdutoRepository produtoRepository;
 
-    public ResponseEntity<CarrinhoResponse> getCarrinho(String email) {
-        Optional<Carrinho> optionalCarrinho = carrinhoRepository.findByCadastro(cadastroRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new));
+    public ResponseEntity<CarrinhoResponse> getCarrinho(JwtAuthenticationToken token) {
+        verificarToken(token);
+        Optional<Carrinho> optionalCarrinho = carrinhoRepository.findByCadastro(cadastroRepository.findByEmail(token.getName()).orElseThrow(EntityNotFoundException::new));
         if(optionalCarrinho.isEmpty())
             return ResponseEntity.ok().build();
 
@@ -48,8 +51,9 @@ public class CarrinhoService {
         ));
     }
 
-    public ResponseEntity<Void> adicionarProduto(String email, CarrinhoRequest carrinhoRequest) {
-        Cadastro cadastro = getCadastroByEmail(email);
+    public ResponseEntity<Void> adicionarProduto(JwtAuthenticationToken token, CarrinhoRequest carrinhoRequest) {
+        verificarToken(token);
+        Cadastro cadastro = getCadastroByEmail(token.getName());
         Produto produto = getProdutoById(carrinhoRequest.id());
 
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElse(null);
@@ -64,8 +68,9 @@ public class CarrinhoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> removerProduto(String email, CarrinhoRequest carrinhoRequest) {
-        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(email));
+    public ResponseEntity<Void> removerProduto(JwtAuthenticationToken token, CarrinhoRequest carrinhoRequest) {
+        verificarToken(token);
+        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(token.getName()));
         List<ItensCarrinho> itens = carrinho.getItens();
         Integer quantidade = (carrinhoRequest.quantidade() != null && carrinhoRequest.quantidade() > 0) ? carrinhoRequest.quantidade() : 1;
         for (ItensCarrinho item : itens) {
@@ -87,12 +92,18 @@ public class CarrinhoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> removerTodosProdutos(String email) {
-        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(email));
+    public ResponseEntity<Void> removerTodosProdutos(JwtAuthenticationToken token) {
+        verificarToken(token);
+        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(token.getName()));
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
 
+    private void verificarToken(JwtAuthenticationToken token) {
+        if(token == null) {
+            throw new TokenNotValidOrExpiredException();
+        }
+    }
     private Cadastro getCadastroByEmail(String email) {
         return cadastroRepository.findByEmail(email).orElseThrow(ClienteNotFoundException::new);
     }

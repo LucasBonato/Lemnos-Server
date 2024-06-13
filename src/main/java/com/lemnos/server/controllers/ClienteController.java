@@ -23,16 +23,16 @@ public class ClienteController {
 
     @GetMapping("/find")
     public ResponseEntity<ClienteResponse> getOneByEmail(JwtAuthenticationToken token){
-        return clienteService.getOneByEmail(token.getName());
+        return clienteService.getOneByEmail(token);
     }
 
     @PutMapping
     public ResponseEntity<Void> updateById(JwtAuthenticationToken token, @RequestBody ClienteRequest clienteRequest){
-        return clienteService.updateCliente(token.getName(), clienteRequest);
+        return clienteService.updateCliente(token, clienteRequest);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteById(JwtAuthenticationToken token){
-        return clienteService.deleteByEmail(token.getName());
+        return clienteService.deleteByEmail(token);
     }
 }

@@ -1,5 +1,6 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.auth.TokenNotValidOrExpiredException;
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
@@ -19,6 +20,7 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,21 +45,24 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<ClienteResponse> getOneByEmail(String email) {
-        Cliente cliente = getOneClienteByEmail(email);
+    public ResponseEntity<ClienteResponse> getOneByEmail(JwtAuthenticationToken token) {
+        verificarToken(token);
+        Cliente cliente = getOneClienteByEmail(token.getName());
         ClienteResponse record = getClienteResponse(cliente);
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<Void> updateCliente(String email, ClienteRequest clienteDTO){
-        Cliente updatedCliente = insertData(email, clienteDTO);
+    public ResponseEntity<Void> updateCliente(JwtAuthenticationToken token, ClienteRequest clienteDTO){
+        verificarToken(token);
+        Cliente updatedCliente = insertData(token.getName(), clienteDTO);
         clienteRepository.save(updatedCliente);
 
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteByEmail(String email){
-        Cliente clienteDeletado = getOneClienteByEmail(email);
+    public ResponseEntity<Void> deleteByEmail(JwtAuthenticationToken token){
+        verificarToken(token);
+        Cliente clienteDeletado = getOneClienteByEmail(token.getName());
 
         if(clienteDeletado.getSituacao() == Situacao.ATIVO) {
             clienteDeletado.setSituacao(Situacao.INATIVO);
@@ -84,7 +89,9 @@ public class ClienteService extends Util {
         }
         return produtosFavoritos;
     }
-
+    private void verificarToken(JwtAuthenticationToken token) {
+        if (token == null) throw new TokenNotValidOrExpiredException();
+    }
     private Cliente getOneClienteByEmail(String email) {
         return clienteRepository.findByCadastro(
                 cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(ClienteNotFoundException::new)

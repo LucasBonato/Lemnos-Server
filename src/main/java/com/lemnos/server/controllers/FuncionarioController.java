@@ -24,7 +24,7 @@ class FuncionarioController {
 
     @GetMapping("/me")
     public ResponseEntity<FuncionarioResponse> getOne(JwtAuthenticationToken token) {
-        return funcionarioService.getOne(token.getName());
+        return funcionarioService.getOne(token);
     }
 
     @GetMapping("/find")

@@ -1,5 +1,6 @@
 package com.lemnos.server.services;
 
+import com.lemnos.server.exceptions.auth.TokenNotValidOrExpiredException;
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
@@ -40,8 +41,9 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<FuncionarioResponse> getOne(String email) {
-        Funcionario funcionario = getOneFuncionarioByEmail(email);
+    public ResponseEntity<FuncionarioResponse> getOne(JwtAuthenticationToken token) {
+        verificarToken(token);
+        Funcionario funcionario = getOneFuncionarioByEmail(token.getName());
         return ResponseEntity.ok(getFuncionarioResponse(funcionario));
     }
 
@@ -95,6 +97,9 @@ public class FuncionarioService extends Util {
         );
     }
 
+    private void verificarToken(JwtAuthenticationToken token) {
+        if(token == null) throw new TokenNotValidOrExpiredException();
+    }
     private Funcionario getOneFuncionarioByEmail(String email) {
         return funcionarioRepository.findByCadastro(
                 cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(FuncionarioNotFoundException::new)

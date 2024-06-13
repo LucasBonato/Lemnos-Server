@@ -51,17 +51,17 @@ public class ProdutoController {
 
     @GetMapping("/fav")
     public ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token) {
-        return produtoService.getFavoritos(token.getName());
+        return produtoService.getFavoritos(token);
     }
 
     @PostMapping("/fav")
     public ResponseEntity<Void> favoritar(JwtAuthenticationToken token, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.favoritar(token.getName(), idProd);
+        return produtoService.favoritar(token, idProd);
     }
 
     @DeleteMapping("/fav")
     public ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.desfavoritar(token.getName(), idProd);
+        return produtoService.desfavoritar(token, idProd);
     }
 
     @DeleteMapping("/desconto/{id}")
