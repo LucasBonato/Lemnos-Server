@@ -4,11 +4,14 @@ import com.lemnos.server.exceptions.auth.TokenNotValidOrExpiredException;
 import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
+import com.lemnos.server.models.dtos.requests.FuncionarioFiltroRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
+import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.entidades.Cliente;
+import com.lemnos.server.models.entidades.FuncionarioSpecification;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Funcionario;
@@ -19,6 +22,9 @@ import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -39,6 +45,24 @@ public class FuncionarioService extends Util {
             dto.add(getFuncionarioResponse(funcionario));
         }
         return ResponseEntity.ok(dto);
+    }
+
+    public ResponseEntity<List<FuncionarioResponse>> getBy(FuncionarioFiltroRequest filtro){
+        Specification<Funcionario> specification = Specification.where(null);
+
+        if(StringUtils.isNotBlank(filtro.nome())){
+            specification.and(FuncionarioSpecification.hasNome(filtro.nome()));
+        }
+
+        int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
+        int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 10;
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<FuncionarioResponse> funcionarioResponses = new ArrayList<>();
+        funcionarioRepository.findAll(pageable)
+                .forEach(funcionario -> funcionarioResponses.add(getFuncionarioResponse(funcionario)));
+
+        return ResponseEntity.ok(funcionarioResponses);
     }
 
     public ResponseEntity<FuncionarioResponse> getOne(JwtAuthenticationToken token) {
