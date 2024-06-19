@@ -187,6 +187,7 @@ public class FuncionarioService extends Util {
         updatedFuncionario.setTelefone(telefone);
         updatedFuncionario.setCadastro(funcionarioEncontrado.getCadastro());
         updatedFuncionario.setEnderecos(funcionarioEncontrado.getEnderecos());
+        updatedFuncionario.setRole(funcionarioEncontrado.getRole());
 
         return updatedFuncionario;
     }
