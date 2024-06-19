@@ -147,4 +147,17 @@ public class CarrinhoService {
         itens.forEach(item -> valorTotal[0] += item.getProduto().getValor() * item.getQuantidade());
         return valorTotal[0];
     }
+
+    public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token) {
+        verificarToken(token);
+
+        Cadastro cadastro = getCadastroByEmail(token.getName());
+        Carrinho carrinho = getCarrinhoByCadastro(cadastro);
+
+        if(carrinho.getItens() == null){
+            return ResponseEntity.ok(0);
+        }
+
+        return ResponseEntity.ok(carrinho.getItens().size());
+    }
 }

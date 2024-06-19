@@ -106,7 +106,7 @@ public class AuthService extends Util {
     }
 
     private UserDetails verificarLogin(LoginRequest loginRequest) {
-        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email());
+        Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email().toLowerCase());
         if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(loginRequest, passwordEncoder)) {
             throw new AuthNotValidException("Email ou senha inválidos");
         }
