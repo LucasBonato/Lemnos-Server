@@ -32,4 +32,9 @@ public class CarrinhoController {
     public ResponseEntity<Void> removerTodosProdutos(JwtAuthenticationToken token) {
         return carrinhoService.removerTodosProdutos(token);
     }
+
+    @GetMapping("/quantidade")
+    public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token){
+        return carrinhoService.quantidadeProdutos(token);
+    }
 }
