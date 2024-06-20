@@ -102,7 +102,7 @@ public class AuthService extends Util {
         if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
             return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
         }
-        return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getEmail())));
+        return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
     }
 
     private UserDetails verificarLogin(LoginRequest loginRequest) {
