@@ -76,7 +76,7 @@ public class ClienteService extends Util {
                 cliente.getNome(),
                 cliente.getCadastro().getEmail(),
                 cliente.getSituacao().toString(),
-                cliente.getCpf().toString(),
+                cliente.getCpf() == null ? "" : cliente.getCpf().toString(),
                 getProdutosFavoritos(cliente),
                 getEnderecoRecords(cliente)
         );
