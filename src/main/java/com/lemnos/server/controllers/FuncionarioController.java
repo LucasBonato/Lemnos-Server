@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.models.dtos.requests.FuncionarioFiltroRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
 import com.lemnos.server.services.FuncionarioService;
@@ -33,8 +34,8 @@ class FuncionarioController {
     }
 
     @GetMapping("/by")
-    public ResponseEntity<List<String>> getBy(@RequestParam(value = "nome") String nome) {
-        return funcionarioService.getBy(nome);
+    public ResponseEntity<List<String>> getBy(@RequestBody FuncionarioFiltroRequest nome) {
+        return funcionarioService.filterByName(nome);
     }
 
     @PutMapping

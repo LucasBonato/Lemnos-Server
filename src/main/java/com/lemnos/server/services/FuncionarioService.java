@@ -47,20 +47,16 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<List<FuncionarioResponse>> getBy(FuncionarioFiltroRequest filtro){
+    public ResponseEntity<List<String>> filterByName(FuncionarioFiltroRequest filtro){
         Specification<Funcionario> specification = Specification.where(null);
 
         if(StringUtils.isNotBlank(filtro.nome())){
             specification.and(FuncionarioSpecification.hasNome(filtro.nome()));
         }
+        Pageable pageable = PageRequest.ofSize(filtro.size());
 
-        int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
-        int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 10;
-        Pageable pageable = PageRequest.of(page, size);
-
-        List<FuncionarioResponse> funcionarioResponses = new ArrayList<>();
-        funcionarioRepository.findAll(pageable)
-                .forEach(funcionario -> funcionarioResponses.add(getFuncionarioResponse(funcionario)));
+        List<String> funcionarioResponses = new ArrayList<>();
+        funcionarioRepository.findAll(specification, pageable);
 
         return ResponseEntity.ok(funcionarioResponses);
     }
@@ -75,12 +71,6 @@ public class FuncionarioService extends Util {
         Funcionario funcionario = getOneFuncionarioByEmail(email);
         FuncionarioResponse record = getFuncionarioResponse(funcionario);
         return ResponseEntity.ok(record);
-    }
-
-    public ResponseEntity<List<String>> getBy(String nome) {
-        List<String> response = new ArrayList<>();
-        funcionarioRepository.findByNomeContainingIgnoreCase(nome).forEach(funcionario -> response.add(funcionario.getNome()));
-        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<Void> updateFuncionario(String email, FuncionarioRequest funcionarioRequest){

@@ -1,6 +1,7 @@
 package com.lemnos.server.repositories.entidades;
 
 import com.lemnos.server.models.cadastro.Cadastro;
+import com.lemnos.server.models.dtos.requests.FuncionarioFiltroRequest;
 import com.lemnos.server.models.entidades.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -15,5 +16,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Intege
 
     Optional<Funcionario> findByCadastro(Cadastro cadastro);
 
-    List<Funcionario> findByNomeContainingIgnoreCase(String nome);
+    List<Funcionario> findByNomeContainingIgnoreCase(FuncionarioFiltroRequest filtro);
 }
