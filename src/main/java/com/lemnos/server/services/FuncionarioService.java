@@ -47,18 +47,21 @@ public class FuncionarioService extends Util {
         return ResponseEntity.ok(dto);
     }
 
-    public ResponseEntity<List<String>> filterByName(FuncionarioFiltroRequest filtro){
+    public ResponseEntity<List<FuncionarioResponse>> filterByName(FuncionarioFiltroRequest filtro){
         Specification<Funcionario> specification = Specification.where(null);
 
         if(StringUtils.isNotBlank(filtro.nome())){
             specification.and(FuncionarioSpecification.hasNome(filtro.nome()));
         }
-        Pageable pageable = PageRequest.ofSize(filtro.size());
+        int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
+        int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 5;
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<String> funcionarioResponses = new ArrayList<>();
-        funcionarioRepository.findAll(specification, pageable);
+        List<FuncionarioResponse> funcionarioResponse = new ArrayList<>();
+        funcionarioRepository.findAll(specification, pageable)
+                .forEach(funcionario -> funcionarioResponse.add(getFuncionarioResponse(funcionario)));
 
-        return ResponseEntity.ok(funcionarioResponses);
+        return ResponseEntity.ok(funcionarioResponse);
     }
 
     public ResponseEntity<FuncionarioResponse> getOne(JwtAuthenticationToken token) {

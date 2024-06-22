@@ -106,10 +106,10 @@ public class ProdutoService {
         }
         int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
         int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 10;
-        Pageable pageble = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size);
 
         List<ProdutoResponse> produtoResponses = new ArrayList<>();
-        produtoRepository.findAll(specification, pageble)
+        produtoRepository.findAll(specification, pageable)
                 .forEach(produto -> produtoResponses.add(getProdutoResponse(produto)));
 
         return ResponseEntity.ok(produtoResponses);

@@ -34,7 +34,7 @@ class FuncionarioController {
     }
 
     @GetMapping("/by")
-    public ResponseEntity<List<String>> getBy(@RequestBody FuncionarioFiltroRequest nome) {
+    public ResponseEntity<List<FuncionarioResponse>> getBy(@RequestBody FuncionarioFiltroRequest nome) {
         return funcionarioService.filterByName(nome);
     }
 
