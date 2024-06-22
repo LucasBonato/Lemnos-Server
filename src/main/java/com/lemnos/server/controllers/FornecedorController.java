@@ -25,7 +25,7 @@ public class FornecedorController {
         return fornecedorService.getOneByEmail(email);
     }
 
-    @GetMapping("/by")
+    @PostMapping("/by")
     public ResponseEntity<List<FornecedorResponse>> getBy(@RequestParam(value = "nome") String nome) {
         return fornecedorService.getBy(nome);
     }

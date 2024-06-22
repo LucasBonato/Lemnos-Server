@@ -33,7 +33,7 @@ class FuncionarioController {
         return funcionarioService.getOneByEmail(email);
     }
 
-    @GetMapping("/by")
+    @PostMapping("/by")
     public ResponseEntity<List<FuncionarioResponse>> getBy(@RequestBody FuncionarioFiltroRequest nome) {
         return funcionarioService.filterByName(nome);
     }
