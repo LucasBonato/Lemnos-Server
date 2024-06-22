@@ -213,6 +213,7 @@ public class AuthService extends Util {
 
         return new Funcionario(
                 funcionarioRequest,
+                passwordEncoder.encode(funcionarioRequest.senha()),
                 convertData(funcionarioRequest.dataNascimento()),
                 convertData(funcionarioRequest.dataAdmissao())
         );

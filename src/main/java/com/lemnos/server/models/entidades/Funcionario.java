@@ -61,13 +61,13 @@ public class Funcionario implements UserDetails {
     @Column(name = "role")
     private Roles role = Roles.FUNCIONARIO;
 
-    public Funcionario(FuncionarioRequest funcionarioRequest, Date dataNascimento, Date dataAdmissao){
+    public Funcionario(FuncionarioRequest funcionarioRequest, String password,Date dataNascimento, Date dataAdmissao){
         this.nome = funcionarioRequest.nome();
         this.cpf = Long.parseLong(funcionarioRequest.cpf());
         this.dataNascimento = dataNascimento;
         this.dataAdmissao = dataAdmissao;
         this.telefone = Long.parseLong(funcionarioRequest.telefone());
-        this.cadastro = new Cadastro(funcionarioRequest);
+        this.cadastro = new Cadastro(funcionarioRequest, password);
     }
 
     public Funcionario(FirebaseToken decodedToken, String senha) {
