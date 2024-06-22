@@ -32,6 +32,7 @@ public class EnderecoService extends UtilEndereco {
     @Autowired private FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
 
     public ResponseEntity<Void> createEndereco(EnderecoRequest enderecoRequest) {
+        verificarCamposEndereco(enderecoRequest);
         switch (enderecoRequest.entidade()){
             case "funcionario":
                 createEnderecoFuncionario(enderecoRequest);
@@ -46,6 +47,7 @@ public class EnderecoService extends UtilEndereco {
     }
 
     public ResponseEntity<Void> updateEndereco(EnderecoRequest enderecoRequest) {
+        verificarCamposEndereco(enderecoRequest);
         switch (enderecoRequest.entidade()){
             case "funcionario":
                 updateEnderecoFuncionario(enderecoRequest);
