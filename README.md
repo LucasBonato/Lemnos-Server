@@ -3079,7 +3079,6 @@ Class Api{
 ### Pedido Body:
 
 ``` JSON
-"email": "emailDaEntidade@email.com",
 "id": 0 // Id do Pedido
 ```
 
@@ -3100,7 +3099,6 @@ function atualizarStatus(pedido, cliente) {
       method: "PUT",
       url: "/pedido",
       data: {
-        email: cliente.email,
         id: pedido.id
       }
     })
