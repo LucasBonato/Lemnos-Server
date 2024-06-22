@@ -6,6 +6,7 @@ import com.lemnos.server.models.dtos.responses.PedidoResponse;
 import com.lemnos.server.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +17,8 @@ public class PedidoController {
     @Autowired private PedidoService pedidoService;
 
     @GetMapping
-    public ResponseEntity<List<PedidoResponse>> getAllByEmail(@RequestParam(value = "email") String email) {
-        return pedidoService.getAll(email);
+    public ResponseEntity<List<PedidoResponse>> getAllByEmail(JwtAuthenticationToken token) {
+        return pedidoService.getAll(token);
     }
 
     @GetMapping("/{id}")
@@ -26,8 +27,8 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> novoPedido(@RequestBody PedidoRequest pedidoRequest) {
-        return pedidoService.novoPedido(pedidoRequest);
+    public ResponseEntity<Void> novoPedido(@RequestBody PedidoRequest pedidoRequest, JwtAuthenticationToken token) {
+        return pedidoService.novoPedido(pedidoRequest, token);
     }
 
     @PutMapping

@@ -20,6 +20,7 @@ import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ public class PedidoService {
     @Autowired private CarrinhoRepository carrinhoRepository;
     @Autowired private EntregaRepository entregaRepository;
 
-    public ResponseEntity<List<PedidoResponse>> getAll(String email){
-        List<Pedido> pedidos = pedidoRepository.findByCadastro(getCadastroByEmail(email));
+    public ResponseEntity<List<PedidoResponse>> getAll(JwtAuthenticationToken token){
+        List<Pedido> pedidos = pedidoRepository.findByCadastro(getCadastroByEmail(token.getName()));
         List<PedidoResponse> dto = new ArrayList<>();
         pedidos.forEach(pedido -> dto.add(getPedidoResponse(pedido)));
 
@@ -46,8 +47,8 @@ public class PedidoService {
         return ResponseEntity.ok(getPedidoResponse(pedido));
     }
 
-    public ResponseEntity<Void> novoPedido(PedidoRequest pedidoRequest) {
-        Cadastro cadastro = getCadastroByEmail(pedidoRequest.email());
+    public ResponseEntity<Void> novoPedido(PedidoRequest pedidoRequest, JwtAuthenticationToken token) {
+        Cadastro cadastro = getCadastroByEmail(token.getName());
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElseThrow(CarrinhoVazioException::new);
         verficarPedido(pedidoRequest);
         pedidoRepository.save(new Pedido(carrinho.getValor(), pedidoRequest.metodoPagamento(), carrinho.getValor(),carrinho.getQuantidadeProdutos(), getDescricao(carrinho),  pedidoRequest.valorFrete(), cadastro));

@@ -2889,14 +2889,9 @@ Class Api{
 
 ### Lista de Pedidos
 
-### Parâmetros:
-| Key   | Tipo   | Descrição                                                        |
-|-------|--------|------------------------------------------------------------------|
-| email | String | Email da entidade que se deseja pegar os pedidos                 |
-
 ![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
 
-> `{{baseUri}}/pedido?email=`
+> `{{baseUri}}/pedido`
 
 JavaScript
 ~~~javascript
@@ -2910,8 +2905,8 @@ function getPedidos(email) {
       baseURL: baseUri,
       method: "GET",
       url: "/pedido",
-      params: {
-        email: email
+      headers: {
+        'Authorization': token
       }
     })
       .then((response) => console.log(response.data))
@@ -3010,7 +3005,6 @@ Class Api{
 ### Pedido Body:
 
 ``` JSON
-"email": "emailDaEntidade@email.com",
 "metodoPagamento": "",
 "valorPagamento": 1.0,
 "valorFrete": 1.0
@@ -3032,9 +3026,13 @@ function novoPedido(pedido, cliente) {
       baseURL: baseUri,
       method: "POST",
       url: "/pedido",
+      headers: {
+        'Authorization': token
+      },
       data: {
-        email: cliente.email,
-        metodoPagamento: pedido.metodoPagamento
+        metodoPagamento: pedido.metodoPagamento,
+        valorPagamento: pedido.valor,
+        valorFrete: pedido.frete
       }
     })
       .then((response) => console.log(response.data))
