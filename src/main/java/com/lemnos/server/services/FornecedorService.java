@@ -45,9 +45,9 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<List<String>> getBy(String nome) {
-        List<String> response = new ArrayList<>();
-        fornecedorRepository.findByNomeContainingIgnoreCase(nome).forEach(fornecedor -> response.add(fornecedor.getNome()));
+    public ResponseEntity<List<FornecedorResponse>> getBy(String nome) {
+        List<FornecedorResponse> response = new ArrayList<>();
+        fornecedorRepository.findByNomeContainingIgnoreCase(nome).forEach(fornecedor -> response.add(getFornecedorResponse(fornecedor)));
         return ResponseEntity.ok(response);
     }
 

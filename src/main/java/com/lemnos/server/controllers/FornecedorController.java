@@ -26,7 +26,7 @@ public class FornecedorController {
     }
 
     @GetMapping("/by")
-    public ResponseEntity<List<String>> getBy(@RequestParam(value = "nome") String nome) {
+    public ResponseEntity<List<FornecedorResponse>> getBy(@RequestParam(value = "nome") String nome) {
         return fornecedorService.getBy(nome);
     }
 
