@@ -8,6 +8,7 @@ public record FuncionarioResponse(
         Date dataNascimento,
         Date dataAdmissao,
         Long telefone,
+        Long cpf,
         String email,
         String situacao,
         List<EnderecoResponse> enderecos

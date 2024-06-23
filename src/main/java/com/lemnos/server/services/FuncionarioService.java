@@ -108,6 +108,7 @@ public class FuncionarioService extends Util {
                 funcionario.getDataNascimento(),
                 funcionario.getDataAdmissao(),
                 funcionario.getTelefone(),
+                funcionario.getCpf(),
                 funcionario.getCadastro().getEmail(),
                 funcionario.getSituacao().toString(),
                 getEnderecoRecords(funcionario)
