@@ -2634,7 +2634,7 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function getCarrinho(email) {
+function getCarrinho() {
     axios({
       baseURL: baseUri,
       method: "GET",
@@ -2658,8 +2658,68 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<Carrinho> getCarrinho(email) async{
-        var uri = Uri.parse(baseUri + "/carrinho?email=${email}");
+    Future<Carrinho> getCarrinho() async{
+        var uri = Uri.parse(baseUri + "/carrinho");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Carrinho carrinho = jsonResponse.map((json) => Carrinho.fromJson(json));
+        return carrinho;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |                         Por quê?                         |
+|-------------|:-----------:|:--------------------------------------------------------:|
+| 200         |     OK      |                     Retornou o valor                     |
+| 400         | BAD REQUEST | Alguma informação foi enviada errada ou falta informação |
+| 404         |  NOT FOUND  |    A entidade do objeto procurado não foi encontrada     |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Quantidade de itens
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/carrinho/quantidade`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getCarrinho() {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Authorization": token
+      },
+      url: "/carrinho/quantidade"
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Carrinho> getCarrinho() async{
+        var uri = Uri.parse(baseUri + "/carrinho/quantidade");
         var response = await client.get(uri);
     
         var responseBodyUtf8 = utf8.decode(response.body.runes.toList());

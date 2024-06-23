@@ -18,6 +18,11 @@ public class CarrinhoController {
         return carrinhoService.getCarrinho(token);
     }
 
+    @GetMapping("/quantidade")
+    public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token){
+        return carrinhoService.quantidadeProdutos(token);
+    }
+
     @PostMapping
     public ResponseEntity<Void> adicionarProduto(JwtAuthenticationToken token, @RequestBody CarrinhoRequest carrinhoRequest) {
         return carrinhoService.adicionarProduto(token, carrinhoRequest);
@@ -31,10 +36,5 @@ public class CarrinhoController {
     @DeleteMapping("/tudo")
     public ResponseEntity<Void> removerTodosProdutos(JwtAuthenticationToken token) {
         return carrinhoService.removerTodosProdutos(token);
-    }
-
-    @GetMapping("/quantidade")
-    public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token){
-        return carrinhoService.quantidadeProdutos(token);
     }
 }

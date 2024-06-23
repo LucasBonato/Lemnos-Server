@@ -51,7 +51,8 @@ public class PedidoService {
         Cadastro cadastro = getCadastroByEmail(token.getName());
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElseThrow(CarrinhoVazioException::new);
         verficarPedido(pedidoRequest);
-        pedidoRepository.save(new Pedido(carrinho.getValor(), pedidoRequest.metodoPagamento(), carrinho.getValor(),carrinho.getQuantidadeProdutos(), getDescricao(carrinho),  pedidoRequest.valorFrete(), cadastro));
+        Double valorPedido = pedidoRequest.valorPagamento() - pedidoRequest.valorFrete();
+        pedidoRepository.save(new Pedido(valorPedido, pedidoRequest.metodoPagamento(), pedidoRequest.valorPagamento(), carrinho.getQuantidadeProdutos(), getDescricao(carrinho),  pedidoRequest.valorFrete(), cadastro));
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
