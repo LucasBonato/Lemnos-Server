@@ -15,6 +15,4 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Intege
     Optional<Funcionario> findByCpf(Long cpf);
 
     Optional<Funcionario> findByCadastro(Cadastro cadastro);
-
-    List<Funcionario> findByNomeContainingIgnoreCase(FuncionarioFiltroRequest filtro);
 }

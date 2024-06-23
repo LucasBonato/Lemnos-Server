@@ -64,7 +64,6 @@ public class PedidoService {
             Optional<Entrega> entregaOptional = entregaRepository.findByPedido(pedido);
             if(entregaOptional.isPresent()) throw new EntregaJaRealizadaException();
             entregaRepository.save(new Entrega(pedido));
-            return ResponseEntity.ok().build();
         }
         pedido.setStatus(status.getStatus());
         pedidoRepository.save(pedido);
