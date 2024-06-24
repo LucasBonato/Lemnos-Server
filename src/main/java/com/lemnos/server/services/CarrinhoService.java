@@ -98,14 +98,15 @@ public class CarrinhoService {
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
+
     public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token) {
         verificarToken(token);
 
-        Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(token.getName()));
+        Optional<Carrinho> carrinho = carrinhoRepository.findByCadastro(getCadastroByEmail(token.getName()));
 
-        if(carrinho.getItens() == null)
+        if(carrinho.isEmpty())
             return ResponseEntity.ok(0);
-        return ResponseEntity.ok(carrinho.getItens().size());
+        return ResponseEntity.ok(carrinho.get().getItens().size());
     }
 
     private void verificarToken(JwtAuthenticationToken token) {
