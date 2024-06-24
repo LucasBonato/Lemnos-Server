@@ -51,7 +51,7 @@ public class FuncionarioService extends Util {
         Specification<Funcionario> specification = Specification.where(null);
 
         if(StringUtils.isNotBlank(filtro.nome())){
-            specification.and(FuncionarioSpecification.hasNome(filtro.nome()));
+            specification = specification.and(FuncionarioSpecification.hasNome(filtro.nome()));
         }
         int page = (filtro.page() != null && filtro.page() > 0) ? filtro.page() : 0;
         int size = (filtro.size() != null && filtro.size() > 0) ? filtro.size() : 5;
