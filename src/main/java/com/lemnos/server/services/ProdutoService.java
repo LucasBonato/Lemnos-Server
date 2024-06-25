@@ -86,6 +86,7 @@ public class ProdutoService {
 
         if(StringUtils.isNotBlank(filtro.nome())) {
             specification = specification.and(ProdutoSpecifications.hasNome(filtro.nome()));
+            specification = specification.and(ProdutoSpecifications.hasDescricao(filtro.nome()));
         }
         if (StringUtils.isNotBlank(filtro.categoria())) {
             specification = specification.and(ProdutoSpecifications.hasCategoria(filtro.categoria()));

@@ -27,4 +27,8 @@ public class ProdutoSpecifications {
     public static Specification<Produto> hasAvaliacao(Double avaliacao){
         return (root, query, cb) -> cb.equal(root.get("mediaAvaliacao"), avaliacao);
     }
+
+    public static Specification<Produto> hasDescricao(String descricao){
+        return ((root, query, cb) -> cb.like(cb.lower(root.get("descricao")), "%" + descricao.toLowerCase() + "%"));
+    }
 }

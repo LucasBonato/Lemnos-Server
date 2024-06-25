@@ -85,7 +85,7 @@ public class PedidoService {
 
     private Status proximoStatus(String status) {
         return switch (status) {
-            case "Em processamento" -> Status.EVIADO_TRANSPORTADORA;
+            case "Em processamento" -> Status.ENVIADO_TRANSPORTADORA;
             case "Enviado para a transportadora" -> Status.RECEBIDO_TRANSPORTADORA;
             case "Recebido pela transportadora" -> Status.MERCADORIA_EM_TRANSITO;
             case "Mercadoria em trânsito" -> Status.ROTA_DE_ENTREGA;
