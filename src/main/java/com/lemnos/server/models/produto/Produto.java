@@ -97,7 +97,7 @@ public class Produto {
         setDescricao((StringUtils.isNotBlank(produtoRequest.descricao())) ? produtoRequest.descricao() : this.descricao);
         setCor((StringUtils.isNotBlank(produtoRequest.cor())) ? produtoRequest.cor() : this.cor);
         setModelo((StringUtils.isNotBlank(produtoRequest.modelo())) ? produtoRequest.modelo() : this.modelo);
-        setValor((valor != null) ? produtoRequest.valor() : this.valor);
+        setValor((valor != null) ? valor : this.valor);
         setPeso((produtoRequest.peso() != null) ? produtoRequest.peso() : this.peso);
         setAltura((produtoRequest.altura() != null) ? produtoRequest.altura() : this.altura);
         setComprimento((produtoRequest.comprimento() != null) ? produtoRequest.comprimento() : this.comprimento);

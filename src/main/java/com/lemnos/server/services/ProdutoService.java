@@ -141,9 +141,10 @@ public class ProdutoService {
         SubCategoria subCategoria = (StringUtils.isBlank(produtoRequest.subCategoria())) ? produto.getSubCategoria() : getSubCategoria(produtoRequest.subCategoria());
         ImagemPrincipal imagemPrincipal = produto.getImagemPrincipal();
         Desconto desconto = (StringUtils.isBlank(produtoRequest.desconto())) ? produto.getDesconto() : getDesconto(produtoRequest.desconto());
+        produto.setValor((produtoRequest.valor() == null) ? produto.getValor() : produtoRequest.valor());
         Double valorTotal = getValorComDesconto(getValorTotal(produto), desconto);
 
-        produto.setAll(produtoRequest, valorTotal,fabricante, subCategoria, imagemPrincipal, desconto);
+        produto.setAll(produtoRequest, valorTotal, fabricante, subCategoria, imagemPrincipal, desconto);
         verificarRegraDeNegocioUpdate(produto);
 
         produtoRepository.save(produto);
@@ -391,6 +392,9 @@ public class ProdutoService {
     }
 
     private Double getValorTotal(Produto produto) {
+        if(produto.getDesconto().getValorDesconto().equals("0"))
+            return produto.getValor();
+
         DecimalFormat df = new DecimalFormat("#.00");
         String resultado = String.format("%s", df.format((100 * produto.getValor()) / (100 - Double.parseDouble(produto.getDesconto().getValorDesconto())))).replace(',', '.');
         return Double.parseDouble(resultado);
