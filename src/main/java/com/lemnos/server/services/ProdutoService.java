@@ -82,10 +82,7 @@ public class ProdutoService {
         Specification<Produto> specification = Specification.where(null);
 
         if(StringUtils.isNotBlank(filtro.nome())) {
-            if(filtro.nome().length() > 3)
-                specification = specification.or(ProdutoSpecifications.hasDescricao(filtro.nome()));
-            else
-                specification = specification.or(ProdutoSpecifications.hasNome(filtro.nome()));
+            specification = specification.and(ProdutoSpecifications.hasNomeOrDescricao(filtro.nome()));
         }
         if (StringUtils.isNotBlank(filtro.categoria())) {
             specification = specification.and(ProdutoSpecifications.hasCategoria(filtro.categoria()));

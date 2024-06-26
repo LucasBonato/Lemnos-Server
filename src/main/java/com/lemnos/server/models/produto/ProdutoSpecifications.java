@@ -1,5 +1,6 @@
 package com.lemnos.server.models.produto;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -30,5 +31,12 @@ public class ProdutoSpecifications {
 
     public static Specification<Produto> hasDescricao(String descricao) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("descricao")), "%" + descricao.toLowerCase() + "%");
+    }
+
+    public static Specification<Produto> hasNomeOrDescricao(String filtro) {
+        return (root, query, cb) -> cb.or(
+                hasNome(filtro).toPredicate(root, query, cb),
+                hasDescricao(filtro).toPredicate(root, query, cb)
+        );
     }
 }
