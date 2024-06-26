@@ -46,10 +46,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ProdutoService {
@@ -85,7 +82,10 @@ public class ProdutoService {
         Specification<Produto> specification = Specification.where(null);
 
         if(StringUtils.isNotBlank(filtro.nome())) {
-            specification = specification.and(ProdutoSpecifications.hasNome(filtro.nome()));
+            if(filtro.nome().length() > 3)
+                specification = specification.or(ProdutoSpecifications.hasDescricao(filtro.nome()));
+            else
+                specification = specification.or(ProdutoSpecifications.hasNome(filtro.nome()));
         }
         if (StringUtils.isNotBlank(filtro.categoria())) {
             specification = specification.and(ProdutoSpecifications.hasCategoria(filtro.categoria()));
