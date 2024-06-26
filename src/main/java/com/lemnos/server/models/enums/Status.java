@@ -7,11 +7,11 @@ import lombok.Getter;
 @Getter
 public enum Status {
     EM_PROCESSAMENTO("Em processamento"),
-    EVIADO_TRANSPORTADORA("Enviado para a transportadora"),
+    ENVIADO_TRANSPORTADORA("Enviado para a transportadora"),
     RECEBIDO_TRANSPORTADORA("Recebido pela transportadora"),
     MERCADORIA_EM_TRANSITO("Mercadoria em trânsito"),
     ROTA_DE_ENTREGA("Mercadoria em rota de entrega"),
-    ENTREGUE("Pedido entregue");
+    ENTREGUE("Entregue");
 
     private final String status;
 }

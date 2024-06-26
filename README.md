@@ -38,9 +38,8 @@ API criada nesse projeto vem com a ideia de facilitar o trabalho na criação do
 de cadastro de Clientes e Funcionários, gerenciamento, listagem e verificação de produtos, tratamento e 
 gerenciamento de carrinho.
 
-> _<ins>Ainda não foi feito o Deploy da API</ins>_
 
-### _Url Base_: `http://localhost:8080/api/`
+### _Url Base_: `https://lemnos-server.up.railway.app/api`
 
 # Headers
 
@@ -113,6 +112,7 @@ Segue a tabela de valores:
 | 29 |             Avaliação             |
 | 30 |             Favorito              |
 | 31 |             Carrinho              |
+| 32 |              Pedido               |
 ---
 
 # Exemplos
@@ -954,9 +954,9 @@ Class Api{
 |------|--------|-----------------------------------------------|
 | nome | String | Nome da entidade que se deseja pegar os nomes |
 
-![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+![POST](https://img.shields.io/static/v1?label=&message=POST&color=yellow&style=for-the-badge)
 
-> `{{baseUri}}/funcionario/by?nome=`
+> `{{baseUri}}/funcionario/by`
 
 JavaScript
 ~~~javascript
@@ -965,14 +965,14 @@ const axios = require("axios");
 
 let baseUri = "https://localhost:8080/api";
 
-function getFuncionariosByNome(nome) {
+function getFuncionariosByNome(filtro) {
     axios({
       baseURL: baseUri,
-      method: "GET",
+      method: "POST",
       url: "/funcionario/by",
-      params: {
-        nome: nome
-      }
+      data: {
+        nome: filtro.nome
+      },
     })
       .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
@@ -988,22 +988,19 @@ Class Api{
     var client = http.Client();
     String baseUri = "https//localhost:8080/api";
     
-    Future<List<Funcionario>> getFuncionariosByNome(String nome) async{
-        var uri = Uri.parse(baseUri + "/funcionario/by?nome=${nome}");
-        var response = await client.get(uri);
-    
-        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
-        List<dynamic> jsonResponse = json.decode(responseBodyUtf8);
-        List<Funcionario> funcionarios = jsonResponse.map((json) => Funcionario.fromJson(json)).toList();
-        return funcionarios;
-    }
+    Future<Produto> getProdutoFilter(FuncionarioFiltro filtro) async{
+        var uri = Uri.parse(baseUri + "/funcionario/by");
+        var response = await client.post(uri, 
+        body: jsonEnconde({
+          "nome": filtro.nome
+        }));
 }
 ~~~
 
 #### Responses:
 | Status Code |   Meaning   |                 Why?                 |
 |-------------|:-----------:|:------------------------------------:|
-| 200         |     OK      |         Retornou os valores          |                 
+| 200         |     OK      |         Retornou os valores          |                  
 
 ###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
 
@@ -2022,7 +2019,7 @@ let baseUri = "https://localhost:8080/api";
 function getProdutosFilter(filtro) {
     axios({
       baseURL: baseUri,
-      method: "GET",
+      method: "POST",
       url: "/produto/find",
       data: {
         nome: filtro.nome

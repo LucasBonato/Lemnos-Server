@@ -29,6 +29,6 @@ public class ProdutoSpecifications {
     }
 
     public static Specification<Produto> hasDescricao(String descricao) {
-        return (root, query, cb) -> cb.like(root.get("descricao"), "%" + descricao + "%");
+        return (root, query, cb) -> cb.like(cb.lower(root.get("descricao")), "%" + descricao.toLowerCase() + "%");
     }
 }
