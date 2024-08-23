@@ -1,6 +1,5 @@
 package com.lemnos.server.controllers;
 
-import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.requests.FireBaseLoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
