@@ -24,6 +24,11 @@ public class ProdutoController {
         return produtoService.getAll();
     }
 
+    @GetMapping("/discount")
+    public ResponseEntity<List<ProdutoResponse>> getAllWithDiscount() {
+        return produtoService.getAllWithDiscount();
+    }
+
     @PostMapping("/find")
     public ResponseEntity<List<ProdutoResponse>> getBy(@RequestBody ProdutoFiltroRequest filtroRequest) {
         return produtoService.getBy(filtroRequest);
@@ -35,8 +40,8 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> cadastrar(@RequestBody ProdutoRequest produtoRequest){
-        return produtoService.cadastrar(produtoRequest);
+    public ResponseEntity<Void> register(@RequestBody ProdutoRequest produtoRequest){
+        return produtoService.register(produtoRequest);
     }
 
     @PutMapping("/{id}")

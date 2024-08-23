@@ -64,14 +64,20 @@ public class ProdutoService {
 
     @Cacheable("allProdutos")
     public ResponseEntity<List<ProdutoResponse>> getAll(){
-        List<Produto> produtos = produtoRepository.findAll();
         List<ProdutoResponse> dto = new ArrayList<>();
-
-        for(Produto produto : produtos){
-            dto.add(getProdutoResponse(produto));
-        }
+        produtoRepository.findAll()
+                .forEach(produto -> dto.add(getProdutoResponse(produto)));
 
         return ResponseEntity.ok(dto);
+    }
+
+    public ResponseEntity<List<ProdutoResponse>> getAllWithDiscount() {
+        List<ProdutoResponse> produtoResponse = new ArrayList<>();
+        produtoRepository.findAll()
+                .stream()
+                .filter(produto -> !produto.getDesconto().getValorDesconto().equals("0"))
+                .forEach(produto -> produtoResponse.add(getProdutoResponse(produto)));
+        return ResponseEntity.ok(produtoResponse);
     }
 
     public ResponseEntity<ProdutoResponse> getOneById(String id){
@@ -112,8 +118,8 @@ public class ProdutoService {
         return ResponseEntity.ok(produtoResponses);
     }
 
-    public ResponseEntity<Void> cadastrar(ProdutoRequest produtoRequest){
-        verificarRegraDeNegocioCreate(produtoRequest);
+    public ResponseEntity<Void> register(ProdutoRequest produtoRequest){
+        verifyRequestToRegister(produtoRequest);
 
         Desconto desconto = getDesconto(produtoRequest.desconto());
         Produto produto = produtoRepository.save(new Produto(
@@ -142,7 +148,7 @@ public class ProdutoService {
         Double valorTotal = getValorComDesconto(getValorTotal(produto), desconto);
 
         produto.setAll(produtoRequest, valorTotal, fabricante, subCategoria, imagemPrincipal, desconto);
-        verificarRegraDeNegocioUpdate(produto);
+        verifyRequestToUpdate(produto);
 
         produtoRepository.save(produto);
 
@@ -156,7 +162,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token) {
-        verificarToken(token);
+        verifyToken(token);
         Cliente cliente = getClienteByEmail(token.getName());
         List<FavoritoResponse> response = new ArrayList<>();
         cliente.getProdutosFavoritos().forEach(produto -> response.add(new FavoritoResponse(produto.getId().toString())));
@@ -164,7 +170,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> favoritar(JwtAuthenticationToken token, String idProd) {
-        verificarToken(token);
+        verifyToken(token);
         Cliente cliente = getClienteByEmail(token.getName());
         Produto produto = getProdutoById(idProd);
 
@@ -177,7 +183,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, String idProd) {
-        verificarToken(token);
+        verifyToken(token);
         Cliente cliente = getClienteByEmail(token.getName());
         List<Produto> novosProdutosFavoritos = new ArrayList<>();
         cliente.getProdutosFavoritos()
@@ -203,12 +209,12 @@ public class ProdutoService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    private void verificarToken(JwtAuthenticationToken token) {
+    private void verifyToken(JwtAuthenticationToken token) {
         if(token == null) {
             throw new TokenNotValidOrExpiredException();
         }
     }
-    private void verificarRegraDeNegocioCreate(ProdutoRequest produtoRequest) {
+    private void verifyRequestToRegister(ProdutoRequest produtoRequest) {
         if(StringUtils.isBlank(produtoRequest.nome())){
             throw new ProdutoNotValidException(Codigo.NOME, "O campo Nome é obrigatório!");
         }
@@ -226,6 +232,9 @@ public class ProdutoService {
         }
         if(produtoRequest.cor().length() < 2 || produtoRequest.cor().length() > 30){
             throw new ProdutoNotValidException(Codigo.COR, "A cor deve conter entre 2 e 30 caracteres!");
+        }
+        if(produtoRequest.valor() == null) {
+            throw  new ProdutoNotValidException(Codigo.VALOR, "O valor é obrigatório");
         }
         if(produtoRequest.valor() < 0.00 || produtoRequest.valor() > 99999999.99){
             throw new ProdutoNotValidException(Codigo.VALOR, "O valor deve ser entre R$0.00 e R$99999999.99");
@@ -282,7 +291,7 @@ public class ProdutoService {
             throw new ProdutoNotValidException(Codigo.IMAGENS, "É necessário ter no minimo uma imagem secundária!");
         }
     }
-    private void verificarRegraDeNegocioUpdate(Produto produto) {
+    private void verifyRequestToUpdate(Produto produto) {
         if(produto.getNome().length() < 5 || produto.getNome().length() > 100){
             throw new ProdutoNotValidException(Codigo.NOME, "O nome deve conter entre 5 a 100 caracteres!");
         }
@@ -384,8 +393,10 @@ public class ProdutoService {
     }
 
     private String getFornecedor(Produto produto) {
-        Fornecedor fornecedor = dataForneceRepository.findByProduto(produto).getFornecedor();
-        return fornecedor.getNome();
+        return dataForneceRepository
+                .findByProduto(produto)
+                .getFornecedor()
+                .getNome();
     }
 
     private Double getValorTotal(Produto produto) {
@@ -396,7 +407,6 @@ public class ProdutoService {
         String resultado = String.format("%s", df.format((100 * produto.getValor()) / (100 - Double.parseDouble(produto.getDesconto().getValorDesconto())))).replace(',', '.');
         return Double.parseDouble(resultado);
     }
-
     private Double getValorComDesconto(Double valor, Desconto desconto) {
         DecimalFormat df = new DecimalFormat("#.00");
         String resultado = String.format("%s", df.format((100 - Double.parseDouble(desconto.getValorDesconto())) * valor / 100)).replace(',', '.');
@@ -417,7 +427,7 @@ public class ProdutoService {
     }
 
     private Double arredondarValor(Double valor) {
-        BigDecimal bd = new BigDecimal(valor).multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(2));
+        BigDecimal bd = new BigDecimal(valor).multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
