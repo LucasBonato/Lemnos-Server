@@ -16,14 +16,14 @@ import java.util.List;
 @Tag(name = "Favorito", description = "Favorite")
 public interface FavoritoSwagger {
 
-    @Operation(summary = "Get favorite products", description = "Get all favorite products of the user account by its token.")
+    @Operation(description = "Get all favorite products of the user account by its token.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returned all the favorite products from the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FavoritoSwagger.class))),
             @ApiResponse(responseCode = "404", description = "User Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token);
 
-    @Operation(summary = "Favorite a product", description = "Favorite a product.")
+    @Operation(description = "Favorite a product.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully favorited"),
             @ApiResponse(responseCode = "209", description = "The Product is already favorited", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
@@ -32,7 +32,7 @@ public interface FavoritoSwagger {
     })
     ResponseEntity<Void> favoritar(JwtAuthenticationToken token, String idProduto);
 
-    @Operation(summary = "Unfavorite a product", description = "Unfavorite a product.")
+    @Operation(description = "Unfavorite a product.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product successfully unfavorited"),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
