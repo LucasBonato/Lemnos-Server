@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.AuthSwagger;
 import com.lemnos.server.models.dtos.requests.FireBaseLoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.LoginRequest;
 import com.lemnos.server.models.dtos.requests.auth.RegisterRequest;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController implements AuthSwagger {
 
     @Autowired private AuthService authService;
 
