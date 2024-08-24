@@ -1,15 +1,10 @@
 package com.lemnos.server.services;
 
-import com.lemnos.server.exceptions.auth.TokenNotValidOrExpiredException;
-import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.entidades.fornecedor.FornecedorNotFoundException;
 import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.exceptions.produto.AvaliacaoNotValidException;
-import com.lemnos.server.exceptions.produto.ProdutoAlreadyFavoritoException;
 import com.lemnos.server.exceptions.produto.ProdutoNotValidException;
 import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
-import com.lemnos.server.models.dtos.responses.FavoritoResponse;
-import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.produto.*;
 import com.lemnos.server.models.produto.DataFornece;
@@ -21,8 +16,6 @@ import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.produto.categoria.SubCategoria;
 import com.lemnos.server.models.produto.imagens.Imagem;
 import com.lemnos.server.models.produto.imagens.ImagemPrincipal;
-import com.lemnos.server.repositories.cadastro.CadastroRepository;
-import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.DataForneceRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.produto.AvaliacaoRepository;
@@ -40,7 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -51,8 +43,6 @@ import java.util.*;
 @Service
 public class ProdutoService {
     @Autowired private ProdutoRepository produtoRepository;
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private CadastroRepository cadastroRepository;
     @Autowired private AvaliacaoRepository avaliacaoRepository;
     @Autowired private FabricanteRepository fabricanteRepository;
     @Autowired private DataForneceRepository dataForneceRepository;
@@ -161,40 +151,6 @@ public class ProdutoService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token) {
-        verifyToken(token);
-        Cliente cliente = getClienteByEmail(token.getName());
-        List<FavoritoResponse> response = new ArrayList<>();
-        cliente.getProdutosFavoritos().forEach(produto -> response.add(new FavoritoResponse(produto.getId().toString())));
-        return ResponseEntity.ok(response);
-    }
-
-    public ResponseEntity<Void> favoritar(JwtAuthenticationToken token, String idProd) {
-        verifyToken(token);
-        Cliente cliente = getClienteByEmail(token.getName());
-        Produto produto = getProdutoById(idProd);
-
-        if(cliente.getProdutosFavoritos().remove(produto)) throw new ProdutoAlreadyFavoritoException("O produto já está favoritado");
-
-        cliente.getProdutosFavoritos().add(produto);
-        clienteRepository.save(cliente);
-
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, String idProd) {
-        verifyToken(token);
-        Cliente cliente = getClienteByEmail(token.getName());
-        List<Produto> novosProdutosFavoritos = new ArrayList<>();
-        cliente.getProdutosFavoritos()
-                .stream()
-                .filter(produto -> !produto.getId().toString().equals(idProd))
-                .forEach(novosProdutosFavoritos::add);
-        cliente.setProdutosFavoritos(novosProdutosFavoritos);
-        clienteRepository.save(cliente);
-        return ResponseEntity.ok().build();
-    }
-
     public ResponseEntity<Void> retirarPorcentagem(String idProduto){
         Produto produto = getProdutoById(idProduto);
         produto.setValor(getValorTotal(produto));
@@ -209,11 +165,6 @@ public class ProdutoService {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    private void verifyToken(JwtAuthenticationToken token) {
-        if(token == null) {
-            throw new TokenNotValidOrExpiredException();
-        }
-    }
     private void verifyRequestToRegister(ProdutoRequest produtoRequest) {
         if(StringUtils.isBlank(produtoRequest.nome())){
             throw new ProdutoNotValidException(Codigo.NOME, "O campo Nome é obrigatório!");
@@ -333,11 +284,6 @@ public class ProdutoService {
         }
     }
 
-    private Cliente getClienteByEmail(String email) {
-        return clienteRepository.findByCadastro(
-                cadastroRepository.findByEmail(email.replace("%40", "@")
-            ).orElseThrow(ClienteNotFoundException::new)).orElseThrow(ClienteNotFoundException::new);
-    }
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }

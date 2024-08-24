@@ -24,11 +24,6 @@ public class ProdutoController {
         return produtoService.getAll();
     }
 
-    @GetMapping("/discount")
-    public ResponseEntity<List<ProdutoResponse>> getAllWithDiscount() {
-        return produtoService.getAllWithDiscount();
-    }
-
     @PostMapping("/find")
     public ResponseEntity<List<ProdutoResponse>> getBy(@RequestBody ProdutoFiltroRequest filtroRequest) {
         return produtoService.getBy(filtroRequest);
@@ -54,19 +49,9 @@ public class ProdutoController {
         return produtoService.delete(id);
     }
 
-    @GetMapping("/fav")
-    public ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token) {
-        return produtoService.getFavoritos(token);
-    }
-
-    @PostMapping("/fav")
-    public ResponseEntity<Void> favoritar(JwtAuthenticationToken token, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.favoritar(token, idProd);
-    }
-
-    @DeleteMapping("/fav")
-    public ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, @RequestParam(name = "id_prod") String idProd) {
-        return produtoService.desfavoritar(token, idProd);
+    @GetMapping("/desconto")
+    public ResponseEntity<List<ProdutoResponse>> getAllWithDiscount() {
+        return produtoService.getAllWithDiscount();
     }
 
     @DeleteMapping("/desconto/{id}")
