@@ -278,12 +278,11 @@ public class ProdutoService {
         }
         if(StringUtils.isBlank(produto.getImagemPrincipal().getImagemPrincipal())){
             throw new ProdutoNotValidException(Codigo.IMGPRINCIPAL, "O campo Imagem Principal é obrigatório!");
-        };
+        }
         if(StringUtils.isBlank(produto.getImagemPrincipal().getImagens().toString())){
             throw new ProdutoNotValidException(Codigo.IMAGENS, "O campo Imagens é obrigatório!");
         }
     }
-
     private Produto getProdutoById(String id){
         return produtoRepository.findById(UUID.fromString(id)).orElseThrow(ProdutoNotFoundException::new);
     }
@@ -337,14 +336,12 @@ public class ProdutoService {
             avaliacaoRepository.findAllByProduto(produto).size()
         );
     }
-
     private String getFornecedor(Produto produto) {
         return dataForneceRepository
                 .findByProduto(produto)
                 .getFornecedor()
                 .getNome();
     }
-
     private Double getValorTotal(Produto produto) {
         if(produto.getDesconto().getValorDesconto().equals("0"))
             return produto.getValor();
@@ -358,7 +355,6 @@ public class ProdutoService {
         String resultado = String.format("%s", df.format((100 - Double.parseDouble(desconto.getValorDesconto())) * valor / 100)).replace(',', '.');
         return Double.parseDouble(resultado);
     }
-
     private Double calcularAvaliacao(Produto produto) {
         List<Avaliacao> avaliacoes = avaliacaoRepository.findAllByProduto(produto);
         Double media = 0.0;
@@ -371,12 +367,10 @@ public class ProdutoService {
         produtoRepository.save(produto);
         return media;
     }
-
     private Double arredondarValor(Double valor) {
         BigDecimal bd = new BigDecimal(valor).multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
     private Fabricante getFabricante(String fabricante) {
         Optional<Fabricante> fabricanteOptional = fabricanteRepository.findByFabricante(fabricante);
         return fabricanteOptional.orElseGet(() -> fabricanteRepository.save(new Fabricante(fabricante)));

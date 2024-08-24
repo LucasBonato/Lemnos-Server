@@ -1,11 +1,19 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.ProdutoSwagger;
 import com.lemnos.server.models.dtos.requests.AvaliacaoRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.FavoritoResponse;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import com.lemnos.server.services.ProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -15,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/produto")
-public class ProdutoController {
+public class ProdutoController implements ProdutoSwagger {
 
     @Autowired private ProdutoService produtoService;
 
