@@ -39,7 +39,7 @@ de cadastro de Clientes e Funcionários, gerenciamento, listagem e verificação
 gerenciamento de carrinho.
 
 
-### _Url Base_: `https://lemnos-server.up.railway.app/api`
+### _Url Base_: `https://lemnos-server.onrender.com/api`
 
 # Headers
 
