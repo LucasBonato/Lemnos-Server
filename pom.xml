@@ -9,8 +9,8 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.lemnos</groupId>
-	<artifactId>Lemnos-API</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<artifactId>Lemnos-Server</artifactId>
+	<version>0.1.0</version>
 	<name>Lemnos</name>
 	<description>Api para TCC Lemnos</description>
 	<properties>
