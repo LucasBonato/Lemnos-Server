@@ -52,16 +52,16 @@ gerenciamento de carrinho.
 
 # Endpoints
 
-| **EndPoints** | **Sub Endpoints**                                                                                            | **Exemplos**                                                                                                                                                                                        | **Body**                                                                                                                   |                                         Descrição                                          |
-|---------------|--------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
-| /auth         | /login<br/>/login-firebase<br/>/register<br/>/register/funcionario<br/>/register/fornecedor<br/>**/verificar | [login](#Login)<br/>[login google](#Login-Google)<br/>[register](#Registrar-Cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Registro) | [login](#body-login)<br/>[register](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) |            Permite o login e registro de clientes, funcionários e fornecedores             |
-| /cliente      | /find?email=<br/>/endereco                                                                                   | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                                       | [Cliente](#body-put-cliente)                                                                                               |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
-| /funcionario  | /find?email=<br/>/endereco<br/>/by?nome=                                                                     | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                               | [Funcionário](#body-put-funcionário)                                                                                       |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
-| /fornecedor   | /find?email=<br/>/endereco<br/>/by?nome=                                                                     | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                                 | [Fornecedor](#body-put-fornecedor)                                                                                         |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
-| /endereco     | /verificar                                                                                                   | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                                        | [Endereço](#body-endereço)                                                                                                 |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
-| /produto      | /{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id}                                                | [produto](#body-produto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto)              | [Produto](#produto)                                                                                                        | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
-| /carrinho     | /quantidade                                                                                                  | [carrinho](#Carrinho)<br/>[quantidade](#Quantidade-de-itens)                                                                                                                                        | [Carrinho](#Carrinho-Body)                                                                                                 |                    Permite a criação, inserção e remoção de um carrinho                    |
-| /pedido       | ?email=<br/>/{id}                                                                                            | [pedido](#Pedido)                                                                                                                                                                                   | [Pedido](#Pedido-Body)                                                                                                     |        Permite a criação de um novo pedido, visualizar os pedidos e alterar status         |
+| **EndPoints** | **Sub Endpoints**                                                                                            | **Exemplos**                                                                                                                                                                                                                  | **Body**                                                                                                                   |                                         Descrição                                          |
+|---------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------:|
+| /auth         | /login<br/>/login-firebase<br/>/register<br/>/register/funcionario<br/>/register/fornecedor<br/>**/verificar | [login](#Login)<br/>[login google](#Login-Google)<br/>[register](#Registrar-Cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor)<br/>[verificação](#Verificar-Registro)                           | [login](#body-login)<br/>[register](#body-cliente)<br/>[funcionario](#body-funcionario)<br/>[fornecedor](#body-fornecedor) |            Permite o login e registro de clientes, funcionários e fornecedores             |
+| /cliente      | /find?email=<br/>/endereco                                                                                   | [cliente](#Cliente)<br/>[endereço](#Endereço)                                                                                                                                                                                 | [Cliente](#body-put-cliente)                                                                                               |            Possui a forma de conseguir procurar clientes, alterar ou desativar             |
+| /funcionario  | /find?email=<br/>/endereco<br/>/by?nome=                                                                     | [funcionario](#Funcionário)<br/>[endereço](#Endereço)                                                                                                                                                                         | [Funcionário](#body-put-funcionário)                                                                                       |          Possui a forma de conseguir procurar funcionários, alterar ou desativar           |
+| /fornecedor   | /find?email=<br/>/endereco<br/>/by?nome=                                                                     | [fornecedor](#Fornecedor)<br/>[endereço](#Endereço)                                                                                                                                                                           | [Fornecedor](#body-put-fornecedor)                                                                                         |          Possui a forma de conseguir procurar fornecedores, alterar ou desativar           |
+| /endereco     | /verificar                                                                                                   | [endereco](#Endereço)<br/>[verificação](#Verificar-Endereço)                                                                                                                                                                  | [Endereço](#body-endereço)                                                                                                 |       Possui a forma de cadastrar, atualizar ou remover um endereço de uma entidade        |
+| /produto      | /discount<br/>/{id}<br/>/find<br/>/fav<br/>/desconto/{id}<br/>/avaliar/{id}                                  | [produto](#body-produto)<br/>[desconto](#Produtos-Com-Desconto)<br/>[filtro](#Filtro-Produto)<br/>[favoritar](#Favoritar)<br/>[desfavoritar](#Desfavoritar)<br/>[desconto](#Retirar-Desconto)<br/>[avaliar](#Avaliar-Produto) | [Produto](#produto)                                                                                                        | Possui a forma de conseguir procurar produtos, alterar, deletar, favoritar ou desfavoritar |
+| /carrinho     | /quantidade                                                                                                  | [carrinho](#Carrinho)<br/>[quantidade](#Quantidade-de-itens)                                                                                                                                                                  | [Carrinho](#Carrinho-Body)                                                                                                 |                    Permite a criação, inserção e remoção de um carrinho                    |
+| /pedido       | ?email=<br/>/{id}                                                                                            | [pedido](#Pedido)                                                                                                                                                                                                             | [Pedido](#Pedido-Body)                                                                                                     |        Permite a criação de um novo pedido, visualizar os pedidos e alterar status         |
 
 ---
 
@@ -1971,6 +1971,62 @@ Class Api{
     
     Future<Produto> getProduto() async{
         var uri = Uri.parse(baseUri + "/produto");
+        var response = await client.get(uri);
+    
+        var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
+        dynamic jsonResponse = json.decode(responseBodyUtf8);
+        Produto produto = jsonResponse.map((json) => produto.fromJson(json));
+        return produto;
+    }
+}
+~~~
+
+#### Responses:
+| Status Code | Significado |     Por quê?     |
+|-------------|:-----------:|:----------------:|
+| 200         |     OK      | Retornou o valor |
+
+###### Alguma Dúvida sobre o corpo de um erro? [Erros](#Erros)
+
+---
+
+### Produto com Desconto
+
+Neste endpoint é possível pegar só os produtos que possuem desconto.
+
+![GET](https://img.shields.io/static/v1?label=&message=GET&color=&style=for-the-badge)
+
+> `{{baseUri}}/produto/discount`
+
+JavaScript
+~~~javascript
+import axios from 'axios';
+const axios = require("axios");
+
+let baseUri = "https://localhost:8080/api";
+
+function getProdutos() {
+    axios({
+      baseURL: baseUri,
+      method: "GET",
+      url: "/produto/discount"
+    })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
+}
+~~~
+
+Dart
+~~~dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Class Api{
+    var client = http.Client();
+    String baseUri = "https//localhost:8080/api";
+    
+    Future<Produto> getProduto() async{
+        var uri = Uri.parse(baseUri + "/produto/discount");
         var response = await client.get(uri);
     
         var responseBodyUtf8 = utf8.decode(response.body.runes.toList());
