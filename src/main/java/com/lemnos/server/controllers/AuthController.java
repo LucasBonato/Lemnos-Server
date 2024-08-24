@@ -19,12 +19,12 @@ public class AuthController implements AuthSwagger {
     @Autowired private AuthService authService;
 
     @PostMapping("/login")
-    private ResponseEntity<LoginReponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginReponse> login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
 
     @PostMapping("/login-firebase")
-    private ResponseEntity<LoginReponse> loginFirebase(@RequestBody FireBaseLoginRequest fbLoginRequest) {
+    public ResponseEntity<LoginReponse> loginFirebase(@RequestBody FireBaseLoginRequest fbLoginRequest) {
         return authService.loginFirebase(fbLoginRequest);
     }
 

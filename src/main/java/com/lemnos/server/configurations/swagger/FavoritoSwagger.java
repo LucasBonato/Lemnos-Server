@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -14,13 +15,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.List;
 
 @Tag(name = "Favorito", description = "Favorite")
-public interface FavoritoSwagger {
+public interface FavoritoSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Get all favorite products of the user account by its token.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Returned all the favorite products from the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FavoritoSwagger.class))),
             @ApiResponse(responseCode = "404", description = "User Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<List<FavoritoResponse>> getFavoritos(JwtAuthenticationToken token);
 
     @Operation(description = "Favorite a product.")
@@ -30,6 +32,7 @@ public interface FavoritoSwagger {
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "Product or User Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> favoritar(JwtAuthenticationToken token, String idProduto);
 
     @Operation(description = "Unfavorite a product.")
@@ -38,5 +41,6 @@ public interface FavoritoSwagger {
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "Product or User Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
+    @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> desfavoritar(JwtAuthenticationToken token, String idProduto);
 }
