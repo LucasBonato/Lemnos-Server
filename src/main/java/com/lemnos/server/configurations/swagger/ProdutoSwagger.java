@@ -1,13 +1,11 @@
 package com.lemnos.server.configurations.swagger;
 
 import com.lemnos.server.exceptions.ExceptionResponse;
-import com.lemnos.server.exceptions.entidades.produto.ProdutoNotFoundException;
 import com.lemnos.server.models.dtos.requests.AvaliacaoRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoFiltroRequest;
 import com.lemnos.server.models.dtos.requests.ProdutoRequest;
 import com.lemnos.server.models.dtos.responses.ProdutoResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.links.Link;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Tag(name = "Produto", description = "Product endpoint")
+@Tag(name = "Produto", description = "Product")
 public interface ProdutoSwagger {
     @Operation(summary = "Fetch all products", description = "Fetch all products and their data.")
     @ApiResponses(value = {

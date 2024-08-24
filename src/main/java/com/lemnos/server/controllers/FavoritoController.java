@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.FavoritoSwagger;
 import com.lemnos.server.models.dtos.responses.FavoritoResponse;
 import com.lemnos.server.services.FavoritoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/favorito")
-public class FavoritoController {
+public class FavoritoController implements FavoritoSwagger {
     @Autowired private FavoritoService favoritoService;
 
     @GetMapping
