@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorization -> authorization
-                        .requestMatchers(HttpMethod.GET, "/produto", "/produto/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/produto", "/produto/{id}", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produto/find", "/auth/login", "/auth/login-firebase", "/auth/register", "/auth/register/verificar").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasAuthority("CLIENTE")
