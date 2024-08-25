@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "OAuth", description = "Authorization")
+@Tag(name = "0Auth", description = "Authorization")
 public interface AuthSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Login with email and password to get the token.")
