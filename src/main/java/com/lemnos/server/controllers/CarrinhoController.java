@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.CarrinhoSwagger;
 import com.lemnos.server.models.dtos.requests.CarrinhoRequest;
 import com.lemnos.server.models.dtos.responses.CarrinhoResponse;
 import com.lemnos.server.services.CarrinhoService;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/carrinho")
-public class CarrinhoController {
+public class CarrinhoController implements CarrinhoSwagger {
     @Autowired private CarrinhoService carrinhoService;
 
     @GetMapping
