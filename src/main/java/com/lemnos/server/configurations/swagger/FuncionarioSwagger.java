@@ -1,7 +1,6 @@
 package com.lemnos.server.configurations.swagger;
 
 import com.lemnos.server.exceptions.ExceptionResponse;
-import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundException;
 import com.lemnos.server.models.dtos.requests.FuncionarioFiltroRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;

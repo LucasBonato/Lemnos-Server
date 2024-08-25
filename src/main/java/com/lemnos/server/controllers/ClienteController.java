@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.ClienteSwagger;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
 import com.lemnos.server.services.ClienteService;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cliente")
-public class ClienteController {
+public class ClienteController implements ClienteSwagger {
     @Autowired private ClienteService clienteService;
 
     @GetMapping
