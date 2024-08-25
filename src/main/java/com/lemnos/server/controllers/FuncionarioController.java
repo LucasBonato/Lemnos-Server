@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.FuncionarioSwagger;
 import com.lemnos.server.models.dtos.requests.FuncionarioFiltroRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/funcionario")
-class FuncionarioController {
+class FuncionarioController implements FuncionarioSwagger {
     @Autowired private FuncionarioService funcionarioService;
 
     @GetMapping
