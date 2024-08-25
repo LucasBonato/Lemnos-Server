@@ -3,7 +3,6 @@ package com.lemnos.server.configurations.swagger;
 import com.lemnos.server.exceptions.ExceptionResponse;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
-import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.PedidoSwagger;
 import com.lemnos.server.models.dtos.requests.AlterarStatusRequest;
 import com.lemnos.server.models.dtos.requests.PedidoRequest;
 import com.lemnos.server.models.dtos.responses.PedidoResponse;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pedido")
-public class PedidoController {
+public class PedidoController implements PedidoSwagger {
     @Autowired private PedidoService pedidoService;
 
     @GetMapping
