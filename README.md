@@ -163,7 +163,7 @@ API criada com o intuito de facilitar o trabalho na criação do e-commerce [Lem
 
 ## Swagger
 
-### _Endpoint_: `https://lemnos-server.onrender.com/api/swagger-iu/index.html`
+### _Endpoint_: `https://lemnos-server.onrender.com/api/swagger`
 
 ---
 
