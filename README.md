@@ -32,12 +32,12 @@
 
 # Desenvolvedores
 
-<div style="display:flex; justify-content: space-evenly">
-  <a href="https://github.com/lucas7silva"><img style="border-radius:50%" src="https://avatars.githubusercontent.com/u/141294696?v=4" width="100" alt="Lucas Rocha"></a>
-  <a href="https://github.com/lucasatdriano"><img style="border-radius:50%" src="https://avatars.githubusercontent.com/u/134859091?v=4" width="100" alt="Lucas Adriano"></a>
-  <a href="https://github.com/lucasbonato"><img style="border-radius:50%" src="https://avatars.githubusercontent.com/u/95046421?v=4" width="100" alt="Lucas Bonato"></a>
-  <a href="https://github.com/leankk"><img style="border-radius:50%" src="https://avatars.githubusercontent.com/u/108305442?v=4" width="100" alt="Leankk"></a>
-  <a href="https://github.com/gi-colucci"><img style="border-radius:50%" src="https://avatars.githubusercontent.com/u/138801921?v=4" width="100" alt="Giovanna Colucci"></a>
+<div align="center">
+  <a href="https://github.com/lucas7silva"><img style="margin: 0 1% 0 1%" src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/141294696?v=4&h=100&w=100&fit=cover&mask=circle&maxage=1y&trim=10" width="100" alt="Lucas Rocha"></a>
+  <a href="https://github.com/lucasatdriano"><img style="margin: 0 1% 0 1%" src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/134859091?v=4&h=100&w=100&fit=cover&mask=circle&maxage=1y&trim=10" width="100" alt="Lucas Adriano"></a>
+  <a href="https://github.com/lucasbonato"><img style="margin: 0 1% 0 1%" src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/95046421?v=4&h=100&w=100&fit=cover&mask=circle&maxage=1y&trim=10" alt="Lucas Bonato"></a>
+  <a href="https://github.com/leankk"><img style="margin: 0 1% 0 1%" src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/108305442?v=4&h=100&w=100&fit=cover&mask=circle&maxage=1y&trim=10" width="100" alt="Leankk"></a>
+  <a href="https://github.com/gi-colucci"><img style="margin: 0 1% 0 1%" src="https://images.weserv.nl/?url=avatars.githubusercontent.com/u/138801921?v=4&h=100&w=100&fit=cover&mask=circle&maxage=1y&trim=10" width="100" alt="Giovanna Colucci"></a>
 </div>
 
 ---
