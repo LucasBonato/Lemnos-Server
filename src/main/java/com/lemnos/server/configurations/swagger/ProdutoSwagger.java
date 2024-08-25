@@ -40,7 +40,7 @@ public interface ProdutoSwagger extends SwaggerConfiguration {
 
     @Operation(description = "Register a product sending an body")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Product registered successfully"),
+            @ApiResponse(responseCode = "201", description = "Product registered successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
@@ -48,7 +48,7 @@ public interface ProdutoSwagger extends SwaggerConfiguration {
 
     @Operation(description = "Update a product sending some itens of the body or it all.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product updated successfully"),
+            @ApiResponse(responseCode = "200", description = "Product updated successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "Product Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
@@ -79,7 +79,7 @@ public interface ProdutoSwagger extends SwaggerConfiguration {
 
     @Operation(description = "Rate a product from 1 to 5 stars.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product rated successfully"),
+            @ApiResponse(responseCode = "200", description = "Product rated successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "Product Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })

@@ -37,7 +37,7 @@ public interface AuthSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Register with email, password and CPF to be able to login.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Registered in successfully"),
+            @ApiResponse(responseCode = "201", description = "Registered in successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "Conflict, email or CPF are already registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
@@ -45,29 +45,29 @@ public interface AuthSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Register an employee with their information.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Registered successfully"),
+            @ApiResponse(responseCode = "201", description = "Registered successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "Conflict, email, CPF or telefone is already in use", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated"),
-            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee")
+            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee", content = @Content(schema = @Schema()))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> cadastrarFuncionario(@RequestBody FuncionarioRequest funcionarioRequest);
 
     @Operation(description = "Register a supplier with their information.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Registered successfully"),
+            @ApiResponse(responseCode = "201", description = "Registered successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "Conflict, email, CNPJ or telefone is already in use", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated"),
-            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee")
+            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee", content = @Content(schema = @Schema()))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> cadastrarFornecedor(@RequestBody FornecedorRequest fornecedorRequest);
 
     @Operation(description = "Verify if it can register an user without creating a new record on the database.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "It's possible to register successfully"),
+            @ApiResponse(responseCode = "201", description = "It's possible to register successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "Conflict, email or CPF are already registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
@@ -75,22 +75,22 @@ public interface AuthSwagger extends SwaggerConfiguration{
 
     @Operation(description = "verify if it can register an employee with their information without creating a new record on the database.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "It's possible to register an employee successfully"),
+            @ApiResponse(responseCode = "200", description = "It's possible to register an employee successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "Conflict, email, CPF or telefone is already in use", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated"),
-            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee")
+            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee", content = @Content(schema = @Schema()))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> verificarFuncionario(@RequestBody FuncionarioRequest funcionarioRequest);
 
     @Operation(description = "verify if it can register a supplier with their information without creating a new record on the database.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "It's possible to register a supplier successfully"),
+            @ApiResponse(responseCode = "200", description = "It's possible to register a supplier successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "Conflict, email, CNPJ or telefone is already in use", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated"),
-            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee")
+            @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to register an employee", content = @Content(schema = @Schema()))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> verificarFornecedor(@RequestBody FornecedorRequest fornecedorRequest);

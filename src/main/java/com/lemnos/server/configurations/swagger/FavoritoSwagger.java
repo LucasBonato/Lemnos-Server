@@ -27,7 +27,7 @@ public interface FavoritoSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Favorite a product.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product successfully favorited"),
+            @ApiResponse(responseCode = "200", description = "Product successfully favorited", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "209", description = "The Product is already favorited", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "Product or User Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
@@ -37,7 +37,7 @@ public interface FavoritoSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Unfavorite a product.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product successfully unfavorited"),
+            @ApiResponse(responseCode = "200", description = "Product successfully unfavorited", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "400", description = "Bad Request, some information passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "404", description = "Product or User Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
