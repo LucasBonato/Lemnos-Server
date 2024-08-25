@@ -21,7 +21,7 @@ public interface FornecedorSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Fetch all suppliers.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched all suppliers successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FornecedorResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Fetched all suppliers successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FornecedorResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the suppliers", content = @Content(schema = @Schema()))
     })
@@ -30,7 +30,7 @@ public interface FornecedorSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Fetch a supplier by its email.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched the supplier successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FornecedorResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Fetched the supplier successfully", content = @Content(schema = @Schema(implementation = FornecedorResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the supplier", content = @Content(schema = @Schema()))
     })
@@ -39,7 +39,7 @@ public interface FornecedorSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Fetch a list of suppliers by name.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched all suppliers by name successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FornecedorResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Fetched all suppliers by name successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FornecedorResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch suppliers", content = @Content(schema = @Schema()))
     })
@@ -49,11 +49,11 @@ public interface FornecedorSwagger extends SwaggerConfiguration{
     @Operation(description = "Update a supplier with their information.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updated supplier successfully", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "209", description = "Conflict, email, CNPJ or telefone is already in use", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "209", description = "Conflict, email, CNPJ or telefone is already in use", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request, some information was passed wrong", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to update a supplier", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found, supplier not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FornecedorNotFoundException.class)))
+            @ApiResponse(responseCode = "404", description = "Not Found, supplier not found", content = @Content(schema = @Schema(implementation = FornecedorNotFoundException.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> update(String email, FornecedorRequest fornecedorRequest);

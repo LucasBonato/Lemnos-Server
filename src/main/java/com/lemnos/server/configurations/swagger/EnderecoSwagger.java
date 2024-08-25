@@ -17,12 +17,12 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Fetch the fields of the address from the CEP from the ViaCEP API.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched the address successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ViaCepDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Fetched the address successfully", content = @Content(schema = @Schema(implementation = ViaCepDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the address", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "500", description = "Service Down, The ViaCep Api is down", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-            @ApiResponse(responseCode = "503", description = "Internal Server Erros, Network error trying to access Via Cep or RestTemplate isn't working", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "500", description = "Service Down, The ViaCep Api is down", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "503", description = "Internal Server Erros, Network error trying to access Via Cep or RestTemplate isn't working", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<ViaCepDTO> getFieldsEndereco(String cep);
@@ -30,7 +30,7 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
     @Operation(description = "Register the Address with cep and the user, adding to the list of address if it is a client")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Registered the address successfully", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to record the address", content = @Content(schema = @Schema()))
     })
@@ -40,7 +40,7 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
     @Operation(description = "Update the Address of an user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Updated the address successfully", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to update the address", content = @Content(schema = @Schema()))
     })
@@ -50,7 +50,7 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
     @Operation(description = "Deleting the Address of an user, or removing from the list if it is a client")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Removed the address successfully", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to record the address", content = @Content(schema = @Schema()))
     })
@@ -60,7 +60,7 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
     @Operation(description = "Verify the fields to register the Address without a new record in the database.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "It's possible to register the address successfully", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request, some field was passed wrong", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to record the address", content = @Content(schema = @Schema()))
     })

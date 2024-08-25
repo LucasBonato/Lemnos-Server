@@ -21,7 +21,7 @@ public interface PedidoSwagger extends SwaggerConfiguration {
 
     @Operation(description = "Fetch all orders from an users by its token.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched all orders successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PedidoResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Fetched all orders successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PedidoResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the orders", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not Found, user not found", content = @Content(schema = @Schema()))
@@ -31,7 +31,7 @@ public interface PedidoSwagger extends SwaggerConfiguration {
 
     @Operation(description = "Fetch one order by id from an user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched the order successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PedidoResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Fetched the order successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PedidoResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the employees", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Not found, Order not found", content = @Content(schema = @Schema()))

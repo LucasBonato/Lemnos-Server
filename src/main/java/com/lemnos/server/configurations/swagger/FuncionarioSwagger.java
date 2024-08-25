@@ -22,7 +22,7 @@ public interface FuncionarioSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Fetch all employees.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched all employees successfully", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FuncionarioResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Fetched all employees successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FuncionarioResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the employees", content = @Content(schema = @Schema()))
     })
@@ -31,27 +31,27 @@ public interface FuncionarioSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Fetch one employees with the token.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched the employee successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Fetched the employee successfully", content = @Content(schema = @Schema(implementation = FuncionarioResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the employee", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<FuncionarioResponse> getOne(JwtAuthenticationToken token);
 
     @Operation(description = "Fetch an employee by email.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched the employee", content = @Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioResponse.class))),
+            @ApiResponse(responseCode = "200", description = "Fetched the employee", content = @Content(schema = @Schema(implementation = FuncionarioResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the employee", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<FuncionarioResponse> getOneByEmail(String email);
 
     @Operation(description = "Fetch a list of employees by name.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched the employee", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FuncionarioResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "Fetched the employee", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FuncionarioResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to fetch the employees", content = @Content(schema = @Schema()))
     })
@@ -63,7 +63,7 @@ public interface FuncionarioSwagger extends SwaggerConfiguration{
             @ApiResponse(responseCode = "200", description = "Updated the employee", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to update the employee", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> updateFuncionario(String email, FuncionarioRequest funcionarioRequest);
@@ -73,7 +73,7 @@ public interface FuncionarioSwagger extends SwaggerConfiguration{
             @ApiResponse(responseCode = "200", description = "Activate or deactivate successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to execute the action", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> ativarOuDesativar(List<String> emails);
@@ -83,7 +83,7 @@ public interface FuncionarioSwagger extends SwaggerConfiguration{
             @ApiResponse(responseCode = "200", description = "Deleted successfully", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "401", description = "Unauthorized, you are not authenticated", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to delete the employee", content = @Content(schema = @Schema())),
-            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+            @ApiResponse(responseCode = "404", description = "Not Found, employee not found", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
     ResponseEntity<Void> deleteById(String email);
