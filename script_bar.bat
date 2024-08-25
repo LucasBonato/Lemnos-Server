@@ -3,12 +3,13 @@ echo Setting environment variables...
 set POSTGRES_USERNAME=
 set POSTGRES_PASSWORD=
 set FIREBASE_CREDENTIALS=
-set RAILWAY_HOST=
-set RAILWAY_PORT=
-set RAILWAY_DATABASE=
+set DB_HOST=
+set DB_PORT=
+set DB_NAME=
 
 echo Building the project...
 call .\mvnw clean package
+call .\mvnw dependency:resolve
 
 if %errorlevel% neq 0 (
     echo Build failed. Exiting.
