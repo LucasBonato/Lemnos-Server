@@ -17,6 +17,7 @@
 # Súmario
 
 - [Como Utilizar](#Como-utilizar-a-API)
+- [Swagger](#Swagger)
 - [Headers](#Headers)
 - [EndPoints](#Endpoints)
 - [Erros](#Erros)
@@ -38,6 +39,7 @@ API criada nesse projeto vem com a ideia de facilitar o trabalho na criação do
 de cadastro de Clientes e Funcionários, gerenciamento, listagem e verificação de produtos, tratamento e 
 gerenciamento de carrinho.
 
+### Swagger: `https://lemnos-server.onrender.com/api/swagger-ui/index.html`
 
 ### _Url Base_: `https://lemnos-server.onrender.com/api`
 
