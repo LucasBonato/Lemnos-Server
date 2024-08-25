@@ -1,5 +1,6 @@
 package com.lemnos.server.controllers;
 
+import com.lemnos.server.configurations.swagger.FornecedorSwagger;
 import com.lemnos.server.models.dtos.requests.FornecedorRequest;
 import com.lemnos.server.models.dtos.responses.FornecedorResponse;
 import com.lemnos.server.services.FornecedorService;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/fornecedor")
-public class FornecedorController {
+public class FornecedorController implements FornecedorSwagger {
     @Autowired private FornecedorService fornecedorService;
 
     @GetMapping

@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "OAuth", description = "Authorization")
-public interface AuthSwagger {
+public interface AuthSwagger extends SwaggerConfiguration{
 
     @Operation(description = "Login with email and password to get the token.")
     @ApiResponses(value = {
