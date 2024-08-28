@@ -146,7 +146,7 @@ public class ProdutoService {
     }
 
     public ResponseEntity<Void> delete(String id) {
-        dataForneceRepository.delete(dataForneceRepository.findByProduto(getProdutoById(id)));
+        dataForneceRepository.delete(dataForneceRepository.findByProduto(getProdutoById(id)).orElseThrow(FornecedorNotFoundException::new));
         produtoRepository.delete(getProdutoById(id));
         return ResponseEntity.ok().build();
     }
@@ -337,10 +337,10 @@ public class ProdutoService {
         );
     }
     private String getFornecedor(Produto produto) {
-        return dataForneceRepository
-                .findByProduto(produto)
-                .getFornecedor()
-                .getNome();
+        Optional<DataFornece> optionalDataFornece =  dataForneceRepository.findByProduto(produto);
+        if(optionalDataFornece.isPresent())
+            return optionalDataFornece.get().getFornecedor().getNome();
+        return "N/A";
     }
     private Double getValorTotal(Produto produto) {
         if(produto.getDesconto().getValorDesconto().equals("0"))

@@ -18,11 +18,6 @@ public class ProdutoController implements ProdutoSwagger {
 
     @Autowired private ProdutoService produtoService;
 
-    @GetMapping
-    public ResponseEntity<List<ProdutoResponse>> getAll(){
-        return produtoService.getAll();
-    }
-
     @PostMapping("/find")
     public ResponseEntity<List<ProdutoResponse>> getBy(@RequestBody ProdutoFiltroRequest filtroRequest) {
         return produtoService.getBy(filtroRequest);

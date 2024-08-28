@@ -19,12 +19,6 @@ import java.util.List;
 
 @Tag(name = "Produto", description = "Product")
 public interface ProdutoSwagger extends SwaggerConfiguration {
-    @Operation(description = "Fetch all products and their data.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Fetched all products successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProdutoResponse.class))))
-    })
-    ResponseEntity<List<ProdutoResponse>> getAll();
-
     @Operation(description = "Fetch some products based on an filter, all of them are optional.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Fetched all products successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProdutoResponse.class))))
