@@ -21,13 +21,13 @@ public class CacheConfiguration {
     public CacheManager cacheManager() {
         ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
         cacheManager.setAllowNullValues(false);
-        cacheManager.setCacheNames(Arrays.asList("allProdutos", "allClientes", "allFuncionarios", "allFornecedores"));
+        cacheManager.setCacheNames(Arrays.asList("productsDiscount", "allClientes", "allFuncionarios", "allFornecedores"));
         return cacheManager;
     }
 
-    @CacheEvict(value = "allProdutos", allEntries = true)
+    @CacheEvict(value = "productsDiscount", allEntries = true)
     @Scheduled(fixedDelay = TRINTA_SEGUNDOS, initialDelay = 0)
-    public void evictAllProdutosCache() { }
+    public void evictProductsDiscountCache() { }
 
     @CacheEvict(value = "allClientes", allEntries = true)
     @Scheduled(fixedDelay = TRINTA_SEGUNDOS, initialDelay = 0)

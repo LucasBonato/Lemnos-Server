@@ -52,15 +52,7 @@ public class ProdutoService {
     @Autowired private ImagemRepository imagemRepository;
     @Autowired private DescontoRepository descontoRepository;
 
-    @Cacheable("allProdutos")
-    public ResponseEntity<List<ProdutoResponse>> getAll(){
-        List<ProdutoResponse> dto = new ArrayList<>();
-        produtoRepository.findAll()
-                .forEach(produto -> dto.add(getProdutoResponse(produto)));
-
-        return ResponseEntity.ok(dto);
-    }
-
+    @Cacheable("productsDiscount")
     public ResponseEntity<List<ProdutoResponse>> getAllWithDiscount() {
         List<ProdutoResponse> produtoResponse = new ArrayList<>();
         produtoRepository.findAll()
