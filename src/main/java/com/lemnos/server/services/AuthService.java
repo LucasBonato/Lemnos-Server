@@ -99,10 +99,10 @@ public class AuthService extends Util {
     }
 
     /**
-    * Register a new client using the google credentials, and
-    * verifiying some emails to register as Admins.
+    * Register a new client using the Google credentials, and
+    * verifying some emails to register as Admins.
     *
-    * @param decodedToken FirebaseToken with google credentials authorized by the user.
+    * @param decodedToken FirebaseToken with Google credentials authorized by the user.
     * @return             A new register of User, Employee or Admin, using a base class {@link UserDetails}.
     */
     private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
@@ -117,7 +117,7 @@ public class AuthService extends Util {
     * if they are correct, based on our auth methods.
     *
     * @param loginRequest Credentials of the user, like email and password.
-    * @return             The register of an Client or Employee, using a base class {@link UserDetails}.
+    * @return             The register of a Client or Employee, using a base class {@link UserDetails}.
     */
     private UserDetails verificarLogin(LoginRequest loginRequest) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email().toLowerCase());
@@ -137,11 +137,11 @@ public class AuthService extends Util {
 
     /**
     * Verify if the credentials passed exists in the database and
-    * if they are correct, based on google credentials.
+    * if they are correct, based on Google credentials.
     *
     * @param email Email registered on our database.
-    * @param uid   The id that wich google account has.
-    * @return             The register of an Client or Employee with a google register, using a base class {@link UserDetails}.
+    * @param uid   The id that which Google account has.
+    * @return             The register of a Client or Employee with a Google register, using a base class {@link UserDetails}.
     */
     private UserDetails verificarLogin(String email, String uid) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(email);
@@ -157,11 +157,11 @@ public class AuthService extends Util {
     }
 
     /**
-    * Verify if the informations passed for the clients are correct to 
-    * be put in the database, don't violationg any rules.
+    * Verify if the information passed for the clients are correct to
+    * be put in the database, don't violation any rules.
     *
-    * @param registerRequest Credentials of the user, like email, password, et cetera.
-    * @return             A new {@link Cliente} object with the informations.
+    * @param registerRequest Credentials of the user, like email, password, etc.
+    * @return             A new {@link Cliente} object with the information.
     */
     private Cliente verificarRegraDeNegocio(RegisterRequest registerRequest) {
 
@@ -200,11 +200,11 @@ public class AuthService extends Util {
     }
 
     /**
-    * Verify if the informations passed for the employee are correct to 
-    *  be put in the database, don't violationg any rules.
+    * Verify if the information passed for the employee are correct to
+    *  be put in the database, don't violation any rules.
     *
-    * @param funcionarioRequest Credentials of the employee, like email, password, et cetera.
-    * @return             A new {@link Funcionario} object with the informations.
+    * @param funcionarioRequest Credentials of the employee, like email, password, etc.
+    * @return             A new {@link Funcionario} object with the information.
     */
     private Funcionario verificarRegraDeNegocio(FuncionarioRequest funcionarioRequest) {
 
@@ -258,11 +258,11 @@ public class AuthService extends Util {
     }
 
     /**
-    * Verify if the informations passed for supplier are correct to be 
-    * put in the database, don't violationg any rules.
+    * Verify if the information passed for supplier are correct to be
+    * put in the database, don't violation any rules.
     *
-    * @param fornecedorRequest Credentials of the supplier, like email, password, et cetera.
-    * @return             A new {@link Fornecedor} object with the informations.
+    * @param fornecedorRequest Credentials of the supplier, like email, password, etc.
+    * @return             A new {@link Fornecedor} object with the information.
     */
     private Fornecedor verificarRegraDeNegocio(FornecedorRequest fornecedorRequest) {
 
