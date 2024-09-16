@@ -98,6 +98,13 @@ public class AuthService extends Util {
         return ResponseEntity.ok().build();
     }
 
+    /**
+    * Register a new client using the google credentials, and
+    * verifiying some emails to register as Admins.
+    *
+    * @param decodedToken FirebaseToken with google credentials authorized by the user.
+    * @return             A new register of User, Employee or Admin, using a base class {@link UserDetails}.
+    */
     private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
         if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
             return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
@@ -105,6 +112,13 @@ public class AuthService extends Util {
         return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
     }
 
+    /**
+    * Verify if the credentials passed exists in the database and
+    * if they are correct, based on our auth methods.
+    *
+    * @param loginRequest Credentials of the user, like email and password.
+    * @return             The register of an Client or Employee, using a base class {@link UserDetails}.
+    */
     private UserDetails verificarLogin(LoginRequest loginRequest) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(loginRequest.email().toLowerCase());
         if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(loginRequest, passwordEncoder)) {
@@ -120,6 +134,15 @@ public class AuthService extends Util {
         }
         throw new UsuarioNotFoundException();
     }
+
+    /**
+    * Verify if the credentials passed exists in the database and
+    * if they are correct, based on google credentials.
+    *
+    * @param email Email registered on our database.
+    * @param uid   The id that wich google account has.
+    * @return             The register of an Client or Employee with a google register, using a base class {@link UserDetails}.
+    */
     private UserDetails verificarLogin(String email, String uid) {
         Optional<Cadastro> cadastroOptional = cadastroRepository.findByEmail(email);
         if (cadastroOptional.isEmpty() || !cadastroOptional.get().isLoginCorrect(uid, passwordEncoder)) {
@@ -133,6 +156,13 @@ public class AuthService extends Util {
         return funcionarioOptional.orElse(null);
     }
 
+    /**
+    * Verify if the informations passed for the clients are correct to 
+    * be put in the database, don't violationg any rules.
+    *
+    * @param registerRequest Credentials of the user, like email, password, et cetera.
+    * @return             A new {@link Cliente} object with the informations.
+    */
     private Cliente verificarRegraDeNegocio(RegisterRequest registerRequest) {
 
         if(StringUtils.isBlank(registerRequest.getNome())){
@@ -168,6 +198,14 @@ public class AuthService extends Util {
 
         return new Cliente(registerRequest);
     }
+
+    /**
+    * Verify if the informations passed for the employee are correct to 
+    *  be put in the database, don't violationg any rules.
+    *
+    * @param funcionarioRequest Credentials of the employee, like email, password, et cetera.
+    * @return             A new {@link Funcionario} object with the informations.
+    */
     private Funcionario verificarRegraDeNegocio(FuncionarioRequest funcionarioRequest) {
 
         if(StringUtils.isBlank(funcionarioRequest.nome())){
@@ -218,6 +256,14 @@ public class AuthService extends Util {
                 convertData(funcionarioRequest.dataAdmissao())
         );
     }
+
+    /**
+    * Verify if the informations passed for supplier are correct to be 
+    * put in the database, don't violationg any rules.
+    *
+    * @param fornecedorRequest Credentials of the supplier, like email, password, et cetera.
+    * @return             A new {@link Fornecedor} object with the informations.
+    */
     private Fornecedor verificarRegraDeNegocio(FornecedorRequest fornecedorRequest) {
 
         if(StringUtils.isBlank(fornecedorRequest.nome())){
