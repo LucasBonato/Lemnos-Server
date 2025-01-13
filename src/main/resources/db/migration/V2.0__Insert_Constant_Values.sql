@@ -1,8 +1,8 @@
 -- Inserir Estados, se não existirem
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM "Estado" WHERE "UF" = 'AC') THEN
-        INSERT INTO "Estado"("UF") VALUES
+    IF NOT EXISTS (SELECT 1 FROM "estado" WHERE "UF" = 'AC') THEN
+        INSERT INTO "estado"("UF") VALUES
             ('AC'), ('AL'), ('AP'),
             ('AM'), ('BA'), ('CE'),
             ('ES'), ('GO'), ('MA'),
@@ -18,8 +18,8 @@ END $$;
 -- Inserir Categorias, se não existirem
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM "Categoria" WHERE "id" = 1) THEN
-        INSERT INTO "Categoria" VALUES
+    IF NOT EXISTS (SELECT 1 FROM "categoria" WHERE "id" = 1) THEN
+        INSERT INTO "categoria" VALUES
             (1, 'Casa Inteligente'),
             (2, 'Computadores'),
             (3, 'Eletrônicos'),
@@ -37,8 +37,8 @@ END $$;
 -- Inserir Sub-Categorias, se não existirem
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM "Sub_Categoria" WHERE "id" = 1) THEN
-        INSERT INTO "Sub_Categoria" VALUES
+    IF NOT EXISTS (SELECT 1 FROM "sub_categoria" WHERE "id" = 1) THEN
+        INSERT INTO "sub_categoria" VALUES
             (1, 'Assistente Virtual', 1),
             (2, 'Controles Smarts', 1),
             (3, 'Lâmpadas Inteligentes', 1),
@@ -87,8 +87,8 @@ END $$;
 -- Inserir Descontos, se não existirem
 DO $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM "Desconto" WHERE "Valor_Porcentagem" = '0') THEN
-        INSERT INTO "Desconto"("Valor_Porcentagem") VALUES
+    IF NOT EXISTS (SELECT 1 FROM "desconto" WHERE "valor_porcentagem" = '0') THEN
+        INSERT INTO "desconto"("valor_porcentagem") VALUES
             ('0'), ('1'), ('2'), ('3'), ('4'),
             ('5'), ('6'), ('7'), ('8'), ('9'),
             ('10'), ('11'), ('12'), ('13'), ('14'),
