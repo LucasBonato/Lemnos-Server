@@ -1,4 +1,4 @@
-package com.lemnos.server.models.endereco.Possui;
+package com.lemnos.server.models.endereco.possui;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

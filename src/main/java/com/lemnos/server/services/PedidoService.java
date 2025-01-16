@@ -96,9 +96,7 @@ public class PedidoService {
 
     private String getDescricao(Carrinho carrinho) {
         String[] response = {""};
-        carrinho.getItens().forEach(item -> {
-            response[0] += item.getProduto().getId().toString() + ", " + item.getQuantidade() + "\n";
-        });
+        carrinho.getItens().forEach(item -> response[0] += item.getProduto().getId().toString() + ", " + item.getQuantidade() + "\n");
         return response[0];
     }
 

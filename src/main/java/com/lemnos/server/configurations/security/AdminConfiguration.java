@@ -21,12 +21,10 @@ public class AdminConfiguration implements CommandLineRunner {
     @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Optional<Cadastro> adminOptional = cadastroRepository.findByEmail("admin@gmail.com");
         adminOptional.ifPresentOrElse(
-            user -> {
-                System.out.println("Admin já existe!");
-            },
+            user -> System.out.println("Admin já existe!"),
             () -> {
                 Funcionario admin = new Funcionario();
                 admin.setCadastro(new Cadastro("admin@gmail.com", passwordEncoder.encode("admin")));

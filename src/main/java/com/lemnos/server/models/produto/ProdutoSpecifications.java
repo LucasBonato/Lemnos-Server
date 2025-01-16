@@ -1,6 +1,5 @@
 package com.lemnos.server.models.produto;
 
-import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 

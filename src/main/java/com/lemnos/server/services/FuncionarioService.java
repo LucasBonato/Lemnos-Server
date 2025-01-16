@@ -6,11 +6,8 @@ import com.lemnos.server.exceptions.entidades.funcionario.FuncionarioNotFoundExc
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.dtos.requests.FuncionarioFiltroRequest;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
-import com.lemnos.server.models.dtos.responses.ClienteResponse;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.dtos.responses.ProdutoResponse;
-import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
-import com.lemnos.server.models.entidades.Cliente;
+import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.entidades.FuncionarioSpecification;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;

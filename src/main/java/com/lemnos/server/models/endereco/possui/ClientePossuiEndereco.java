@@ -1,26 +1,26 @@
-package com.lemnos.server.models.endereco.Possui;
+package com.lemnos.server.models.endereco.possui;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.endereco.Endereco;
-import com.lemnos.server.models.entidades.Funcionario;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Funcionario_Possui_Endereco")
+@Table(name = "Cliente_Possui_Endereco")
 @Data
 @NoArgsConstructor
-public class FuncionarioPossuiEndereco {
+public class ClientePossuiEndereco {
     @EmbeddedId
     @JsonIgnore
-    private FuncionarioPossuiEnderecoId id;
+    private ClientePossuiEnderecoId id;
 
     @ManyToOne
-    @MapsId("id_funcionario")
-    @JoinColumn(name = "id_funcionario")
+    @MapsId("Id_cliente")
+    @JoinColumn(name = "Id_cliente")
     @JsonIgnore
-    private Funcionario funcionario;
+    private Cliente cliente;
 
     @ManyToOne
     @MapsId("Cep")
@@ -33,9 +33,9 @@ public class FuncionarioPossuiEndereco {
     @Column(name = "Complemento")
     private String complemento;
 
-    public FuncionarioPossuiEndereco(Funcionario funcionario, Endereco endereco, Integer numeroLogradouro, String complemento) {
-        this.id = new FuncionarioPossuiEnderecoId(funcionario.getId(), endereco.getCep());
-        this.funcionario = funcionario;
+    public ClientePossuiEndereco(Cliente cliente, Endereco endereco, Integer numeroLogradouro, String complemento) {
+        this.id = new ClientePossuiEnderecoId(cliente.getId(), endereco.getCep());
+        this.cliente = cliente;
         this.endereco = endereco;
         this.numeroLogradouro = numeroLogradouro;
         this.complemento = complemento;

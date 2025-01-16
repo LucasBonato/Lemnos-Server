@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
-import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.enums.Roles;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.utils.Util;

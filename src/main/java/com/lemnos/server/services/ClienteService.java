@@ -8,7 +8,7 @@ import com.lemnos.server.exceptions.global.UpdateNotValidException;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
+import com.lemnos.server.models.endereco.possui.ClientePossuiEndereco;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;

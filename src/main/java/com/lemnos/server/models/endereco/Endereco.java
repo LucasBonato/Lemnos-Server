@@ -2,9 +2,8 @@ package com.lemnos.server.models.endereco;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.annotations.CEP;
-import com.lemnos.server.models.dtos.requests.EnderecoRequest;
-import com.lemnos.server.models.endereco.Possui.ClientePossuiEndereco;
-import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.endereco.possui.ClientePossuiEndereco;
+import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.viacep.ViaCepDTO;
 import jakarta.persistence.*;
 import lombok.Data;

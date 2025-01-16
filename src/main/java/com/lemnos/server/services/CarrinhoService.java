@@ -38,8 +38,8 @@ public class CarrinhoService {
 
         Carrinho carrinho = optionalCarrinho.get();
 
-        List<ItemCarrinhoResponse> itens = new ArrayList<>();
-        carrinho.getItens().forEach(item -> itens.add(new ItemCarrinhoResponse(
+        List<ItemCarrinhoResponse> items = new ArrayList<>();
+        carrinho.getItens().forEach(item -> items.add(new ItemCarrinhoResponse(
                 item.getProduto().getId().toString(),
                 item.getQuantidade()
         )));
@@ -47,7 +47,7 @@ public class CarrinhoService {
         return ResponseEntity.ok(new CarrinhoResponse(
                 carrinho.getQuantidadeProdutos(),
                 carrinho.getValor(),
-                itens
+                items
         ));
     }
 
@@ -104,9 +104,9 @@ public class CarrinhoService {
 
         Optional<Carrinho> carrinho = carrinhoRepository.findByCadastro(getCadastroByEmail(token.getName()));
 
-        if(carrinho.isEmpty())
-            return ResponseEntity.ok(0);
-        return ResponseEntity.ok(carrinho.get().getItens().size());
+        return carrinho
+                .map(value -> ResponseEntity.ok(value.getItens().size()))
+                .orElseGet(() -> ResponseEntity.ok(0));
     }
 
     private void verificarToken(JwtAuthenticationToken token) {
@@ -147,9 +147,9 @@ public class CarrinhoService {
     }
 
     private Integer getQuantidadeTotal(List<ItensCarrinho> itens) {
-        Integer[] qntdTotal = {0};
-        itens.forEach(item -> qntdTotal[0] += item.getQuantidade());
-        return qntdTotal[0];
+        Integer[] quantidadeTotal = {0};
+        itens.forEach(item -> quantidadeTotal[0] += item.getQuantidade());
+        return quantidadeTotal[0];
     }
 
     private Double getValorTotal(List<ItensCarrinho> itens) {

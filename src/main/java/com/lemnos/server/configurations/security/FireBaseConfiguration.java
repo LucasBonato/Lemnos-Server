@@ -20,14 +20,14 @@ public class FireBaseConfiguration {
     private String credentials;
 
     @Bean
-    public FirebaseApp initialize() throws IOException, IllegalAccessException {
+    public FirebaseApp initialize() throws IOException {
         if(credentials == null) {
             throw new BaseException(HttpStatus.NOT_FOUND, new ExceptionResponse(0, "Não possui as credenciais"));
         }
 
         InputStream serviceAccount = new ByteArrayInputStream(credentials.getBytes());
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
+        FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
 

@@ -1,7 +1,7 @@
 package com.lemnos.server.repositories.endereco.possui;
 
-import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEndereco;
-import com.lemnos.server.models.endereco.Possui.FuncionarioPossuiEnderecoId;
+import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEnderecoId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

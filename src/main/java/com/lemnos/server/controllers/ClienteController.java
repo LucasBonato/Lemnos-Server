@@ -4,7 +4,6 @@ import com.lemnos.server.configurations.swagger.ClienteSwagger;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
 import com.lemnos.server.models.dtos.responses.ClienteResponse;
 import com.lemnos.server.services.ClienteService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;

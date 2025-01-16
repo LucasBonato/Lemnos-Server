@@ -288,9 +288,9 @@ public class AuthService extends Util {
             throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
         }
 
-        Optional<Fornecedor> Optionalmail = fornecedorRepository.findByEmail(fornecedorRequest.email());
+        Optional<Fornecedor> OptionalEmail = fornecedorRepository.findByEmail(fornecedorRequest.email());
         Optional<Fornecedor> OptionalCnpj = fornecedorRepository.findByCnpj(cnpj);
-        if(Optionalmail.isPresent()) throw new CadastroEmailAlreadyInUseException();
+        if(OptionalEmail.isPresent()) throw new CadastroEmailAlreadyInUseException();
         if(OptionalCnpj.isPresent()) throw new CadastroCnpjAlreadyInUseException();
 
         return new Fornecedor(fornecedorRequest);

@@ -2,7 +2,6 @@ package com.lemnos.server.controllers;
 
 import com.lemnos.server.configurations.swagger.EnderecoSwagger;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
-import com.lemnos.server.models.dtos.responses.EnderecoResponse;
 import com.lemnos.server.models.viacep.ViaCepDTO;
 import com.lemnos.server.services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
