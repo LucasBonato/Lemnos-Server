@@ -9,7 +9,7 @@ public class CorsConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "http://localhost:5173/**", "http://localhost:5173/login/**", "https://lemnos.vercel.app", "https://lemnos.vercel.app/**")
+                .allowedOrigins("http://localhost:5173", "https://lemnos.vercel.app")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);

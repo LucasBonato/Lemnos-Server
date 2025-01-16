@@ -31,8 +31,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorization -> authorization
-                        .requestMatchers(HttpMethod.GET, "/produto", "/produto/{id}", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/produto/find", "/auth/login", "/auth/login-firebase", "/auth/register", "/auth/register/verificar").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/produto", "/produto/desconto", "/produto/{id}", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/produto/find/**", "/auth/login", "/auth/login-firebase", "/auth/register", "/auth/register/verificar").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasAuthority(Roles.CLIENTE.getRole())
                         .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasAuthority(Roles.CLIENTE.getRole())
                         .requestMatchers(HttpMethod.PUT, "/cliente", "/endereco", "/pedido").hasAuthority(Roles.CLIENTE.getRole())
@@ -61,9 +62,9 @@ public class SecurityConfiguration {
 
     @Bean
     static RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.withDefaultRolePrefix()
-                .role(Roles.ADMIN.getRole()).implies(Roles.FUNCIONARIO.getRole())
-                .role(Roles.FUNCIONARIO.getRole()).implies(Roles.CLIENTE.getRole())
+        return RoleHierarchyImpl.withRolePrefix("")
+                .role("ADMIN").implies("FUNCIONARIO")
+                .role("FUNCIONARIO").implies("CLIENTE")
                 .build();
     }
     @Bean

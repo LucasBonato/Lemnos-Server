@@ -14,4 +14,8 @@ public enum Roles {
     Roles(String role) {
         this.role = role;
     }
+
+    public String getRoleWithPrefix() {
+        return String.format("ROLE_%s", this.role);
+    }
 }
