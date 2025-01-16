@@ -1,5 +1,6 @@
 package com.lemnos.server.configurations.security;
 
+import com.lemnos.server.models.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,18 +33,18 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorization -> authorization
                         .requestMatchers(HttpMethod.GET, "/produto", "/produto/{id}", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produto/find", "/auth/login", "/auth/login-firebase", "/auth/register", "/auth/register/verificar").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.PUT, "/cliente", "/endereco", "/pedido").hasAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.DELETE, "/endereco", "/produto/fav", "/carrinho/**").hasAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET, "/fornecedor/**", "/funcionario/me").hasAuthority("FUNCIONARIO")
-                        .requestMatchers(HttpMethod.POST, "/produto/**", "/auth/register/fornecedor/**").hasAuthority("FUNCIONARIO")
-                        .requestMatchers(HttpMethod.PUT, "/produto/**", "/fornecedor").hasAuthority("FUNCIONARIO")
-                        .requestMatchers(HttpMethod.DELETE, "/produto/**", "/fornecedor", "/cliente").hasAuthority("FUNCIONARIO")
-                        .requestMatchers(HttpMethod.GET, "/funcionario/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/auth/register/funcionario/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/funcionario/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/funcionario").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasAuthority(Roles.CLIENTE.getRole())
+                        .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasAuthority(Roles.CLIENTE.getRole())
+                        .requestMatchers(HttpMethod.PUT, "/cliente", "/endereco", "/pedido").hasAuthority(Roles.CLIENTE.getRole())
+                        .requestMatchers(HttpMethod.DELETE, "/endereco", "/produto/fav", "/carrinho/**").hasAuthority(Roles.CLIENTE.getRole())
+                        .requestMatchers(HttpMethod.GET, "/fornecedor/**", "/funcionario/me").hasAuthority(Roles.FUNCIONARIO.getRole())
+                        .requestMatchers(HttpMethod.POST, "/produto/**", "/auth/register/fornecedor/**").hasAuthority(Roles.FUNCIONARIO.getRole())
+                        .requestMatchers(HttpMethod.PUT, "/produto/**", "/fornecedor").hasAuthority(Roles.FUNCIONARIO.getRole())
+                        .requestMatchers(HttpMethod.DELETE, "/produto/**", "/fornecedor", "/cliente").hasAuthority(Roles.FUNCIONARIO.getRole())
+                        .requestMatchers(HttpMethod.GET, "/funcionario/**").hasAuthority(Roles.ADMIN.getRole())
+                        .requestMatchers(HttpMethod.POST, "/auth/register/funcionario/**").hasAuthority(Roles.ADMIN.getRole())
+                        .requestMatchers(HttpMethod.PUT, "/funcionario/**").hasAuthority(Roles.ADMIN.getRole())
+                        .requestMatchers(HttpMethod.DELETE, "/funcionario").hasAuthority(Roles.ADMIN.getRole())
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -60,14 +61,11 @@ public class SecurityConfiguration {
 
     @Bean
     static RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy("""
-                ADMIN > FUNCIONARIO
-                FUNCIONARIO > CLIENTE
-            """);
-        return hierarchy;
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role(Roles.ADMIN.getRole()).implies(Roles.FUNCIONARIO.getRole())
+                .role(Roles.FUNCIONARIO.getRole()).implies(Roles.CLIENTE.getRole())
+                .build();
     }
-
     @Bean
     static MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy hierarchy) {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
