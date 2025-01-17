@@ -17,32 +17,30 @@ import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ClienteService extends Util {
-
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private CadastroRepository cadastroRepository;
+    private final ClienteRepository clienteRepository;
+    private final CadastroRepository cadastroRepository;
 
     @Cacheable("allClientes")
     public ResponseEntity<List<ClienteResponse>> getAll() {
-        List<Cliente> clientes = clienteRepository.findAll();
-        List<ClienteResponse> dto = new ArrayList<>();
-        for(Cliente cliente : clientes){
-            dto.add(getClienteResponse(cliente));
-        }
+        List<ClienteResponse> clientes = clienteRepository.findAll().stream()
+                .map(this::getClienteResponse)
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(clientes);
     }
 
     public ResponseEntity<ClienteResponse> getOneByEmail(JwtAuthenticationToken token) {
@@ -52,7 +50,7 @@ public class ClienteService extends Util {
         return ResponseEntity.ok(record);
     }
 
-    public ResponseEntity<Void> updateCliente(JwtAuthenticationToken token, ClienteRequest clienteDTO){
+    public ResponseEntity<Void> updateCliente(JwtAuthenticationToken token, ClienteRequest clienteDTO) {
         verificarToken(token);
         Cliente updatedCliente = insertData(token.getName(), clienteDTO);
         clienteRepository.save(updatedCliente);
@@ -60,78 +58,78 @@ public class ClienteService extends Util {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteByEmail(JwtAuthenticationToken token){
+    public ResponseEntity<Void> deleteByEmail(JwtAuthenticationToken token) {
         verificarToken(token);
         Cliente clienteDeletado = getOneClienteByEmail(token.getName());
 
-        if(clienteDeletado.getSituacao() == Situacao.ATIVO) {
+        if (clienteDeletado.getSituacao() == Situacao.ATIVO) {
             clienteDeletado.setSituacao(Situacao.INATIVO);
             clienteRepository.save(clienteDeletado);
         }
         return ResponseEntity.ok().build();
     }
 
-    private static ClienteResponse getClienteResponse(Cliente cliente) {
+    private ClienteResponse getClienteResponse(Cliente cliente) {
         return new ClienteResponse(
-                cliente.getNome(),
-                cliente.getCadastro().getEmail(),
-                cliente.getSituacao().toString(),
-                cliente.getCpf() == null ? "" : cliente.getCpf().toString(),
-                getProdutosFavoritos(cliente),
-                getEnderecoRecords(cliente)
+            cliente.getNome(),
+            cliente.getCadastro().getEmail(),
+            cliente.getSituacao().toString(),
+            cliente.getCpf() == null ? "" : cliente.getCpf().toString(),
+            getProdutosFavoritos(cliente),
+            getEnderecoRecords(cliente)
         );
     }
 
     private static List<String> getProdutosFavoritos(Cliente cliente) {
-        List<Produto> produtos = cliente.getProdutosFavoritos();
-        List<String> produtosFavoritos = new ArrayList<>();
-        for (Produto produto : produtos) {
-            produtosFavoritos.add(produto.getId().toString());
-        }
-        return produtosFavoritos;
+        return cliente.getProdutosFavoritos().stream()
+                .map(produto -> produto.getId().toString())
+                .collect(Collectors.toList());
     }
+
     private void verificarToken(JwtAuthenticationToken token) {
         if (token == null) throw new TokenNotValidOrExpiredException();
     }
+
     private Cliente getOneClienteByEmail(String email) {
         return clienteRepository.findByCadastro(
                 cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(ClienteNotFoundException::new)
         ).orElseThrow(ClienteNotFoundException::new);
     }
+
     private static List<EnderecoResponse> getEnderecoRecords(Cliente cliente) {
-        List<EnderecoResponse> enderecoResponses = new ArrayList<>();
-        for(ClientePossuiEndereco cpe : cliente.getEnderecos()){
-            enderecoResponses.add(new EnderecoResponse(
-                    cpe.getEndereco().getCep(),
-                    cpe.getEndereco().getLogradouro(),
-                    cpe.getNumeroLogradouro(),
-                    cpe.getComplemento(),
-                    cpe.getEndereco().getCidade().getCidade(),
-                    cpe.getEndereco().getBairro(),
-                    cpe.getEndereco().getEstado().getUf()
-            ));
-        }
-        return enderecoResponses;
+        return cliente.getEnderecos().stream()
+                .map(clienteEndereco -> new EnderecoResponse(
+                        clienteEndereco.getEndereco().getCep(),
+                        clienteEndereco.getEndereco().getLogradouro(),
+                        clienteEndereco.getNumeroLogradouro(),
+                        clienteEndereco.getComplemento(),
+                        clienteEndereco.getEndereco().getCidade().getCidade(),
+                        clienteEndereco.getEndereco().getBairro(),
+                        clienteEndereco.getEndereco().getEstado().getUf()
+                ))
+                .collect(Collectors.toList());
     }
+
     private Cliente insertData(String email, ClienteRequest clienteEnviado) {
         Cliente clienteEncontrado = getOneClienteByEmail(email);
 
-        if(StringUtils.isBlank(clienteEnviado.nome()) && (clienteEnviado.cpf() == null || clienteEnviado.cpf().isBlank())){
+        if (StringUtils.isBlank(clienteEnviado.nome()) && (clienteEnviado.cpf() == null || clienteEnviado.cpf().isBlank())) {
             throw new UpdateNotValidException("Cliente");
         }
-        if(StringUtils.isBlank(clienteEnviado.nome())){
+        if (StringUtils.isBlank(clienteEnviado.nome())) {
             clienteEnviado = clienteEnviado.setNome(clienteEncontrado.getNome());
         }
-        if(clienteEnviado.nome().length() < 2 || clienteEnviado.nome().length() > 40){
+        if (clienteEnviado.nome().length() < 2 || clienteEnviado.nome().length() > 40) {
             throw new CadastroNotValidException(Codigo.NOME, "O Nome precisa ter de 3 à 40 caracteres!");
         }
-        if(clienteEnviado.cpf() == null){
+        if (clienteEnviado.cpf() == null) {
             clienteEnviado = clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
         Long cpf = convertStringToLong(clienteEnviado.cpf(), Codigo.CPF);
 
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
-        if(clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), clienteEncontrado.getId())) throw new CadastroCpfAlreadyInUseException();
+        if (clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), clienteEncontrado.getId()))
+            throw new CadastroCpfAlreadyInUseException();
 
         Cliente updatedCliente = new Cliente();
         updatedCliente.setId(clienteEncontrado.getId());
