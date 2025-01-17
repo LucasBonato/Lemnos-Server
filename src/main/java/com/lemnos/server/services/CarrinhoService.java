@@ -16,19 +16,22 @@ import com.lemnos.server.repositories.ItensCarrinhoRepository;
 import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.produto.ProdutoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CarrinhoService {
-    @Autowired private CadastroRepository cadastroRepository;
-    @Autowired private CarrinhoRepository carrinhoRepository;
-    @Autowired private ItensCarrinhoRepository itensCarrinhoRepository;
-    @Autowired private ProdutoRepository produtoRepository;
+    private final CadastroRepository cadastroRepository;
+    private final CarrinhoRepository carrinhoRepository;
+    private final ItensCarrinhoRepository itensCarrinhoRepository;
+    private final ProdutoRepository produtoRepository;
 
     public ResponseEntity<CarrinhoResponse> getCarrinho(JwtAuthenticationToken token) {
         verificarToken(token);
@@ -38,11 +41,12 @@ public class CarrinhoService {
 
         Carrinho carrinho = optionalCarrinho.get();
 
-        List<ItemCarrinhoResponse> items = new ArrayList<>();
-        carrinho.getItens().forEach(item -> items.add(new ItemCarrinhoResponse(
-                item.getProduto().getId().toString(),
-                item.getQuantidade()
-        )));
+        List<ItemCarrinhoResponse> items = carrinho.getItens().stream()
+                .map(item -> new ItemCarrinhoResponse(
+                        item.getProduto().getId().toString(),
+                        item.getQuantidade()
+                ))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(new CarrinhoResponse(
                 carrinho.getQuantidadeProdutos(),
@@ -60,7 +64,8 @@ public class CarrinhoService {
 
         if(carrinho == null) {
             carrinho = criarNovoCarrinho(cadastro, produto, carrinhoRequest.quantidade());
-        } else {
+        }
+        else {
             atualizarCarrinho(carrinho, produto, carrinhoRequest.quantidade());
         }
 
@@ -71,9 +76,22 @@ public class CarrinhoService {
     public ResponseEntity<Void> removerProduto(JwtAuthenticationToken token, CarrinhoRequest carrinhoRequest) {
         verificarToken(token);
         Carrinho carrinho = getCarrinhoByCadastro(getCadastroByEmail(token.getName()));
-        List<ItensCarrinho> itens = carrinho.getItens();
+        List<ItensCarrinho> itens = new ArrayList<>(carrinho.getItens());
         Integer quantidade = (carrinhoRequest.quantidade() != null && carrinhoRequest.quantidade() > 0) ? carrinhoRequest.quantidade() : 1;
-        for (ItensCarrinho item : itens) {
+
+        itens.stream()
+                .filter(item -> item.getProduto().equals(getProdutoById(carrinhoRequest.id())))
+                .findFirst()
+                .ifPresent(item -> {
+                    if (item.getQuantidade() > quantidade) {
+                        item.setQuantidade(item.getQuantidade() - quantidade);
+                    }
+                    else {
+                        itens.remove(item);
+                    }
+                });
+
+/*        for (ItensCarrinho item : itens) {
             if (!item.getProduto().equals(getProdutoById(carrinhoRequest.id()))) continue;
             if (item.getQuantidade() - quantidade != 0) {
                 item.setQuantidade(item.getQuantidade() - quantidade);
@@ -81,11 +99,12 @@ public class CarrinhoService {
             }
             itens.remove(item);
             break;
-        }
+        }*/
 
         if(itens.isEmpty()) {
             carrinhoRepository.delete(carrinho);
-        } else {
+        }
+        else {
             carrinho.setAll(itens, getValorTotal(itens), getQuantidadeTotal(itens));
             carrinhoRepository.save(carrinho);
         }
@@ -147,14 +166,14 @@ public class CarrinhoService {
     }
 
     private Integer getQuantidadeTotal(List<ItensCarrinho> itens) {
-        Integer[] quantidadeTotal = {0};
-        itens.forEach(item -> quantidadeTotal[0] += item.getQuantidade());
-        return quantidadeTotal[0];
+        return itens.stream()
+                .mapToInt(ItensCarrinho::getQuantidade)
+                .sum();
     }
 
     private Double getValorTotal(List<ItensCarrinho> itens) {
-        Double[] valorTotal = {0.0};
-        itens.forEach(item -> valorTotal[0] += item.getProduto().getValor() * item.getQuantidade());
-        return valorTotal[0];
+        return itens.stream()
+                .mapToDouble(item -> item.getProduto().getValor() * item.getQuantidade())
+                .sum();
     }
 }
