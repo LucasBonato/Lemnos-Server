@@ -18,26 +18,28 @@ import com.lemnos.server.repositories.EntregaRepository;
 import com.lemnos.server.repositories.PedidoRepository;
 import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PedidoService {
-    @Autowired private PedidoRepository pedidoRepository;
-    @Autowired private CadastroRepository cadastroRepository;
-    @Autowired private CarrinhoRepository carrinhoRepository;
-    @Autowired private EntregaRepository entregaRepository;
+    private final PedidoRepository pedidoRepository;
+    private final CadastroRepository cadastroRepository;
+    private final CarrinhoRepository carrinhoRepository;
+    private final EntregaRepository entregaRepository;
 
-    public ResponseEntity<List<PedidoResponse>> getAll(JwtAuthenticationToken token){
-        List<Pedido> pedidos = pedidoRepository.findByCadastro(getCadastroByEmail(token.getName()));
-        List<PedidoResponse> dto = new ArrayList<>();
-        pedidos.forEach(pedido -> dto.add(getPedidoResponse(pedido)));
+    public ResponseEntity<List<PedidoResponse>> getAll(JwtAuthenticationToken token) {
+        List<PedidoResponse> dto = pedidoRepository.findByCadastro(getCadastroByEmail(token.getName()))
+                .stream()
+                .map(this::getPedidoResponse)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(dto);
     }
@@ -52,7 +54,7 @@ public class PedidoService {
         Carrinho carrinho = carrinhoRepository.findByCadastro(cadastro).orElseThrow(CarrinhoVazioException::new);
         verficarPedido(pedidoRequest);
         Double valorPedido = pedidoRequest.valorPagamento() - pedidoRequest.valorFrete();
-        pedidoRepository.save(new Pedido(valorPedido, pedidoRequest.metodoPagamento(), pedidoRequest.valorPagamento(), carrinho.getQuantidadeProdutos(), getDescricao(carrinho),  pedidoRequest.valorFrete(), cadastro));
+        pedidoRepository.save(new Pedido(valorPedido, pedidoRequest.metodoPagamento(), pedidoRequest.valorPagamento(), carrinho.getQuantidadeProdutos(), getDescricao(carrinho), pedidoRequest.valorFrete(), cadastro));
         carrinhoRepository.delete(carrinho);
         return ResponseEntity.ok().build();
     }
@@ -60,9 +62,9 @@ public class PedidoService {
     public ResponseEntity<Void> alterarStatus(AlterarStatusRequest request) {
         Pedido pedido = pedidoRepository.findById(request.id()).orElseThrow(PedidoNotFoundException::new);
         Status status = proximoStatus(pedido.getStatus());
-        if(status == Status.ENTREGUE) {
+        if (status == Status.ENTREGUE) {
             Optional<Entrega> entregaOptional = entregaRepository.findByPedido(pedido);
-            if(entregaOptional.isPresent()) throw new EntregaJaRealizadaException();
+            if (entregaOptional.isPresent()) throw new EntregaJaRealizadaException();
             entregaRepository.save(new Entrega(pedido));
         }
         pedido.setStatus(status.getStatus());
@@ -72,13 +74,13 @@ public class PedidoService {
     }
 
     private void verficarPedido(PedidoRequest pedidoRequest) {
-        if(pedidoRequest.valorFrete() < 0) {
+        if (pedidoRequest.valorFrete() < 0) {
             throw new PedidoNotValidException("O valor do frete não pode ser negativo");
         }
-        if(pedidoRequest.valorPagamento() < 0) {
+        if (pedidoRequest.valorPagamento() < 0) {
             throw new PedidoNotValidException("O valor do pagamento não pode ser negativo");
         }
-        if(StringUtils.isBlank(pedidoRequest.metodoPagamento())) {
+        if (StringUtils.isBlank(pedidoRequest.metodoPagamento())) {
             throw new PedidoNotValidException("Selecione um método de pagamento");
         }
     }
@@ -95,16 +97,17 @@ public class PedidoService {
     }
 
     private String getDescricao(Carrinho carrinho) {
-        String[] response = {""};
-        carrinho.getItens().forEach(item -> response[0] += item.getProduto().getId().toString() + ", " + item.getQuantidade() + "\n");
-        return response[0];
+        return carrinho.getItens()
+                .stream()
+                .map(item -> String.format("%s, %d%n", item.getProduto().getId().toString(), item.getQuantidade()))
+                .collect(Collectors.joining());
     }
 
     private Cadastro getCadastroByEmail(String email) {
         return cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(ClienteNotFoundException::new);
     }
 
-    private static PedidoResponse getPedidoResponse(Pedido pedido) {
+    private PedidoResponse getPedidoResponse(Pedido pedido) {
         return new PedidoResponse(
                 pedido.getId(),
                 pedido.getValorPedido(),
