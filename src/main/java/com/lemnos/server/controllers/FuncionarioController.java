@@ -20,7 +20,7 @@ class FuncionarioController implements FuncionarioSwagger {
     @Autowired private FuncionarioService funcionarioService;
 
     @GetMapping
-    public ResponseEntity<List<FuncionarioResponse>> getAll(){
+    public ResponseEntity<List<FuncionarioResponse>> getAll() {
         return funcionarioService.getAll();
     }
 
@@ -30,7 +30,7 @@ class FuncionarioController implements FuncionarioSwagger {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<FuncionarioResponse> getOneByEmail(@PathParam(value = "email") String email){
+    public ResponseEntity<FuncionarioResponse> getOneByEmail(@PathParam(value = "email") String email) {
         return funcionarioService.getOneByEmail(email);
     }
 
@@ -40,7 +40,7 @@ class FuncionarioController implements FuncionarioSwagger {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateFuncionario(@PathParam(value = "email") String email, @RequestBody @Valid FuncionarioRequest funcionarioRequest){
+    public ResponseEntity<Void> updateFuncionario(@PathParam(value = "email") String email, @RequestBody @Valid FuncionarioRequest funcionarioRequest) {
         return funcionarioService.updateFuncionario(email, funcionarioRequest);
     }
 
@@ -50,7 +50,7 @@ class FuncionarioController implements FuncionarioSwagger {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email){
+    public ResponseEntity<Void> deleteById(@PathParam(value = "email") String email) {
         return funcionarioService.deleteByEmail(email);
     }
 }

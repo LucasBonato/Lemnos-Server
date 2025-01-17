@@ -22,12 +22,12 @@ public class ClienteController implements ClienteSwagger {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<ClienteResponse> getOneByEmail(JwtAuthenticationToken token){
+    public ResponseEntity<ClienteResponse> getOneByEmail(JwtAuthenticationToken token) {
         return clienteService.getOneByEmail(token);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateById(JwtAuthenticationToken token, @RequestBody ClienteRequest clienteRequest){
+    public ResponseEntity<Void> updateById(JwtAuthenticationToken token, @RequestBody ClienteRequest clienteRequest) {
         return clienteService.updateCliente(token, clienteRequest);
     }
 

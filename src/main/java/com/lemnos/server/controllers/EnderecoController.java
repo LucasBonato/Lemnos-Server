@@ -14,27 +14,27 @@ public class EnderecoController implements EnderecoSwagger {
     @Autowired private EnderecoService enderecoService;
 
     @GetMapping
-    public ResponseEntity<ViaCepDTO> getFieldsEndereco(@RequestParam(value = "cep") String cep){
+    public ResponseEntity<ViaCepDTO> getFieldsEndereco(@RequestParam(value = "cep") String cep) {
         return enderecoService.getFields(cep);
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody EnderecoRequest enderecoRequest){
+    public ResponseEntity<Void> create(@RequestBody EnderecoRequest enderecoRequest) {
         return enderecoService.createEndereco(enderecoRequest);
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody EnderecoRequest enderecoRequest){
+    public ResponseEntity<Void> update(@RequestBody EnderecoRequest enderecoRequest) {
         return enderecoService.updateEndereco(enderecoRequest);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestParam(value = "email") String email, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade){
+    public ResponseEntity<Void> remove(@RequestParam(value = "email") String email, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade) {
         return enderecoService.removeEndereco(email, cep, entidade);
     }
 
     @PostMapping("/verificar")
-    public ResponseEntity<Void> verificarCampos(@RequestBody EnderecoRequest enderecoRequest){
+    public ResponseEntity<Void> verificarCampos(@RequestBody EnderecoRequest enderecoRequest) {
         return enderecoService.verificarCampos(enderecoRequest);
     }
 }

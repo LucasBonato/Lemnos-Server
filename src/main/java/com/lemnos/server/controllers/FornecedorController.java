@@ -22,7 +22,7 @@ public class FornecedorController implements FornecedorSwagger {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<FornecedorResponse> getOneByEmail(@PathParam(value = "email") String email){
+    public ResponseEntity<FornecedorResponse> getOneByEmail(@PathParam(value = "email") String email) {
         return fornecedorService.getOneByEmail(email);
     }
 
@@ -37,7 +37,7 @@ public class FornecedorController implements FornecedorSwagger {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@PathParam(value = "email") String email){
+    public ResponseEntity<Void> delete(@PathParam(value = "email") String email) {
         return fornecedorService.deleteByEmail(email);
     }
 }

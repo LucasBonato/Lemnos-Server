@@ -24,12 +24,12 @@ public class ProdutoController implements ProdutoSwagger {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> getOneById(@PathVariable String id){
+    public ResponseEntity<ProdutoResponse> getOneById(@PathVariable String id) {
         return produtoService.getOneById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Void> register(@RequestBody ProdutoRequest produtoRequest){
+    public ResponseEntity<Void> register(@RequestBody ProdutoRequest produtoRequest) {
         return produtoService.register(produtoRequest);
     }
 

@@ -20,7 +20,7 @@ public class CarrinhoController implements CarrinhoSwagger {
     }
 
     @GetMapping("/quantidade")
-    public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token){
+    public ResponseEntity<Integer> quantidadeProdutos(JwtAuthenticationToken token) {
         return carrinhoService.quantidadeProdutos(token);
     }
 
