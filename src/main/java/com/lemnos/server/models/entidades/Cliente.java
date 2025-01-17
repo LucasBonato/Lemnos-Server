@@ -72,7 +72,7 @@ public class Cliente implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("CLIENTE"));
+        return List.of(new SimpleGrantedAuthority(Roles.CLIENTE.getRoleWithPrefix()));
     }
 
     @Override

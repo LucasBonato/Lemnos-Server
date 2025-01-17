@@ -3,7 +3,7 @@ package com.lemnos.server.services;
 import com.lemnos.server.exceptions.auth.TokenNotCreatedException;
 import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.entidades.Funcionario;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
@@ -13,21 +13,23 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
-    @Autowired public JwtEncoder jwtEncoder;
-    @Autowired public JwtDecoder jwtDecoder;
+    public final JwtEncoder jwtEncoder;
+    public final JwtDecoder jwtDecoder;
 
     public String generateToken(UserDetails userDetails) {
         try {
             String email = "";
             String role = "";
 
-            if(userDetails instanceof Cliente cliente) {
+            if (userDetails instanceof Cliente cliente) {
                 email = cliente.getCadastro().getEmail();
-                role = cliente.getRole().getRole();
-            } else if(userDetails instanceof Funcionario funcionario) {
+                role = cliente.getRole().getRoleWithPrefix();
+            }
+            else if (userDetails instanceof Funcionario funcionario) {
                 email = funcionario.getCadastro().getEmail();
-                role = funcionario.getRole().getRole();
+                role = funcionario.getRole().getRoleWithPrefix();
             }
 
             JwtClaimsSet claims = JwtClaimsSet.builder()

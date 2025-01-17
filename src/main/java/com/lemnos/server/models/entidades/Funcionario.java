@@ -99,7 +99,7 @@ public class Funcionario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority((this.role == Roles.FUNCIONARIO) ? "FUNCIONARIO" : "ADMIN"));
+        return List.of(new SimpleGrantedAuthority(((this.role == Roles.FUNCIONARIO) ? Roles.FUNCIONARIO : Roles.ADMIN).getRoleWithPrefix()));
     }
 
     @Override

@@ -90,6 +90,7 @@ public class Produto {
         this.subCategoria = subCategoria;
         this.imagemPrincipal = imagemPrincipal;
         this.desconto = desconto;
+        this.mediaAvaliacao = 0.0;
     }
 
     public void setAll(ProdutoRequest produtoRequest, Double valor, Fabricante fabricante, SubCategoria subCategoria, ImagemPrincipal imagemPrincipal, Desconto desconto) {
