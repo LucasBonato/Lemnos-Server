@@ -18,25 +18,23 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FornecedorService extends Util {
-
     @Autowired private FornecedorRepository fornecedorRepository;
 
     @Cacheable("allFornecedores")
     public ResponseEntity<List<FornecedorResponse>> getAll() {
-        List<Fornecedor> fornecedores = fornecedorRepository.findAll();
-        List<FornecedorResponse> dto = new ArrayList<>();
-        for(Fornecedor fornecedor : fornecedores){
-            dto.add(getFornecedorResponse(fornecedor));
-        }
+        List<FornecedorResponse> response = fornecedorRepository.findAll()
+                .stream()
+                .map(this::getFornecedorResponse)
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<FornecedorResponse> getOneByEmail(String email) {
@@ -46,8 +44,10 @@ public class FornecedorService extends Util {
     }
 
     public ResponseEntity<List<FornecedorResponse>> getBy(String nome) {
-        List<FornecedorResponse> response = new ArrayList<>();
-        fornecedorRepository.findByNomeContainingIgnoreCase(nome).forEach(fornecedor -> response.add(getFornecedorResponse(fornecedor)));
+        List<FornecedorResponse> response = fornecedorRepository.findByNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(this::getFornecedorResponse)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(response);
     }
 
@@ -67,8 +67,7 @@ public class FornecedorService extends Util {
         return ResponseEntity.ok().build();
     }
 
-
-    private static FornecedorResponse getFornecedorResponse(Fornecedor fornecedor) {
+    private FornecedorResponse getFornecedorResponse(Fornecedor fornecedor) {
         return new FornecedorResponse(
                 fornecedor.getNome(),
                 fornecedor.getCnpj(),
@@ -93,7 +92,7 @@ public class FornecedorService extends Util {
                 fornecedor.getEndereco().getEstado().getUf()
         );
     }
-    private Fornecedor insertData(String email, FornecedorRequest fornecedorEnviado){
+    private Fornecedor insertData(String email, FornecedorRequest fornecedorEnviado) {
         Fornecedor fornecedorEncontrado = getOneFornecedorByEmail(email);
 
         if(StringUtils.isBlank(fornecedorEnviado.nome()) && StringUtils.isBlank(fornecedorEnviado.telefone()) && StringUtils.isBlank(fornecedorEnviado.cnpj())){
