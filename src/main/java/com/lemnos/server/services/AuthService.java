@@ -23,7 +23,7 @@ import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.entidades.FuncionarioRepository;
 import com.lemnos.server.utils.Util;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,14 +32,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.lemnos.server.models.enums.AdminEmails.*;
+
 @Service
+@RequiredArgsConstructor
 public class AuthService extends Util {
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private FuncionarioRepository funcionarioRepository;
-    @Autowired private FornecedorRepository fornecedorRepository;
-    @Autowired private CadastroRepository cadastroRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private TokenService tokenService;
+    private final ClienteRepository clienteRepository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final FornecedorRepository fornecedorRepository;
+    private final CadastroRepository cadastroRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
     public ResponseEntity<LoginReponse> login(LoginRequest loginRequest) {
         UserDetails userDetails = verificarLogin(loginRequest);
@@ -106,7 +109,7 @@ public class AuthService extends Util {
     * @return             A new register of User, Employee or Admin, using a base class {@link UserDetails}.
     */
     private UserDetails newClienteFirebase(FirebaseToken decodedToken) {
-        if (decodedToken.getEmail().equals("lucas.perez.bonato@gmail.com") || decodedToken.getEmail().equals("lucasatdriano@gmail.com") || decodedToken.getEmail().equals("leandrofamiliafox@gmail.com")) {
+        if (decodedToken.getEmail().equals(firstEmail) || decodedToken.getEmail().equals(secondEmail) || decodedToken.getEmail().equals(thirdEmail)) {
             return funcionarioRepository.save(new Funcionario(decodedToken, passwordEncoder.encode(decodedToken.getUid())));
         }
         return clienteRepository.save(new Cliente(decodedToken, passwordEncoder.encode(decodedToken.getUid())));

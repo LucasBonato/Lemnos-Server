@@ -13,7 +13,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,11 +26,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
-    @Autowired private TokenService tokenService;
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private FuncionarioRepository funcionarioRepository;
-    @Autowired private CadastroRepository cadastroRepository;
+    private final TokenService tokenService;
+    private final ClienteRepository clienteRepository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final CadastroRepository cadastroRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {

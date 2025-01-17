@@ -5,6 +5,7 @@ import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
+import com.lemnos.server.models.enums.AdminEmails;
 import com.lemnos.server.models.enums.Roles;
 import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.utils.Util;
@@ -19,6 +20,8 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import static com.lemnos.server.models.enums.AdminEmails.*;
 
 @Entity
 @Table(name = "Funcionario")
@@ -72,25 +75,23 @@ public class Funcionario implements UserDetails {
 
     public Funcionario(FirebaseToken decodedToken, String senha) {
         this.nome = decodedToken.getName();
-        switch (decodedToken.getEmail()) {
-            case "lucas.perez.bonato@gmail.com":
-                this.cpf = 11122233301L;
-                this.dataNascimento = Util.convertData("29/08/2006");
-                this.dataAdmissao = Date.from(Instant.now());
-                this.telefone = 11972540380L;
-                break;
-            case "lucasatdriano@gmail.com":
-                this.cpf = 11122233302L;
-                this.dataNascimento = Util.convertData("01/01/2006");
-                this.dataAdmissao = Date.from(Instant.now());
-                this.telefone = 11962891098L;
-                break;
-            case "leandrofamiliafox@gmail.com":
-                this.cpf = 11122233303L;
-                this.dataNascimento = Util.convertData("30/06/2006");
-                this.dataAdmissao = Date.from(Instant.now());
-                this.telefone = 11934485241L;
-                break;
+        if (decodedToken.getEmail().equals(firstEmail)) {
+            this.cpf = 11122233301L;
+            this.dataNascimento = Util.convertData("29/08/2006");
+            this.dataAdmissao = Date.from(Instant.now());
+            this.telefone = 11972540380L;
+        }
+        else if (decodedToken.getEmail().equals(secondEmail)) {
+            this.cpf = 11122233302L;
+            this.dataNascimento = Util.convertData("01/01/2006");
+            this.dataAdmissao = Date.from(Instant.now());
+            this.telefone = 11962891098L;
+        }
+        else if (decodedToken.getEmail().equals(thirdEmail)) {
+            this.cpf = 11122233303L;
+            this.dataNascimento = Util.convertData("30/06/2006");
+            this.dataAdmissao = Date.from(Instant.now());
+            this.telefone = 11934485241L;
         }
         this.role = Roles.ADMIN;
         this.cadastro = new Cadastro(decodedToken, senha);

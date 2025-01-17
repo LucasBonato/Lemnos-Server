@@ -46,6 +46,10 @@ jwt:
     oauth2:
       private-key: 'classpath:private.key'
       public-key: 'classpath:public.key'
+    email:
+      admin1: '${EMAIL_ADMIN1}'
+      admin2: '${EMAIL_ADMIN2}'
+      admin3: '${EMAIL_ADMIN3}'
 
 firebase:
   credentials:

@@ -30,8 +30,8 @@ public class JwtConfiguration {
                 .Builder(publicKey)
                 .privateKey(privateKey)
                 .build();
-        ImmutableJWKSet<SecurityContext> jkws = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jkws);
+        ImmutableJWKSet<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwks);
     }
 
     @Bean
