@@ -16,7 +16,7 @@ import com.lemnos.server.repositories.endereco.possui.ClientePossuiEnderecoRepos
 import com.lemnos.server.repositories.endereco.possui.FuncionarioPossuiEnderecoRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.utils.UtilEndereco;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EnderecoService extends UtilEndereco {
-    @Autowired private FornecedorRepository fornecedorRepository;
-    @Autowired private ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
-    @Autowired private FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
+    private final FornecedorRepository fornecedorRepository;
+    private final ClientePossuiEnderecoRepository clientePossuiEnderecoRepository;
+    private final FuncionarioPossuiEnderecoRepository funcionarioPossuiEnderecoRepository;
 
     public ResponseEntity<Void> createEndereco(EnderecoRequest enderecoRequest) {
         verificarCamposEndereco(enderecoRequest);
@@ -73,6 +74,32 @@ public class EnderecoService extends UtilEndereco {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<Void> verificarCampos(EnderecoRequest enderecoRequest) {
+        verificarCamposEndereco(enderecoRequest);
+
+        ViaCepDTO via = getViaCepObject(enderecoRequest.cep());
+        if(via == null) throw new EnderecoNotValidException(Codigo.CEP ,"Cep não existe!");
+
+        String email = enderecoRequest.email();
+
+        switch (enderecoRequest.entidade()){
+            case "funcionario":
+                Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), getOneFuncionarioByEmail(email).getId());
+                if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
+                break;
+            case "fornecedor":
+                if(getOneFornecedorByEmail(email).getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
+                break;
+            default:
+                Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), getOneClienteByEmail(email).getId());
+                if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<ViaCepDTO> getFields(String cep) {
+        return ResponseEntity.ok(getViaCepObject(cep));
+    }
 
     private void createEnderecoCliente(EnderecoRequest enderecoRequest) {
         Cliente cliente = getOneClienteByEmail(enderecoRequest.email());
@@ -153,32 +180,5 @@ public class EnderecoService extends UtilEndereco {
 
         fornecedor.setEndereco(null);
         fornecedorRepository.save(fornecedor);
-    }
-
-    public ResponseEntity<Void> verificarCampos(EnderecoRequest enderecoRequest) {
-        verificarCamposEndereco(enderecoRequest);
-
-        ViaCepDTO via = getViaCepObject(enderecoRequest.cep());
-        if(via == null) throw new EnderecoNotValidException(Codigo.CEP ,"Cep não existe!");
-
-        String email = enderecoRequest.email();
-
-        switch (enderecoRequest.entidade()){
-            case "funcionario":
-                Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), getOneFuncionarioByEmail(email).getId());
-                if(fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
-                break;
-            case "fornecedor":
-                if(getOneFornecedorByEmail(email).getEndereco() != null) throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
-                break;
-            default:
-                Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(enderecoRequest.cep(), getOneClienteByEmail(email).getId());
-                if(cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
-        }
-        return ResponseEntity.ok().build();
-    }
-
-    public ResponseEntity<ViaCepDTO> getFields(String cep) {
-        return ResponseEntity.ok(getViaCepObject(cep));
     }
 }
