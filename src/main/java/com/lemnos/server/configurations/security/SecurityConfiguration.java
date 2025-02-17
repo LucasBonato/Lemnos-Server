@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorization -> authorization
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger", "/swagger-ui/**", "/v3/api-docs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/produto", "/produto/desconto", "/produto/{id}", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produto/find/**", "/auth/login", "/auth/login-firebase", "/auth/register", "/auth/register/verificar").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasRole(Roles.CLIENTE.getRole())
