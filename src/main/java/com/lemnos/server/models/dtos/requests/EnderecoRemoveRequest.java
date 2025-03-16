@@ -2,10 +2,8 @@ package com.lemnos.server.models.dtos.requests;
 
 import com.lemnos.server.models.enums.Entidade;
 
-public record EnderecoRequest(
+public record EnderecoRemoveRequest(
         String email,
         String cep,
-        Integer numeroLogradouro,
-        String complemento,
         Entidade entidade
-) { }
+) {}

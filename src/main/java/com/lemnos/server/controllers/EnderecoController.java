@@ -1,6 +1,7 @@
 package com.lemnos.server.controllers;
 
 import com.lemnos.server.configurations.swagger.EnderecoSwagger;
+import com.lemnos.server.models.dtos.requests.EnderecoRemoveRequest;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.viacep.ViaCepDTO;
 import com.lemnos.server.services.EnderecoService;
@@ -14,7 +15,7 @@ public class EnderecoController implements EnderecoSwagger {
     @Autowired private EnderecoService enderecoService;
 
     @GetMapping
-    public ResponseEntity<ViaCepDTO> getFieldsEndereco(@RequestParam(value = "cep") String cep) {
+    public ResponseEntity<ViaCepDTO> fetchAddressFields(@RequestParam(value = "cep") String cep) {
         return enderecoService.getFields(cep);
     }
 
@@ -29,12 +30,12 @@ public class EnderecoController implements EnderecoSwagger {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestParam(value = "email") String email, @RequestParam(value = "cep") String cep, @RequestParam(value = "e") String entidade) {
-        return enderecoService.removeEndereco(email, cep, entidade);
+    public ResponseEntity<Void> remove(@RequestBody EnderecoRemoveRequest enderecoRequest) {
+        return enderecoService.removeEndereco(enderecoRequest);
     }
 
     @PostMapping("/verificar")
-    public ResponseEntity<Void> verificarCampos(@RequestBody EnderecoRequest enderecoRequest) {
+    public ResponseEntity<Void> verifyFields(@RequestBody EnderecoRequest enderecoRequest) {
         return enderecoService.verificarCampos(enderecoRequest);
     }
 }

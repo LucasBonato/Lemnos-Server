@@ -1,6 +1,7 @@
 package com.lemnos.server.configurations.swagger;
 
 import com.lemnos.server.exceptions.ExceptionResponse;
+import com.lemnos.server.models.dtos.requests.EnderecoRemoveRequest;
 import com.lemnos.server.models.dtos.requests.EnderecoRequest;
 import com.lemnos.server.models.viacep.ViaCepDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +26,7 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
             @ApiResponse(responseCode = "503", description = "Internal Server Erros, Network error trying to access Via Cep or RestTemplate isn't working", content = @Content(schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @SecurityRequirement(name = "Authorization")
-    ResponseEntity<ViaCepDTO> getFieldsEndereco(String cep);
+    ResponseEntity<ViaCepDTO> fetchAddressFields(String cep);
 
     @Operation(description = "Register the Address with cep and the user, adding to the list of address if it is a client")
     @ApiResponses(value = {
@@ -55,7 +56,7 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to record the address", content = @Content(schema = @Schema()))
     })
     @SecurityRequirement(name = "Authorization")
-    ResponseEntity<Void> remove(String email, String cep, String entidade);
+    ResponseEntity<Void> remove(EnderecoRemoveRequest enderecoRequest);
 
     @Operation(description = "Verify the fields to register the Address without a new record in the database.")
     @ApiResponses(value = {
@@ -65,5 +66,5 @@ public interface EnderecoSwagger extends SwaggerConfiguration{
             @ApiResponse(responseCode = "403", description = "Forbidden, you don't have the role to record the address", content = @Content(schema = @Schema()))
     })
     @SecurityRequirement(name = "Authorization")
-    ResponseEntity<Void> verificarCampos(EnderecoRequest enderecoRequest);
+    ResponseEntity<Void> verifyFields(EnderecoRequest enderecoRequest);
 }
