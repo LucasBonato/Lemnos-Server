@@ -92,6 +92,7 @@ public class UtilEndereco {
         Endereco endereco = new Endereco(viaCep, cidade, estado);
         return enderecoRepository.save(endereco);
     }
+    
     protected void verificarCamposEndereco(EnderecoRequest enderecoRequest) {
         if(enderecoRequest.numeroLogradouro() == null){
             throw new EnderecoNotValidException(Codigo.NUMERO_LOGRADOURO, "O campo de número logradouro é obrigatório!");
