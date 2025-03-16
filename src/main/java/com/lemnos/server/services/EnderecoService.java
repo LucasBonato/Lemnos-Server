@@ -146,7 +146,7 @@ public class EnderecoService extends UtilEndereco {
         Endereco endereco = getEndereco(enderecoRequest);
         
         Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), cliente.getId());
-        if (cpeOptional.isEmpty()) throw new EnderecoNotFoundException("Cliente");
+        if (cpeOptional.isEmpty()) throw new EnderecoNotFoundException(Entidade.CLIENTE);
         
         clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
     }
@@ -155,7 +155,7 @@ public class EnderecoService extends UtilEndereco {
         Endereco endereco = getEndereco(enderecoRequest);
         
         Optional<FuncionarioPossuiEndereco> cpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), funcionario.getId());
-        if (cpeOptional.isEmpty()) throw new EnderecoNotFoundException("Cliente");
+        if (cpeOptional.isEmpty()) throw new EnderecoNotFoundException(Entidade.FUNCIONARIO);
         
         funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
     }
@@ -163,7 +163,7 @@ public class EnderecoService extends UtilEndereco {
         Fornecedor fornecedor = getOneFornecedorByEmail(enderecoRequest.email());
         Endereco endereco = getEndereco(enderecoRequest);
         
-        if (fornecedor.getEndereco() == null) throw new EnderecoNotFoundException("Fornecedor");
+        if (fornecedor.getEndereco() == null) throw new EnderecoNotFoundException(Entidade.FORNECEDOR);
         
         fornecedor.setEndereco(endereco);
         fornecedor.setComplemento(enderecoRequest.complemento());
