@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: Lemnos
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:LemnosDB}
+    username: '${POSTGRES_USERNAME}'
+    password: '${POSTGRES_PASSWORD}'
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: false
+    open-in-view: true
+  data:
+    jdbc:
+      repositories:
+        enabled: false
+
+server:
+  port: '${PORT:8080}'
+  servlet:
+    context-path: /api
+  error:
+    include-message: ALWAYS
+    include-stacktrace: ALWAYS
+
+flyway:
+  enabled: true
+  url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:LemnosDB}
+  username: '${POSTGRES_USERNAME}'
+  password: '${POSTGRES_PASSWORD}'
+  ignore-unsupported-database: true
+  baseline-version: '0'
+  baseline-on-migrate: true
+
+jwt:
+  spring:
+    oauth2:
+      private-key: 'classpath:private.key'
+      public-key: 'classpath:public.key'
+    email:
+      admin1: '${EMAIL_ADMIN1}'
+      admin2: '${EMAIL_ADMIN2}'
+      admin3: '${EMAIL_ADMIN3}'
+
+firebase:
+  credentials:
+    service:
+      account:
+        key: '${FIREBASE_CREDENTIALS}'
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+springdoc:
+  swagger-ui:
+    operations-sorter: alpha
+    tagsSorter: alpha
+    path: /swagger
+  default-produces-media-type: application/json
