@@ -89,17 +89,17 @@ public class EnderecoService extends UtilEndereco {
                 funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(
                     enderecoRequest.cep(),
                     getOneFuncionarioByEmail(email).getId()
-                ).orElseThrow(() -> new EntityAlreadyHasEnderecoException("Funcionário"));
+                ).orElseThrow(() -> new EntityAlreadyHasEnderecoException(Entidade.FUNCIONARIO));
                 break;
             case Entidade.FORNECEDOR:
                 if (getOneFornecedorByEmail(email).getEndereco() != null)
-                    throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
+                    throw new EntityAlreadyHasEnderecoException(Entidade.FORNECEDOR, "já possui um endereço cadastrado!");
                 break;
             case Entidade.CLIENTE:
                 clientePossuiEnderecoRepository.findByCepAndId_Cliente(
                     enderecoRequest.cep(),
                     getOneClienteByEmail(email).getId()
-                ).orElseThrow(() -> new EntityAlreadyHasEnderecoException("Cliente"));
+                ).orElseThrow(() -> new EntityAlreadyHasEnderecoException(Entidade.CLIENTE));
         }
         return ResponseEntity.ok().build();
     }
@@ -114,7 +114,7 @@ public class EnderecoService extends UtilEndereco {
         Endereco endereco = getEndereco(enderecoRequest);
         
         Optional<ClientePossuiEndereco> cpeOptional = clientePossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), cliente.getId());
-        if (cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Cliente");
+        if (cpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException(Entidade.CLIENTE);
         
         clientePossuiEnderecoRepository.save(new ClientePossuiEndereco(cliente, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
     }
@@ -123,7 +123,7 @@ public class EnderecoService extends UtilEndereco {
         Endereco endereco = getEndereco(enderecoRequest);
         
         Optional<FuncionarioPossuiEndereco> fpeOptional = funcionarioPossuiEnderecoRepository.findByCepAndId_Cliente(endereco.getCep(), funcionario.getId());
-        if (fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException("Funcionário");
+        if (fpeOptional.isPresent()) throw new EntityAlreadyHasEnderecoException(Entidade.FUNCIONARIO);
         
         funcionarioPossuiEnderecoRepository.save(new FuncionarioPossuiEndereco(funcionario, endereco, enderecoRequest.numeroLogradouro(), enderecoRequest.complemento()));
         
@@ -133,7 +133,7 @@ public class EnderecoService extends UtilEndereco {
         Endereco endereco = getEndereco(enderecoRequest);
         
         if (fornecedor.getEndereco() != null)
-            throw new EntityAlreadyHasEnderecoException("Fornecedor", "já possui um endereço cadastrado!");
+            throw new EntityAlreadyHasEnderecoException(Entidade.FORNECEDOR, "já possui um endereço cadastrado!");
         
         fornecedor.setEndereco(endereco);
         fornecedor.setComplemento(enderecoRequest.complemento());
