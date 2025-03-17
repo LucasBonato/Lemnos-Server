@@ -5,7 +5,7 @@ import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.models.enums.Roles;
 import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.FuncionarioRepository;
-import com.lemnos.server.utils.Util;
+import com.lemnos.server.shared.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +32,8 @@ public class AdminConfiguration implements CommandLineRunner {
                 admin.setCpf(23504391864L);
                 admin.setTelefone(11972540380L);
                 admin.setNome("admin");
-                admin.setDataAdmissao(Util.convertData("16/05/2024"));
-                admin.setDataNascimento(Util.convertData("01/01/2000"));
+                admin.setDataAdmissao(Convert.toData("16/05/2024"));
+                admin.setDataNascimento(Convert.toData("01/01/2000"));
 
                 funcionarioRepository.save(admin);
                 System.out.println("Admin cadastrado!");

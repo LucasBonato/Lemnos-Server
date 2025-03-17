@@ -21,7 +21,7 @@ import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
 import com.lemnos.server.repositories.entidades.FuncionarioRepository;
-import com.lemnos.server.utils.Util;
+import com.lemnos.server.shared.Convert;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ import static com.lemnos.server.models.enums.AdminEmails.*;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService extends Util {
+public class AuthService {
     private final ClienteRepository clienteRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final FornecedorRepository fornecedorRepository;
@@ -178,7 +178,7 @@ public class AuthService extends Util {
             throw new CadastroNotValidException(Codigo.CPF, "O CPF é obrigatório!");
         }
 
-        Long cpf = convertStringToLong(registerRequest.getCpf(), Codigo.CPF);
+        Long cpf = Convert.toLong(registerRequest.getCpf(), Codigo.CPF);
 
         if(StringUtils.isBlank(registerRequest.getEmail())){
             throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
@@ -221,7 +221,7 @@ public class AuthService extends Util {
             throw new CadastroNotValidException(Codigo.CPF, "O CPF é obrigatório!");
         }
 
-        Long cpf = convertStringToLong(funcionarioRequest.cpf(), Codigo.CPF);
+        Long cpf = Convert.toLong(funcionarioRequest.cpf(), Codigo.CPF);
 
         if(StringUtils.isBlank(funcionarioRequest.dataNascimento())){
             throw new CadastroNotValidException(Codigo.DATANASC, "A Data de Nascimento é obrigatória!");
@@ -232,8 +232,8 @@ public class AuthService extends Util {
         if(funcionarioRequest.telefone() == null || funcionarioRequest.telefone().isBlank()){
             throw new CadastroNotValidException(Codigo.TELEFONE, "Telefone é obrigatório");
         }
-
-        convertStringToLong(funcionarioRequest.telefone(), Codigo.TELEFONE);
+        
+        Convert.toLong(funcionarioRequest.telefone(), Codigo.TELEFONE);
 
         if(StringUtils.isBlank(funcionarioRequest.email())){
             throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");
@@ -255,8 +255,8 @@ public class AuthService extends Util {
         return new Funcionario(
                 funcionarioRequest,
                 passwordEncoder.encode(funcionarioRequest.senha()),
-                convertData(funcionarioRequest.dataNascimento()),
-                convertData(funcionarioRequest.dataAdmissao())
+                Convert.toData(funcionarioRequest.dataNascimento()),
+                Convert.toData(funcionarioRequest.dataAdmissao())
         );
     }
 
@@ -279,13 +279,13 @@ public class AuthService extends Util {
             throw new CadastroNotValidException(Codigo.CNPJ, "O CNPJ é obrigatório!");
         }
 
-        Long cnpj = convertStringToLong(fornecedorRequest.cnpj(), Codigo.CNPJ);
+        Long cnpj = Convert.toLong(fornecedorRequest.cnpj(), Codigo.CNPJ);
 
         if(fornecedorRequest.telefone() == null || fornecedorRequest.telefone().isBlank()){
             throw new CadastroNotValidException(Codigo.TELEFONE, "O Telefone é obrigatório!");
         }
-
-        convertStringToLong(fornecedorRequest.telefone(), Codigo.TELEFONE);
+        
+        Convert.toLong(fornecedorRequest.telefone(), Codigo.TELEFONE);
 
         if(StringUtils.isBlank(fornecedorRequest.email())){
             throw new CadastroNotValidException(Codigo.EMAIL, "O Email é obrigatório!");

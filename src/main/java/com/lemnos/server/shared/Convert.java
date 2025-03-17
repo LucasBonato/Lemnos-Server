@@ -1,4 +1,4 @@
-package com.lemnos.server.utils;
+package com.lemnos.server.shared;
 
 import com.lemnos.server.exceptions.cadastro.CadastroWrongDataFormatException;
 import com.lemnos.server.exceptions.endereco.CepNotValidException;
@@ -11,8 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Util {
-    public static Date convertData(String data) {
+public class Convert {
+    public static Date toData(String data) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date dataFormatada;
         try{
@@ -22,7 +22,7 @@ public class Util {
         }
         return dataFormatada;
     }
-    protected Long convertStringToLong(String obj, Codigo codigo) {
+    public static Long toLong(String obj, Codigo codigo) {
         switch (codigo){
             case Codigo.CEP:
                 try {

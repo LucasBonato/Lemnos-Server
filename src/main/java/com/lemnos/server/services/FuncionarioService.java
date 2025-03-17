@@ -14,7 +14,7 @@ import com.lemnos.server.models.entidades.Funcionario;
 import com.lemnos.server.models.dtos.responses.FuncionarioResponse;
 import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.FuncionarioRepository;
-import com.lemnos.server.utils.Util;
+import com.lemnos.server.shared.Convert;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class FuncionarioService extends Util {
+public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final CadastroRepository cadastroRepository;
 
@@ -118,7 +118,7 @@ public class FuncionarioService extends Util {
         if (token == null) throw new TokenNotValidOrExpiredException();
     }
 
-    private Funcionario getOneFuncionarioByEmail(String email) {
+    protected Funcionario getOneFuncionarioByEmail(String email) {
         return funcionarioRepository.findByCadastro(
                 cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(FuncionarioNotFoundException::new)
         ).orElseThrow(FuncionarioNotFoundException::new);
@@ -153,21 +153,21 @@ public class FuncionarioService extends Util {
         if (StringUtils.isBlank(funcionarioEnviado.cpf())) {
             funcionarioEnviado = funcionarioEnviado.setCpf(funcionarioEncontrado.getCpf().toString());
         }
-        Long cpf = convertStringToLong(funcionarioEnviado.cpf(), Codigo.CPF);
+        Long cpf = Convert.toLong(funcionarioEnviado.cpf(), Codigo.CPF);
         if (StringUtils.isBlank(funcionarioEnviado.dataNascimento())) {
             dataNasc = funcionarioEncontrado.getDataNascimento();
         } else {
-            dataNasc = convertData(funcionarioEnviado.dataNascimento());
+            dataNasc = Convert.toData(funcionarioEnviado.dataNascimento());
         }
         if (StringUtils.isBlank(funcionarioEnviado.dataAdmissao())) {
             dataAdmi = funcionarioEncontrado.getDataAdmissao();
         } else {
-            dataAdmi = convertData(funcionarioEnviado.dataAdmissao());
+            dataAdmi = Convert.toData(funcionarioEnviado.dataAdmissao());
         }
         if (StringUtils.isBlank(funcionarioEnviado.telefone())) {
             funcionarioEnviado = funcionarioEnviado.setTelefone(funcionarioEncontrado.getTelefone().toString());
         }
-        Long telefone = convertStringToLong(funcionarioEnviado.telefone(), Codigo.TELEFONE);
+        Long telefone = Convert.toLong(funcionarioEnviado.telefone(), Codigo.TELEFONE);
 
         Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByCpf(cpf);
         if (funcionarioOptional.isPresent() && !Objects.equals(funcionarioOptional.get().getId(), funcionarioEncontrado.getId()))

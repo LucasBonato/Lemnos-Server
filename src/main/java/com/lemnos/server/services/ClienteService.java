@@ -5,17 +5,15 @@ import com.lemnos.server.exceptions.cadastro.CadastroCpfAlreadyInUseException;
 import com.lemnos.server.exceptions.cadastro.CadastroNotValidException;
 import com.lemnos.server.exceptions.entidades.cliente.ClienteNotFoundException;
 import com.lemnos.server.exceptions.global.UpdateNotValidException;
-import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.dtos.requests.ClienteRequest;
+import com.lemnos.server.models.dtos.responses.ClienteResponse;
 import com.lemnos.server.models.dtos.responses.EnderecoResponse;
-import com.lemnos.server.models.endereco.possui.ClientePossuiEndereco;
+import com.lemnos.server.models.entidades.Cliente;
 import com.lemnos.server.models.enums.Codigo;
 import com.lemnos.server.models.enums.Situacao;
-import com.lemnos.server.models.dtos.responses.ClienteResponse;
-import com.lemnos.server.models.produto.Produto;
 import com.lemnos.server.repositories.cadastro.CadastroRepository;
 import com.lemnos.server.repositories.entidades.ClienteRepository;
-import com.lemnos.server.utils.Util;
+import com.lemnos.server.shared.Convert;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ClienteService extends Util {
+public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final CadastroRepository cadastroRepository;
 
@@ -90,7 +88,7 @@ public class ClienteService extends Util {
         if (token == null) throw new TokenNotValidOrExpiredException();
     }
 
-    private Cliente getOneClienteByEmail(String email) {
+    protected Cliente getOneClienteByEmail(String email) {
         return clienteRepository.findByCadastro(
                 cadastroRepository.findByEmail(email.replace("%40", "@")).orElseThrow(ClienteNotFoundException::new)
         ).orElseThrow(ClienteNotFoundException::new);
@@ -125,7 +123,7 @@ public class ClienteService extends Util {
         if (clienteEnviado.cpf() == null) {
             clienteEnviado = clienteEnviado.setCpf(clienteEncontrado.getCpf().toString());
         }
-        Long cpf = convertStringToLong(clienteEnviado.cpf(), Codigo.CPF);
+        Long cpf = Convert.toLong(clienteEnviado.cpf(), Codigo.CPF);
 
         Optional<Cliente> clienteOptional = clienteRepository.findByCpf(cpf);
         if (clienteOptional.isPresent() && !Objects.equals(clienteOptional.get().getId(), clienteEncontrado.getId()))

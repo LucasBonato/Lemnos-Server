@@ -11,7 +11,7 @@ import com.lemnos.server.models.enums.Situacao;
 import com.lemnos.server.models.entidades.Fornecedor;
 import com.lemnos.server.models.dtos.responses.FornecedorResponse;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
-import com.lemnos.server.utils.Util;
+import com.lemnos.server.shared.Convert;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class FornecedorService extends Util {
+public class FornecedorService {
     @Autowired private FornecedorRepository fornecedorRepository;
 
     @Cacheable("allFornecedores")
@@ -77,7 +77,7 @@ public class FornecedorService extends Util {
                 getEnderecoRecords(fornecedor)
         );
     }
-    private Fornecedor getOneFornecedorByEmail(String email) {
+    protected Fornecedor getOneFornecedorByEmail(String email) {
         return fornecedorRepository.findByEmail(email.replace("%40", "@")).orElseThrow(FornecedorNotFoundException::new);
     }
     private static EnderecoResponse getEnderecoRecords(Fornecedor fornecedor) {
@@ -110,7 +110,7 @@ public class FornecedorService extends Util {
         if(fornecedorEnviado.telefone() == null || fornecedorEnviado.telefone().isBlank()){
             fornecedorEnviado = fornecedorEnviado.setTelefone(fornecedorEncontrado.getTelefone().toString());
         }
-        Long telefone = convertStringToLong(fornecedorEnviado.telefone(), Codigo.TELEFONE);
+        Long telefone = Convert.toLong(fornecedorEnviado.telefone(), Codigo.TELEFONE);
         if(fornecedorEnviado.cnpj() == null){
             fornecedorEnviado = fornecedorEnviado.setCnpj(fornecedorEncontrado.getCnpj().toString());
         }

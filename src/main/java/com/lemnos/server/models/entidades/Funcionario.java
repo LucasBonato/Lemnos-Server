@@ -5,10 +5,9 @@ import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
 import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
-import com.lemnos.server.models.enums.AdminEmails;
 import com.lemnos.server.models.enums.Roles;
 import com.lemnos.server.models.enums.Situacao;
-import com.lemnos.server.utils.Util;
+import com.lemnos.server.shared.Convert;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -77,19 +76,19 @@ public class Funcionario implements UserDetails {
         this.nome = decodedToken.getName();
         if (decodedToken.getEmail().equals(firstEmail)) {
             this.cpf = 11122233301L;
-            this.dataNascimento = Util.convertData("29/08/2006");
+            this.dataNascimento = Convert.toData("29/08/2006");
             this.dataAdmissao = Date.from(Instant.now());
             this.telefone = 11972540380L;
         }
         else if (decodedToken.getEmail().equals(secondEmail)) {
             this.cpf = 11122233302L;
-            this.dataNascimento = Util.convertData("01/01/2006");
+            this.dataNascimento = Convert.toData("01/01/2006");
             this.dataAdmissao = Date.from(Instant.now());
             this.telefone = 11962891098L;
         }
         else if (decodedToken.getEmail().equals(thirdEmail)) {
             this.cpf = 11122233303L;
-            this.dataNascimento = Util.convertData("30/06/2006");
+            this.dataNascimento = Convert.toData("30/06/2006");
             this.dataAdmissao = Date.from(Instant.now());
             this.telefone = 11934485241L;
         }
