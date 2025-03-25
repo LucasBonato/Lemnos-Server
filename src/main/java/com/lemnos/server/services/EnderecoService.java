@@ -24,7 +24,9 @@ import com.lemnos.server.models.viacep.ViaCepDTO;
 import com.lemnos.server.repositories.endereco.CidadeRepository;
 import com.lemnos.server.repositories.endereco.EnderecoRepository;
 import com.lemnos.server.repositories.endereco.EstadoRepository;
+import com.lemnos.server.repositories.entidades.ClienteRepository;
 import com.lemnos.server.repositories.entidades.FornecedorRepository;
+import com.lemnos.server.repositories.entidades.FuncionarioRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,8 @@ public class EnderecoService {
     private final CidadeRepository cidadeRepository;
     private final EstadoRepository estadoRepository;
     private final FornecedorRepository fornecedorRepository;
+    private final FuncionarioRepository funcionarioRepository;
+    private final ClienteRepository clienteRepository;
     
     public ResponseEntity<Void> createEndereco(EnderecoRequest enderecoRequest) {
         verificarCamposEndereco(enderecoRequest);
@@ -150,7 +154,7 @@ public class EnderecoService {
         );
         
         cliente.getEnderecos().add(clientePossuiEndereco);
-//        clienteRepository.save(cliente);
+        clienteRepository.save(cliente);
     }
     private void createEnderecoFuncionario(EnderecoRequest enderecoRequest) {
         Funcionario funcionario = entityService.getOneFuncionarioByEmail(enderecoRequest.email());
@@ -171,7 +175,7 @@ public class EnderecoService {
         );
         
         funcionario.getEnderecos().add(funcionarioPossuiEndereco);
-//        funcionarioRepository.save(funcionario);
+        funcionarioRepository.save(funcionario);
     }
     private void createEnderecoFornecedor(EnderecoRequest enderecoRequest) {
         Fornecedor fornecedor = entityService.getOneFornecedorByEmail(enderecoRequest.email());
@@ -198,7 +202,7 @@ public class EnderecoService {
         clientePossuiEndereco.setComplemento(enderecoRequest.complemento());
         clientePossuiEndereco.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
         
-        //clienteRepository.save(cliente);
+        clienteRepository.save(cliente);
     }
     private void updateEnderecoFuncionario(EnderecoRequest enderecoRequest) {
         Funcionario funcionario = entityService.getOneFuncionarioByEmail(enderecoRequest.email());
@@ -212,7 +216,7 @@ public class EnderecoService {
         funcionarioPossuiEndereco.setComplemento(enderecoRequest.complemento());
         funcionarioPossuiEndereco.setNumeroLogradouro(enderecoRequest.numeroLogradouro());
         
-        //funcionarioRepository.save(funcionario);
+        funcionarioRepository.save(funcionario);
     }
     private void updateEnderecoFornecedor(EnderecoRequest enderecoRequest) {
         Fornecedor fornecedor = entityService.getOneFornecedorByEmail(enderecoRequest.email());
@@ -236,7 +240,7 @@ public class EnderecoService {
         
         cliente.getEnderecos().remove(clientePossuiEndereco);
         
-        //clienteRepository.save(cliente);
+        clienteRepository.save(cliente);
     }
     private void removeEnderecoFuncionario(EnderecoRemoveRequest enderecoRequest) {
         Funcionario funcionario = entityService.getOneFuncionarioByEmail(enderecoRequest.email());
@@ -248,7 +252,7 @@ public class EnderecoService {
         
         funcionario.getEnderecos().remove(funcionarioPossuiEndereco);
         
-        //funcionarioRepository.save(funcionario);
+        funcionarioRepository.save(funcionario);
     }
     private void removeEnderecoFornecedor(EnderecoRemoveRequest enderecoRequest) {
         Fornecedor fornecedor = entityService.getOneFornecedorByEmail(enderecoRequest.email());
