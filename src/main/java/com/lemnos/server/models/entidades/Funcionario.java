@@ -86,12 +86,14 @@ public class Funcionario implements UserDetails {
             this.dataNascimento = Convert.toData("29/08/2006");
             this.dataAdmissao = Date.from(Instant.now());
             this.telefone = 11972540380L;
-        } else if (decodedToken.getEmail().equals(secondEmail)) {
+        }
+        else if (decodedToken.getEmail().equals(secondEmail)) {
             this.cpf = 11122233302L;
             this.dataNascimento = Convert.toData("01/01/2006");
             this.dataAdmissao = Date.from(Instant.now());
             this.telefone = 11962891098L;
-        } else if (decodedToken.getEmail().equals(thirdEmail)) {
+        }
+        else if (decodedToken.getEmail().equals(thirdEmail)) {
             this.cpf = 11122233303L;
             this.dataNascimento = Convert.toData("30/06/2006");
             this.dataAdmissao = Date.from(Instant.now());

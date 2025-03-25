@@ -59,9 +59,9 @@ firebase:
 
 logging:
   level:
-    org:
-      springframework:
-        security: DEBUG
+#    root: TRACE
+    org.springframework.security: DEBUG
+#    com.lemnos.server: TRACE
 
 springdoc:
   swagger-ui:

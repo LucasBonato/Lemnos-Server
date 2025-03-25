@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 public class AuthController implements AuthSwagger {
-
     @Autowired private AuthService authService;
 
     @PostMapping("/login")
