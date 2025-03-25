@@ -1,6 +1,8 @@
 package com.lemnos.server.configurations.security;
 
 import com.lemnos.server.models.enums.Roles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +15,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import java.util.Collection;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -35,24 +43,24 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/swagger", "/swagger-ui/**", "/v3/api-docs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/produto", "/produto/desconto", "/produto/{id}", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produto/find/**", "/auth/login", "/auth/login-firebase", "/auth/register", "/auth/register/verificar").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasRole(Roles.CLIENTE.getRole())
-                        .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasRole(Roles.CLIENTE.getRole())
-                        .requestMatchers(HttpMethod.PUT, "/cliente", "/endereco", "/pedido").hasRole(Roles.CLIENTE.getRole())
-                        .requestMatchers(HttpMethod.DELETE, "/endereco", "/produto/fav", "/carrinho/**").hasRole(Roles.CLIENTE.getRole())
-                        .requestMatchers(HttpMethod.GET, "/fornecedor/**", "/funcionario/me").hasRole(Roles.FUNCIONARIO.getRole())
-                        .requestMatchers(HttpMethod.POST, "/produto/**", "/auth/register/fornecedor/**").hasRole(Roles.FUNCIONARIO.getRole())
-                        .requestMatchers(HttpMethod.PUT, "/produto/**", "/fornecedor").hasRole(Roles.FUNCIONARIO.getRole())
-                        .requestMatchers(HttpMethod.DELETE, "/produto/**", "/fornecedor", "/cliente").hasRole(Roles.FUNCIONARIO.getRole())
-                        .requestMatchers(HttpMethod.GET, "/funcionario/**").hasRole(Roles.ADMIN.getRole())
-                        .requestMatchers(HttpMethod.POST, "/auth/register/funcionario/**").hasRole(Roles.ADMIN.getRole())
-                        .requestMatchers(HttpMethod.PUT, "/funcionario/**").hasRole(Roles.ADMIN.getRole())
-                        .requestMatchers(HttpMethod.DELETE, "/funcionario").hasRole(Roles.ADMIN.getRole())
+                        .requestMatchers(HttpMethod.GET, "/cliente", "/cliente/find", "/endereco", "/pedido/**", "/produto/fav", "/carrinho").hasAuthority(Roles.CLIENTE.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.POST, "/endereco/**", "/pedido", "/produto/fav", "/produto/avaliar/**", "/carrinho").hasAuthority(Roles.CLIENTE.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.PUT, "/cliente", "/endereco", "/pedido").hasAuthority(Roles.CLIENTE.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.DELETE, "/endereco", "/produto/fav", "/carrinho/**").hasAuthority(Roles.CLIENTE.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.GET, "/fornecedor/**", "/funcionario/me").hasAuthority(Roles.FUNCIONARIO.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.POST, "/produto/**", "/auth/register/fornecedor/**").hasAuthority(Roles.FUNCIONARIO.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.PUT, "/produto/**", "/fornecedor").hasAuthority(Roles.FUNCIONARIO.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.DELETE, "/produto/**", "/fornecedor", "/cliente").hasAuthority(Roles.FUNCIONARIO.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.GET, "/funcionario/**").hasAuthority(Roles.ADMIN.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.POST, "/auth/register/funcionario/**").hasAuthority(Roles.ADMIN.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.PUT, "/funcionario/**").hasAuthority(Roles.ADMIN.getRoleWithPrefix())
+                        .requestMatchers(HttpMethod.DELETE, "/funcionario").hasAuthority(Roles.ADMIN.getRoleWithPrefix())
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(withDefaults())
                 )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class)
                 .build();
     }
 

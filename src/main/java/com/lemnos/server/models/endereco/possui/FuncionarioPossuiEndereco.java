@@ -4,35 +4,37 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.entidades.Funcionario;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "Funcionario_Possui_Endereco")
-@Data
+@Table(name = "funcionario_possui_endereco")
 @NoArgsConstructor
+@Getter
+@Setter
 public class FuncionarioPossuiEndereco {
     @EmbeddedId
-    @JsonIgnore
     private FuncionarioPossuiEnderecoId id;
-
+    
     @ManyToOne
     @MapsId("id_funcionario")
-    @JoinColumn(name = "id_funcionario")
+    @JoinColumn(name = "id_funcionario", nullable = false)
     @JsonIgnore
     private Funcionario funcionario;
-
+    
     @ManyToOne
-    @MapsId("Cep")
-    @JoinColumn(name = "cep")
+    @MapsId("cep")
+    @JoinColumn(name = "cep", nullable = false)
+    @JsonIgnore
     private Endereco endereco;
-
+    
     @Column(name = "numero_logradouro")
     private Integer numeroLogradouro;
-
-    @Column(name = "Complemento")
+    
+    @Column(name = "complemento")
     private String complemento;
-
+    
     public FuncionarioPossuiEndereco(Funcionario funcionario, Endereco endereco, Integer numeroLogradouro, String complemento) {
         this.id = new FuncionarioPossuiEnderecoId(funcionario.getId(), endereco.getCep());
         this.funcionario = funcionario;

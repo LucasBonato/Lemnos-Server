@@ -1,15 +1,10 @@
 package com.lemnos.server.models.endereco;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemnos.server.annotations.CEP;
-import com.lemnos.server.models.endereco.possui.ClientePossuiEndereco;
-import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.viacep.ViaCepDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "Endereco")
@@ -27,21 +22,13 @@ public class Endereco {
     @Column(name = "Bairro")
     private String bairro;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_cidade")
     private Cidade cidade;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_estado")
     private Estado estado;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "endereco")
-    private List<ClientePossuiEndereco> clientes;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "endereco")
-    private List<FuncionarioPossuiEndereco> funcionarios;
 
     public Endereco(ViaCepDTO viaCepDTO, Cidade cidade, Estado estado) {
         this.cep = viaCepDTO.cep();

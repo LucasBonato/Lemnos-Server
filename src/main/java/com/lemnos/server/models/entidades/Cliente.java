@@ -36,8 +36,12 @@ public class Cliente implements UserDetails {
     @Column(name = "CPF")
     @CPF(message = "CPF preenchido incorretamente!")
     private Long cpf;
-
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    
+    @OneToMany(
+            mappedBy = "cliente",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<ClientePossuiEndereco> enderecos;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -55,6 +59,7 @@ public class Cliente implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "Id_Produto")
     )
     private List<Produto> produtosFavoritos;
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Roles role = Roles.CLIENTE;

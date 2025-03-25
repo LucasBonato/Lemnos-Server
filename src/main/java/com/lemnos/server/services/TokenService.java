@@ -25,11 +25,11 @@ public class TokenService {
 
             if (userDetails instanceof Cliente cliente) {
                 email = cliente.getCadastro().getEmail();
-                role = cliente.getRole().getRoleWithPrefix();
+                role = cliente.getRole().getRole();
             }
             else if (userDetails instanceof Funcionario funcionario) {
                 email = funcionario.getCadastro().getEmail();
-                role = funcionario.getRole().getRoleWithPrefix();
+                role = funcionario.getRole().getRole();
             }
 
             JwtClaimsSet claims = JwtClaimsSet.builder()

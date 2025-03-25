@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseToken;
 import com.lemnos.server.annotations.CPF;
 import com.lemnos.server.models.cadastro.Cadastro;
 import com.lemnos.server.models.dtos.requests.FuncionarioRequest;
+import com.lemnos.server.models.endereco.Endereco;
 import com.lemnos.server.models.endereco.possui.FuncionarioPossuiEndereco;
 import com.lemnos.server.models.enums.Roles;
 import com.lemnos.server.models.enums.Situacao;
@@ -48,7 +49,11 @@ public class Funcionario implements UserDetails {
     @Column(name = "Telefone")
     private Long telefone;
 
-    @OneToMany(mappedBy = "funcionario", fetch = FetchType.EAGER)
+    @OneToMany(
+            mappedBy = "funcionario",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<FuncionarioPossuiEndereco> enderecos;
 
     @OneToOne(cascade = CascadeType.ALL)
