@@ -12,6 +12,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,29 +31,30 @@ public class Cliente implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
-
+    
     @Column(name = "Nome")
     private String nome;
-
+    
     @Column(name = "CPF")
     @CPF(message = "CPF preenchido incorretamente!")
     private Long cpf;
     
+    @Fetch(FetchMode.JOIN)
     @OneToMany(
             mappedBy = "cliente",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<ClientePossuiEndereco> enderecos;
-
+    
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_Cadastro")
     private Cadastro cadastro;
-
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "Situacao")
     private Situacao situacao = Situacao.ATIVO;
-
+    
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Produtos_Favoritos",
@@ -63,48 +66,48 @@ public class Cliente implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Roles role = Roles.CLIENTE;
-
-    public Cliente(RegisterRequest registerRequest){
+    
+    public Cliente(RegisterRequest registerRequest) {
         this.nome = registerRequest.getNome();
         this.cpf = Long.parseLong(registerRequest.getCpf());
         this.cadastro = new Cadastro(registerRequest);
     }
-
+    
     public Cliente(FirebaseToken decodedToken, String senha) {
         this.nome = decodedToken.getName();
         this.cadastro = new Cadastro(decodedToken, senha);
     }
-
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(Roles.CLIENTE.getRoleWithPrefix()));
     }
-
+    
     @Override
     public String getPassword() {
         return "";
     }
-
+    
     @Override
     public String getUsername() {
         return "";
     }
-
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
+    
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
+    
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
+    
     @Override
     public boolean isEnabled() {
         return this.situacao == Situacao.ATIVO;
